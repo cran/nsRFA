@@ -89,7 +89,7 @@ Given \eqn{k}, the other parameters are given by
 
 \note{\code{Lmom.lognorm} and \code{par.lognorm} accept input as vectors of equal length. In \code{f.lognorm}, \code{F.lognorm}, \code{invF.lognorm} and \code{rand.lognorm} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.}
 
-\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFTESTS}}, \code{\link{Lmoments}}.}
+\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 
 \examples{
 data(hydroSIMN)

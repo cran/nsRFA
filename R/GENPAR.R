@@ -8,12 +8,12 @@
 
 f.genpar <- function(x,xi,alfa,k) {
 
-  if (k > 0) {
-   if ((x < xi) || (x > (xi + alfa/k))) stop("if k>0 x must be between xi and xi + alfa/k")
-  }
-  else {
-    if(x < xi) stop("if k<0 x must higher than xi") 
-  }
+  # if (k > 0) {
+  #  if ((x < xi) || (x > (xi + alfa/k))) stop("if k>0 x must be between xi and xi + alfa/k")
+  # }
+  # else {
+  #   if(x < xi) stop("if k<0 x must higher than xi") 
+  # }
  
   if(k == 0) {
     y <- (x - xi)/alfa  
@@ -30,12 +30,12 @@ f.genpar <- function(x,xi,alfa,k) {
 
 F.genpar <- function(x,xi,alfa,k) {
 
-  if (k > 0) {
-   if ((x < xi) || (x > (xi + alfa/k))) stop("if k>0 x must be between xi and xi + alfa/k") 
-  }
-  else {
-   if(x < xi) stop("if k<0 x must higher than xi") 
-  }
+  # if (k > 0) {
+  #  if ((x < xi) || (x > (xi + alfa/k))) stop("if k>0 x must be between xi and xi + alfa/k") 
+  # }
+  # else {
+  #  if(x < xi) stop("if k<0 x must higher than xi") 
+  # }
  
   if(k == 0) {
     y <- (x - xi)/alfa  
@@ -52,9 +52,9 @@ F.genpar <- function(x,xi,alfa,k) {
 
 invF.genpar <- function(F,xi,alfa,k) {
 
-  if ((F < 0) || (F > 1)) {
-    stop("F must be between 0 and 1")
-  } 
+  # if ((F < 0) || (F > 1)) {
+  #   stop("F must be between 0 and 1")
+  # } 
 
   if(k == 0) {
     x <- xi - alfa*log(1 - F)  

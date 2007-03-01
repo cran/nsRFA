@@ -6,9 +6,9 @@
 
 f.exp <- function(x,xi,alfa) {
 
-  if (x < xi) {
-    stop("x must be higher or equal than xi")
-  } 
+  # if (x < xi) {
+  #   stop("x must be higher or equal than xi")
+  # } 
 
   f <- alfa^(-1) * exp(-(x - xi)/alfa)
 
@@ -18,9 +18,9 @@ f.exp <- function(x,xi,alfa) {
 
 F.exp <- function(x,xi,alfa) {
 
-  if (x < xi) {
-    stop("x must be higher or equal than xi")
-  } 
+  # if (x < xi) {
+  #   stop("x must be higher or equal than xi")
+  # } 
 
   F <- 1 - exp(-(x - xi)/alfa)
 
@@ -30,9 +30,9 @@ F.exp <- function(x,xi,alfa) {
 
 invF.exp <- function(F,xi,alfa) {
 
-  if ((F < 0) || (F > 1)) {
-    stop("F must be between 0 and 1")
-  } 
+  # if ((F < 0) || (F > 1)) {
+  #   stop("F must be between 0 and 1")
+  # } 
 
   x <- xi - alfa*log(1 - F)
 

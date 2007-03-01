@@ -20,9 +20,9 @@ F.gumb <- function(x,xi,alfa) {
 
 invF.gumb <- function(F,xi,alfa) {
 
-  if ((F < 0) || (F > 1)) {
-    stop("F must be between 0 and 1")
-  } 
+  # if ((F < 0) || (F > 1)) {
+  #   stop("F must be between 0 and 1")
+  # } 
 
   x <- xi - alfa*log(-log(F))
 

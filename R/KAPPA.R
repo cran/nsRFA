@@ -11,22 +11,22 @@
 
 f.kappa <- function (x,xi,alfa,k,h) {
 
-  if (k > 0) {
-    if (x > (xi + alfa/k)) {
-      stop("if k>0 x must be lower than xi + alfa/k")
-    } 
-  }
-  
-  if (h > 0) {
-    if (x < (xi + alfa*(1 - h^(-k))/k)) {
-      stop("if h>0 x must be higher than xi + alfa*(1 - h^(-k))/k")
-    } 
-  }
-  else if (k < 0) {
-    if (x < (xi + alfa/k)) {
-      stop("if h<=0 and k<0 x must be higher than xi + alfa/k")
-    } 
-  }
+  # if (k > 0) {
+  #   if (x > (xi + alfa/k)) {
+  #     stop("if k>0 x must be lower than xi + alfa/k")
+  #   } 
+  # }
+  # 
+  # if (h > 0) {
+  #   if (x < (xi + alfa*(1 - h^(-k))/k)) {
+  #     stop("if h>0 x must be higher than xi + alfa*(1 - h^(-k))/k")
+  #   } 
+  # }
+  # else if (k < 0) {
+  #   if (x < (xi + alfa/k)) {
+  #     stop("if h<=0 and k<0 x must be higher than xi + alfa/k")
+  #   } 
+  # }
 
   if (k == 0) {
     k <- 10^(-100)
@@ -44,22 +44,22 @@ f.kappa <- function (x,xi,alfa,k,h) {
 
 F.kappa <- function (x,xi,alfa,k,h) {
 
-  if (k > 0) {
-    if (x > (xi + alfa/k)) {
-      stop("if k>0 x must be lower than xi + alfa/k")
-    } 
-  }
-  
-  if (h > 0) {
-    if (x < (xi + alfa*(1 - h^(-k))/k)) {
-      stop("if h>0 x must be higher than xi + alfa*(1 - h^(-k))/k")
-    } 
-  }
-  else if (k < 0) {
-    if (x < (xi + alfa/k)) {
-      stop("if h<=0 and k<0 x must be higher than xi + alfa/k")
-    } 
-  }
+  # if (k > 0) {
+  #   if (x > (xi + alfa/k)) {
+  #     stop("if k>0 x must be lower than xi + alfa/k")
+  #   } 
+  # }
+  # 
+  # if (h > 0) {
+  #   if (x < (xi + alfa*(1 - h^(-k))/k)) {
+  #     stop("if h>0 x must be higher than xi + alfa*(1 - h^(-k))/k")
+  #   } 
+  # }
+  # else if (k < 0) {
+  #   if (x < (xi + alfa/k)) {
+  #     stop("if h<=0 and k<0 x must be higher than xi + alfa/k")
+  #   } 
+  # }
 
   if (k == 0) {
     k <- 10^(-100)
@@ -77,9 +77,9 @@ F.kappa <- function (x,xi,alfa,k,h) {
 
 invF.kappa <- function (F,xi,alfa,k,h) {
 
-  if ((F < 0) || (F > 1)) {
-    stop("F must be between 0 and 1")
-  } 
+  # if ((F < 0) || (F > 1)) {
+  #   stop("F must be between 0 and 1")
+  # } 
 
 
   if (k == 0) {

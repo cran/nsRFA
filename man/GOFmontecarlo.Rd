@@ -1,16 +1,24 @@
 % 2005-09-23, Alberto Viglione
 %
-\name{GOFTESTS}
-\alias{GOFTESTS}
+\name{GOFmontecarlo}
+\alias{GOFmontecarlo}
 \alias{gofNORMtest}
+\alias{gofGENLOGIStest}
+\alias{gofGENPARtest}
+\alias{gofGEVtest}
+\alias{gofLOGNORMtest}
 \alias{gofP3test}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Goodness of fit tests}
 \description{
- Anderson-Darling goodness of fit tests for Regional Frequency Analysis.
+ Anderson-Darling goodness of fit tests for Regional Frequency Analysis: Monte-Carlo method.
 }
 \usage{
  gofNORMtest (x)
+ gofGENLOGIStest (x, Nsim=1000)
+ gofGENPARtest (x, Nsim=1000)
+ gofGEVtest (x, Nsim=1000)
+ gofLOGNORMtest (x, Nsim=1000)
  gofP3test (x, Nsim=1000)
 }
 %- maybe also `usage' for other objects documented here.
@@ -40,6 +48,14 @@ In other cases, e.g. the Pearson Type III case here, can be derived with a Monte
 \value{
   \code{gofNORMtest} tests the goodness of fit of a normal (Gauss) distribution with the sample \code{x}.
 
+  \code{gofGENLOGIStest} tests the goodness of fit of a Generalized Logistic distribution with the sample \code{x}.
+
+  \code{gofGENPARtest} tests the goodness of fit of a Generalized Pareto distribution with the sample \code{x}.
+
+  \code{gofGEVtest} tests the goodness of fit of a Generalized Extreme Value distribution with the sample \code{x}.
+
+  \code{gofLOGNORMtest} tests the goodness of fit of a 3 parameters Lognormal distribution with the sample \code{x}.
+
   \code{gofP3test} tests the goodness of fit of a Pearson type III (gamma) distribution with the sample \code{x}.
 
   They return the value \eqn{A_2} of the Anderson-Darling statistics and its probability \eqn{P}.
@@ -61,7 +77,7 @@ Viglione A. (2007) Metodi statistici non-supervised per la stima di grandezze id
 
 %\note{.}
 
-\seealso{\code{\link{CLUSTERS}}, \code{\link{HOMTESTS}}.}
+\seealso{\code{\link{traceWminim}}, \code{\link{roi}}, \code{\link{HOMTESTS}}.}
 
 \examples{
 x <- rnorm(30,10,1)
@@ -69,5 +85,18 @@ gofNORMtest(x)
 
 x <- rand.gamma(50, 100, 15, 7)
 gofP3test(x, Nsim=200)
+
+x <- rand.GEV(50, 0.907, 0.169, 0.0304)
+gofGEVtest(x, Nsim=200)
+
+x <- rand.genlogis(50, 0.907, 0.169, 0.0304)
+gofGENLOGIStest(x, Nsim=200)
+
+x <- rand.genpar(50, 0.716, 0.418, 0.476)
+gofGENPARtest(x, Nsim=200)
+
+x <- rand.lognorm(50, 0.716, 0.418, 0.476)
+gofLOGNORMtest(x, Nsim=200)
+
 }
 \keyword{htest}

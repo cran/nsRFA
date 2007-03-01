@@ -87,7 +87,7 @@ gives the parameters (\code{xi}, \code{alfa}, \code{k}), and \code{rand.genpar} 
 
 \note{ \code{Lmom.genpar} and \code{par.genpar} accept input as vectors of equal length. In \code{f.genpar}, \code{F.genpar}, \code{invF.genpar} and \code{rand.genpar} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.}
 
-\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFTESTS}}, \code{\link{Lmoments}}.}
+\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 
 \examples{
 data(hydroSIMN)

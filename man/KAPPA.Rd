@@ -95,7 +95,7 @@ the quantile function \eqn{x}, \code{Lmom.kappa} gives the L-moments (\eqn{\lamb
 
 \note{\code{Lmom.kappa} and \code{par.kappa} accept input as vectors of equal length. In \code{f.kappa}, \code{F.kappa}, \code{invF.kappa} and \code{rand.kappa} parameters (\code{xi}, \code{alfa}, \code{k}, \code{h}) must be atomic.}
 
-\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{optim}}, \code{\link{DISTPLOTS}}, \code{\link{GOFTESTS}}, \code{\link{Lmoments}}.}
+\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{optim}}, \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 
 \examples{
 data(hydroSIMN)

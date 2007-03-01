@@ -75,7 +75,7 @@ the quantile function \eqn{x}, \code{Lmom.gumb} gives the L-moments (\eqn{\lambd
 
 \note{ \code{Lmom.gumb} and \code{par.gumb} accept input as vectors of equal length. In \code{f.gumb}, \code{F.gumb}, \code{invF.gumb} and \code{rand.gumb} parameters (\code{xi}, \code{alfa}) must be atomic.}
 
-\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFTESTS}}, \code{\link{Lmoments}}.}
+\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 
 \examples{
 data(hydroSIMN)

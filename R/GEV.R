@@ -9,16 +9,16 @@
 
 f.GEV <- function (x,xi,alfa,k) {
 
-  if (k > 0) {
-    if (x > (xi + alfa/k)) {
-      stop("if k>0 x must be lower than xi + alfa/k")
-    } 
-  }
-  else if (k < 0) {
-    if(x < (xi + alfa/k)) {
-      stop("if k>0 x must be higher than xi + alfa/k")
-    } 
-  }
+  # if (k > 0) {
+  #   if (x > (xi + alfa/k)) {
+  #     stop("if k>0 x must be lower than xi + alfa/k")
+  #   } 
+  # }
+  # else if (k < 0) {
+  #   if(x < (xi + alfa/k)) {
+  #     stop("if k>0 x must be higher than xi + alfa/k")
+  #   } 
+  # }
 
   if (k == 0) {
     y <- (x - xi)/alfa
@@ -34,16 +34,16 @@ f.GEV <- function (x,xi,alfa,k) {
 
 F.GEV <- function (x,xi,alfa,k) {
 
-  if (k > 0) {
-    if (x > (xi + alfa/k)) {
-      stop("if k>0 x must be lower than xi + alfa/k")
-    } 
-  }
-  else if (k < 0) {
-    if(x < (xi + alfa/k)) {
-      stop("if k>0 x must be higher than xi + alfa/k")
-    } 
-  }
+  # if (k > 0) {
+  #   if (x > (xi + alfa/k)) {
+  #     stop("if k>0 x must be lower than xi + alfa/k")
+  #   } 
+  # }
+  # else if (k < 0) {
+  #   if(x < (xi + alfa/k)) {
+  #     stop("if k>0 x must be higher than xi + alfa/k")
+  #   } 
+  # }
 
   if (k == 0) {
     y <- (x - xi)/alfa
@@ -60,9 +60,9 @@ F.GEV <- function (x,xi,alfa,k) {
 
 invF.GEV <- function (F,xi,alfa,k) {
 
-  if ((F < 0) || (F > 1)) {
-    stop("F must be between 0 and 1")
-  } 
+  # if ((F < 0) || (F > 1)) {
+  #   stop("F must be between 0 and 1")
+  # } 
 
   if (k == 0) {
     x <- xi - alfa * log(-log(F))

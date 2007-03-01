@@ -9,6 +9,7 @@
 \alias{par.gamma}
 \alias{rand.gamma}
 \alias{mom2par.gamma}
+\alias{par2mom.gamma}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Three parameters Pearson type III distribution and L-moments}
 \description{
@@ -16,25 +17,29 @@
 Pearson type III distribution.
 }
 \usage{
-f.gamma (x, mu, sigma, gamm)
-F.gamma (x, mu, sigma, gamm)
-invF.gamma (F, mu, sigma, gamm)
-Lmom.gamma (mu, sigma, gamm)
+f.gamma (x, xi, beta, alfa)
+F.gamma (x, xi, beta, alfa)
+invF.gamma (F, xi, beta, alfa)
+Lmom.gamma (xi, beta, alfa)
 par.gamma (lambda1, lambda2, tau3)
-rand.gamma (numerosita, mu, sigma, gamm)
+rand.gamma (numerosita, xi, beta, alfa)
 mom2par.gamma (mu, sigma, gamm)
+par2mom.gamma (alfa, beta, xi)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{vector of quantiles}
- \item{mu}{vector of gamma location parameters}
- \item{sigma}{vector of gamma scale parameters}
- \item{gamm}{vector of gamma shape parameters}
+ \item{mu}{vector of gamma mean}
+ \item{sigma}{vector of gamma standard deviation}
+ \item{gamm}{vector of gamma third moment}
  \item{F}{vector of probabilities}
  \item{lambda1}{vector of sample means}
  \item{lambda2}{vector of L-variances}
  \item{tau3}{vector of L-CA (or L-skewness)}
  \item{numerosita}{numeric value indicating the length of the vector to be generated}
+ \item{alfa}{vector of gamma shape parameters}
+ \item{beta}{vector of gamma scale parameters}
+ \item{xi}{vector of gamma location parameters}
 }
 \details{
 \bold{Definition}
@@ -111,7 +116,7 @@ the quantile function \eqn{x}, \code{Lmom.gamma} gives the L-moments (\eqn{\lamb
 
 \note{\code{Lmom.gamma} and \code{par.gamma} accept input as vectors of equal length. In \code{f.gamma}, \code{F.gamma}, \code{invF.gamma} and \code{rand.gamma} parameters (\code{mu}, \code{sigma}, \code{gamm}) must be atomic.}
 
-\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}; \code{\link{DISTPLOTS}}, \code{\link{GOFTESTS}}, \code{\link{Lmoments}}.}
+\seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 
 \examples{
 data(hydroSIMN)
@@ -124,16 +129,17 @@ split(x,fac)
 camp <- split(x,fac)$"45"
 ll <- Lmoments(camp)
 parameters <- par.gamma(ll[1],ll[2],ll[4])
-f.gamma(1800,parameters$mu,parameters$sigma,parameters$gamm)
-F.gamma(1800,parameters$mu,parameters$sigma,parameters$gamm)
-invF.gamma(0.7511627,parameters$mu,parameters$sigma,parameters$gamm)
-Lmom.gamma(parameters$mu,parameters$sigma,parameters$gamm)
-rand.gamma(100,parameters$mu,parameters$sigma,parameters$gamm)
+f.gamma(1800,parameters$xi,parameters$beta,parameters$alfa)
+F.gamma(1800,parameters$xi,parameters$beta,parameters$alfa)
+invF.gamma(0.7511627,parameters$xi,parameters$beta,parameters$alfa)
+Lmom.gamma(parameters$xi,parameters$beta,parameters$alfa)
+rand.gamma(100,parameters$xi,parameters$beta,parameters$alfa)
 
 Rll <- regionalLmoments(x,fac); Rll
 parameters <- par.gamma(Rll[1],Rll[2],Rll[4])
-Lmom.gamma(parameters$mu,parameters$sigma,parameters$gamm)
+Lmom.gamma(parameters$xi,parameters$beta,parameters$alfa)
 
-mom2par.gamma(parameters$mu,parameters$sigma,parameters$gamm)
+moments <- par2mom.gamma(parameters$alfa,parameters$beta,parameters$xi); moments
+mom2par.gamma(moments$mu,moments$sigma,moments$gamm)
 }
 \keyword{distribution}

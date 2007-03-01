@@ -7,16 +7,16 @@
 
 f.genlogis <- function (x,xi,alfa,k) {
 
-  if (k > 0) {
-    if (x > (xi + alfa/k)) {
-      stop("if k>0 x must be lower than xi + alfa/k")
-    } 
-  }
-  else if (k < 0) {
-    if(x < (xi + alfa/k)) {
-      stop("if k>0 x must be higher than xi + alfa/k")
-    } 
-  }
+  # if (k > 0) {
+  #   if (x > (xi + alfa/k)) {
+  #     stop("if k>0 x must be lower than xi + alfa/k")
+  #   } 
+  # }
+  # else if (k < 0) {
+  #   if(x < (xi + alfa/k)) {
+  #     stop("if k>0 x must be higher than xi + alfa/k")
+  #   } 
+  # }
 
   if (k == 0) {
     y <- (x - xi)/alfa
@@ -33,16 +33,16 @@ f.genlogis <- function (x,xi,alfa,k) {
 
 F.genlogis <- function (x,xi,alfa,k) {
 
-  if (k > 0) {
-    if (x > (xi + alfa/k)) {
-      stop("if k>0 x must be lower than xi + alfa/k")
-    } 
-  }
-  else if (k < 0) {
-    if(x < (xi + alfa/k)) {
-      stop("if k>0 x must be higher than xi + alfa/k")
-    } 
-  }
+  # if (k > 0) {
+  #   if (x > (xi + alfa/k)) {
+  #     stop("if k>0 x must be lower than xi + alfa/k")
+  #   } 
+  # }
+  # else if (k < 0) {
+  #   if(x < (xi + alfa/k)) {
+  #     stop("if k>0 x must be higher than xi + alfa/k")
+  #   } 
+  # }
 
   if (k == 0) {
     y <- (x - xi)/alfa
@@ -58,9 +58,9 @@ F.genlogis <- function (x,xi,alfa,k) {
 
 invF.genlogis <- function (F,xi,alfa,k) {
 
-  if ((F < 0) || (F > 1)) {
-    stop("F must be between 0 and 1")
-  } 
+  # if ((F < 0) || (F > 1)) {
+  #   stop("F must be between 0 and 1")
+  # } 
 
   if (k == 0) {
     x <- xi - alfa * log((1 - F)/F)
@@ -74,9 +74,9 @@ invF.genlogis <- function (F,xi,alfa,k) {
 
 Lmom.genlogis <- function(xi,alfa,k) {
 
-  if ((k <= -1) || (k >= 1)) {
-    stop("L-moments are defined for -1<k<1")
-  } 
+  # if ((k <= -1) || (k >= 1)) {
+  #   stop("L-moments are defined for -1<k<1")
+  # } 
 
   lambda1 <- xi + alfa*(1/k - pi/(sin(k*pi)))
   lambda2 <- (alfa*k*pi)/(sin(k*pi))

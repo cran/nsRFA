@@ -4,79 +4,50 @@
 
 # gamm=0 => normal, gamm=2 => exponential, gamm=-2 => reverse exponential distribution
 
-f.gamma <- function (x,mu,sigma,gamm) {
+f.gamma <- function (x,xi,beta,alfa) {
 
-  if (gamm > 0) {
-    alfa <- 4/(gamm^2)
-    beta <- 0.5 * sigma * abs(gamm)
-    xi <- mu - 2*sigma/gamm
-    #f <- dgamma((x - xi)/beta, alfa)
-    f <- ((x - xi)^(alfa - 1) * exp(-(x - xi)/beta))/(beta^alfa * gamma(alfa))
-  }
-  else if (gamm < 0) {
-    alfa <- 4/(gamm^2)
-    beta <- 0.5 * sigma * abs(gamm)
-    xi <- mu - 2*sigma/gamm
-    #f <- dgamma((xi - x)/beta, alfa) 
-    f <- ((xi - x)^(alfa - 1) * exp(-(xi - x)/beta))/(beta^alfa * gamma(alfa))
-  }
-  else if (gamm==0) {
-    f <- sigma^(-1) * dnorm((x - mu)/sigma)	# Normal
-  }
+  f <- ((x - xi)^(alfa - 1) * exp(-(x - xi)/beta))/(abs(beta)*beta^(alfa-1) * gamma(alfa))
 
   return(f)
 }
 
-F.gamma <- function (x,mu,sigma,gamm) {
+F.gamma <- function (x,xi,beta,alfa) {
 
-  if (gamm > 0) {
-    alfa <- 4/(gamm^2)
-    beta <- 0.5 * sigma * abs(gamm)
-    xi <- mu - 2*sigma/gamm
-    F <- pgamma((x - xi)/beta, alfa)
+  if (beta > 0) {
+    #F <- pgamma((x - xi)/beta, alfa)
+    F <- pgamma(x-xi,shape=alfa,scale=beta)
   }
-  else if (gamm < 0) {
-    alfa <- 4/(gamm^2)
-    beta <- 0.5 * sigma * abs(gamm)
-    xi <- mu - 2*sigma/gamm
-    F <- 1 - pgamma((xi - x)/beta, alfa) 
-  }
-  else if (gamm==0) {
-    F <- pnorm((x - mu)/sigma)	# Normal
+  else {
+    #F <- 1 - pgamma((xi - x)/beta, alfa) 
+    F <- 1 - pgamma(xi-x,shape=alfa,scale=-beta)
   }
 
   return(F)
 }
 
-invF.gamma <- function (F,mu,sigma,gamm) {
+invF.gamma <- function (F,xi,beta,alfa) {
 
-  if ((F < 0) || (F > 1)) {
-    stop("F must be between 0 and 1")
-  } 
+  # if ((F < 0) || (F > 1)) {
+  #   stop("F must be between 0 and 1")
+  # } 
 
-  if (gamm > 0) {
-    alfa <- 4/(gamm^2)
-    beta <- 0.5 * sigma * abs(gamm)
-    xi <- mu - 2*sigma/gamm
-    x.st <- qgamma(F, alfa)
-    x <- x.st*beta + xi
+  if (beta >= 0) {
+    #x.st <- qgamma(F, alfa)
+    #x <- x.st*beta + xi
+    x.st <- qgamma(F, shape=alfa,scale=beta)
+    x <- x.st + xi
   }
-  else if (gamm < 0) {
-    alfa <- 4/(gamm^2)
-    beta <- 0.5 * sigma * abs(gamm)
-    xi <- mu - 2*sigma/gamm
-    x.st <- qgamma(F, alfa)
-    x <- xi - x.st*beta
-  }
-  else if (gamm==0) {
-    x.st <- qnorm(F)	# Normal
-    x <- mu + sigma*x.st
+  else if (beta < 0) {
+    #x.st <- qgamma(F, alfa)
+    #x <- xi - x.st*beta
+    x.st <- qgamma(F, shape=alfa,scale=-beta)
+    x <- xi - x.st
   }
 
   return(x)
 }
 
-Lmom.gamma <- function(mu,sigma,gamm) {
+Lmom.gamma <- function(xi,beta,alfa) {
 
   A0 = 0.32573501
   A1 = 0.16869150
@@ -103,16 +74,13 @@ Lmom.gamma <- function(mu,sigma,gamm) {
   H2 = 0.26649995
   H3 = 0.26193668
   
-  quanti <- length(mu)
+  quanti <- length(xi)
   lambda1 <- rep(NA,quanti)
   lambda2 <- rep(NA,quanti)
   tau3 <- rep(NA,quanti)
   tau4 <- rep(NA,quanti)
   for (i in 1:quanti) {
-    if (gamm[i] > 0) {
-      alfa <- 4/(gamm[i]^2)
-      beta <- 0.5 * sigma[i] * abs(gamm[i])
-      xi <- mu[i] - 2*sigma[i]/gamm[i]
+    if (beta[i] >= 0) {
       lambda1[i] <- xi + alfa*beta
       lambda2[i] <- pi^(-0.5) *beta * gamma(alfa + 0.5)/gamma(alfa)
       # tau3 <- 6 * pbeta(1/3,alfa,2*alfa) - 3
@@ -125,10 +93,7 @@ Lmom.gamma <- function(mu,sigma,gamm) {
         tau4[i] <- (1 + G1*alfa + G2*alfa^2 + G3*alfa^3)/(1 + H1*alfa + H2*alfa^2 + H3*alfa^3)
       }
     }
-    else if (gamm[i] < 0) {
-      alfa <- 4/(gamm[i]^2)
-      beta <- 0.5 * sigma[i] * abs(gamm[i])
-      xi <- mu[i] - 2*sigma[i]/gamm[i]
+    else if (beta[i] < 0) {
       lambda1[i] <- -(-xi + alfa*beta)
       lambda2[i] <- pi^(-0.5) *beta * gamma(alfa + 0.5)/gamma(alfa)
       if (alfa >= 1) {
@@ -139,12 +104,6 @@ Lmom.gamma <- function(mu,sigma,gamm) {
         tau3[i] <- -(1 + E1*alfa + E2*alfa^2 + E3*alfa^3)/(1 + F1*alfa + F2*alfa^2 + F3*alfa^3)
         tau4[i] <- (1 + G1*alfa + G2*alfa^2 + G3*alfa^3)/(1 + H1*alfa + H2*alfa^2 + H3*alfa^3)
       }
-    }
-    else if (gamm[i]==0) {
-      lambda1[i] <- mu[i]
-      lambda2[i] <- sigma[i]*pi^(-0.5)
-      tau3[i] <- 0
-      tau4[i] <- 30*pi^(-1)*atan(sqrt(2)) - 9	# 0.1226
     }
   }
   
@@ -158,43 +117,41 @@ par.gamma <- function(lambda1,lambda2,tau3) {
   lambda1 <- as.numeric(lambda1)
   lambda2 <- as.numeric(lambda2)
   tau3 <- as.numeric(tau3)
-  
-  quanti <- length(tau3)
-  mu <- rep(NA,quanti)
-  sigma <- rep(NA,quanti)
-  gamm <- rep(NA,quanti)
 
-  for (i in 1:quanti) {
-    if (tau3[i]==0) {
-      mu[i] <- lambda1[i]
-      sigma[i] <- pi^(0.5) * lambda2[i]
-      gamm[i] <- 0
-    }
-    else {
-      if ((abs(tau3[i]) > 0)&&(abs(tau3[i]) < 1/3)) {
-        z <- 3*pi*tau3[i]^2
-        alfa <- (1 + 0.2906*z)/(z + 0.1882*z^2 + 0.0442*z^3)
-      }
-      else if ((abs(tau3[i]) >= 1/3)&&(abs(tau3[i]) < 1)) {
-        z <- 1 - abs(tau3[i])
-        alfa <- (0.36067*z - 0.59567*z^2 + 0.25361*z^3)/(1 - 2.78861*z + 2.56096*z^2 - 0.77045*z^3)
-      }
-
-      gamm[i] <- 2*alfa^(-0.5) * sign(tau3[i])
-      sigma[i] <- suppressWarnings(lambda2[i]*pi^(0.5) * alfa^(0.5) * gamma(alfa)/gamma(alfa + 0.5))
-      mu[i] <- lambda1[i]
-    }
+  if ((abs(tau3) > 0)&&(abs(tau3) < 1/3)) {
+   z <- 3*pi*tau3^2
+   alfa <- (1 + 0.2906*z)/(z + 0.1882*z^2 + 0.0442*z^3)
   }
-  output <- list(mu=mu, sigma=sigma, gamm=gamm)
- 
+  else if ((abs(tau3) >= 1/3)&&(abs(tau3) < 1)) {
+   z <- 1 - abs(tau3)
+   alfa <- (0.36067*z - 0.59567*z^2 + 0.25361*z^3)/(1 - 2.78861*z + 2.56096*z^2 - 0.77045*z^3)
+  }
+  if(alfa<100) {
+   sigma <- lambda2*pi^(0.5) * alfa^(0.5) * gamma(alfa)/gamma(alfa + 0.5)
+   beta <- 0.5*sigma*abs(2*alfa^(-0.5))
+   if(beta>0) {xi <- lambda1 - alfa*beta} else {xi <- lambda1 + alfa*beta}
+   output <- list(xi=xi, beta=beta, alfa=alfa)
+  }
+  else {
+   mu <- lambda1
+   sigma <- sqrt(pi)*lambda2/(1-1/(8*alfa)+1/(128*alfa^2))
+   output <- list(mu=mu, sigma=sigma)
+  }
+
   return(output)
 }
 
-rand.gamma <- function(numerosita,mu,sigma,gamm) {
+rand.gamma <- function(numerosita,xi,beta,alfa) {
 
-  F <- runif(numerosita, min=0.0000000001, max=0.9999999999)
-  x <- invF.gamma(F,mu,sigma,gamm)
-
+  #F <- runif(numerosita, min=0.0000000001, max=0.9999999999)
+  #x <- invF.gamma(F,xi,beta,alfa)
+  #x <- xi + beta*rgamma(numerosita, shape=alfa)
+  if (beta>0) {
+   x <- xi + rgamma(numerosita, shape=alfa, scale=beta)
+  }
+  else {
+   x <- xi - rgamma(numerosita, shape=alfa, scale=-beta)
+  }
   return(x)
 }
 
@@ -202,12 +159,24 @@ mom2par.gamma <- function(mu,sigma,gamm) {
   
   if(gamm==0) {stop("The distribution is Normal")}
   else {
-   alpha <- 4/(gamm^2)
+   alfa <- 4/(gamm^2)
    beta <- 0.5*sigma*abs(gamm) 
    xi <- mu - 2*sigma/gamm
   }
   
-  output <- list(alpha=alpha, beta=beta, xi=xi)
+  output <- list(alfa=alfa, beta=beta, xi=xi)
 
   return(output)
 }
+
+par2mom.gamma <- function(alfa,beta,xi) {
+
+  gamm <- 2/sqrt(alfa)
+  sigma <- 2*beta/abs(gamm)
+  mu <- xi + 2*sigma/gamm
+
+  output <- list(mu=mu, sigma=sigma, gamm=gamm)
+
+  return(output)
+}
+
