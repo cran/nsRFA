@@ -365,6 +365,24 @@ exampleRFA01 <- function () {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ------------------------------------------------------------------------------------------- #
 
 
@@ -1234,6 +1252,2076 @@ exampleRFA02 <- function () {
   abline(v=3.880,lty=2,col=2)
   text(A2s[A2s>3.880],errors[A2s>3.880],labels=codici[A2s>3.880]-2,pos=1)
   axis(1,at=c(2.492,3.880),labels=c("5\%","1\%"),col=2,col.axis=2,cex.axis=.8)
+
+  cat("\n\n
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+                                          THE END
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+  \n")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exampleRFA03 <- function () {
+
+  cat("\n\n
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+                           ANALYSIS OF FEH DATA: POOLING GROUPS
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+  \n")
+
+  readline("\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Data loading: \n
+  > data(FEH1000)
+  \n")
+
+  data(FEH1000)
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Sample moments and L-moments:
+  > momenti <- t(sapply(split(am[,4],am[,1]),moments))
+  > Lmomenti <- t(sapply(split(am[,4],am[,1]),Lmoments))
+  > plot(as.data.frame(momenti))
+  > plot(as.data.frame(Lmomenti))
+  \n")
+
+  momenti <- t(sapply(split(am[,4],am[,1]),moments))
+  Lmomenti <- t(sapply(split(am[,4],am[,1]),Lmoments))
+  plot(as.data.frame(momenti),pch=".",cex=2)
+  readline("Press Return to continue to the next graphs")
+  plot(as.data.frame(Lmomenti),pch=".",cex=2)
+
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Criteria used in the FEH to choose stations for pooling groups: 
+   n>7
+   area, saar and bfihost are known
+   urbext<0.025
+   area>0.5 \n
+  > n <- tapply(am[,3],am[,1],length)
+  > urbext <- cd[,\"urbext1990\"]
+  > area <- cd[,\"dtm_area\"]
+  > cd696 <- cd[(!is.nan(cd[,\"dtm_area\"]))&(!is.nan(cd[,\"saar\"]))&(!is.nan(cd[,\"bfihost\"]))&(n>7)&(urbext<0.025)&(area>0.5),]
+
+  > fac <- factor(am[,\"number\"],levels=cd696[,\"number\"])
+  > am696 <- am[!is.na(fac),]
+  > nlevels(as.factor(am696[,\"number\"]))
+  \n")
+
+  n <- tapply(am[,4],am[,1],length)
+  urbext <- cd[,"urbext1990"]
+  area <- cd[,"dtm_area"]
+  cd696 <- cd[(!is.nan(cd[,"dtm_area"]))&(!is.nan(cd[,"saar"]))&(!is.nan(cd[,"bfihost"]))&(n>7)&(urbext<0.025)&(area>0.5),]
+  
+  fac <- factor(am[,"number"],levels=cd696[,"number"])
+  am696 <- am[!is.na(fac),]
+  nlevels(as.factor(am696[,"number"]))
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Figure 16.2 pag.157, FEH Vol.3 \n
+  > plot(cd696[c(\"dtm_area\",\"saar\")], pch=\".\", cex=2, log=\"x\")
+  > plot(cd696[c(\"dtm_area\",\"bfihost\")], pch=\".\", cex=2, log=\"x\")
+  > plot(cd696[c(\"saar\",\"bfihost\")], pch=\".\", cex=2)
+  \n")
+  
+  plot(cd696[c("dtm_area","saar")], pch=".", cex=2, log="x")
+  readline("Press Return to continue to the next graphs")
+  plot(cd696[c("dtm_area","bfihost")], pch=".", cex=2, log="x")
+  readline("Press Return to continue to the next graphs")
+  plot(cd696[c("saar","bfihost")], pch=".", cex=2)
+  
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Discordancy measure: \n
+  > Lmomenti696 <- t(sapply(split(am696[,4],am696[,1]),Lmoments))
+  > Di <- discordancy(am696[,\"am\"], am696[,\"number\"])
+  > par(mfrow=c(1,2))
+  >  plot(Lmomenti696[,c(\"lca\",\"lcv\")],xlab=\"L-CA\",ylab=\"L-CV\",cex=.7); grid()
+  >  points(Lmomenti696[(Di>3),c(\"lca\",\"lcv\")],pch=19,cex=.7)
+  >  plot(Lmomenti696[,c(\"lca\",\"lkur\")],xlab=\"L-CA\",ylab=\"L-kur\",cex=.7); grid()
+  >  points(Lmomenti696[(Di>3),c(\"lca\",\"lkur\")],pch=19,cex=.7)
+  > par(mfrow=c(1,1))
+  \n")
+
+  Lmomenti696 <- t(sapply(split(am696[,4],am696[,1]),Lmoments))
+  Di <- discordancy(am696[,"am"], am696[,"number"])
+  par(mfrow=c(1,2))
+   plot(Lmomenti696[,c("lca","lcv")],xlab="L-CA",ylab="L-CV",pch=".",cex=2); grid()
+   points(Lmomenti696[(Di>3),c("lca","lcv")],pch=19,cex=.7)
+   plot(Lmomenti696[,c("lca","lkur")],xlab="L-CA",ylab="L-kur",pch=".",cex=2); grid()
+   points(Lmomenti696[(Di>3),c("lca","lkur")],pch=19,cex=.7)
+  par(mfrow=c(1,1))
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Region of influence (Table 16.2, pag.164, FEH Vol.3):
+  using lnAREA, lnSAAR and BFIHOST to measure distances among sites:\n
+  > sd(log(cd696[,\"dtm_area\"])) 
+  > sd(log(cd696[,\"saar\"]))     
+  > sd(cd696[,\"bfihost\"])       
+
+  > AREAterm <- log(cd696[,\"dtm_area\"])/(sd(log(cd696[,\"dtm_area\"]))*sqrt(2))
+  > SAARterm <- log(cd696[,\"saar\"])/sd(log(cd696[,\"saar\"]))
+  > BFIHOSTterm <- cd696[,\"bfihost\"]/sd(cd696[,\"bfihost\"])
+
+  > distFEH <- dist(cbind(AREAterm,SAARterm,BFIHOSTterm))
+
+  > roi.cd <- data.frame(cbind(AREAterm,SAARterm,BFIHOSTterm))
+  > row.names(roi.cd) <- cd696[,\"number\"]
+
+  > roi01.50year <- new.env()
+  > for(i in 1:696) {
+  >  print(paste(i,\"/ 696\"))
+  >  assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  +         row.names(roi.cd),am696[,\"am\"],am696[,\"number\"],test=\"HW\",station.year=250,Nsim=100), env=roi01.50year)
+  > }
+  > roi01.50year <- as.list(roi01.50year)
+
+  > estrai.region <- function (x) {x$region}
+  > estrai.test <- function (x) {x$test}
+  > regioni.50year <- sapply(roi01.50year, estrai.region)
+  > test.50year <- sapply(roi01.50year, estrai.test)
+  > mL.50year <- mean(sapply(regioni.50year,length)) 
+  > mH2.50year <- mean(test.50year[\"H2\",]) 
+  > gH2gr2.50year <- sum(test.50year[\"H2\",]>2)/696 
+  > gH2gr4.50year <- sum(test.50year[\"H2\",]>4)/696 
+
+  > roi01.100year <- new.env()
+  > for(i in 1:696) {
+  >  print(paste(i,\"/ 696\"))
+  >  assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  +         row.names(roi.cd),am696[,\"am\"],am696[,\"number\"],test=\"HW\",station.year=500,Nsim=100), env=roi01.100year)
+  > }
+  > roi01.100year <- as.list(roi01.100year)
+
+  > regioni.100year <- sapply(roi01.100year, estrai.region)
+  > test.100year <- sapply(roi01.100year, estrai.test)
+  > mL.100year <- mean(sapply(regioni.100year,length)) 
+  > mH2.100year <- mean(test.100year[\"H2\",]) 
+  > gH2gr2.100year <- sum(test.100year[\"H2\",]>2)/696 
+  > gH2gr4.100year <- sum(test.100year[\"H2\",]>4)/696 
+
+  > table16.2 <- data.frame(signif(rbind(c(mL.50year,mH2.50year,gH2gr2.50year*100,gH2gr4.50year*100),
+  +              c(mL.100year,mH2.100year,gH2gr2.100year*100,gH2gr4.100year*100)),3), row.names=c(\"50-year\",\"100-year\"))
+  > names(table16.2) <- c(\"Avg. n sites\",\"m(H2)\",\"% H2>2\",\"% H2>4\")
+  > print(table16.2)
+  \n")
+
+  sd(log(cd696[,"dtm_area"])) # 1.345515 (vs 1.34)
+  sd(log(cd696[,"saar"]))     # 0.38534 (vs 0.38)
+  sd(cd696[,"bfihost"])       # 0.1485239 (vs 0.15)
+
+  AREAterm <- log(cd696[,"dtm_area"])/(sd(log(cd696[,"dtm_area"]))*sqrt(2))
+  SAARterm <- log(cd696[,"saar"])/sd(log(cd696[,"saar"]))
+  BFIHOSTterm <- cd696[,"bfihost"]/sd(cd696[,"bfihost"])
+
+  distFEH <- dist(cbind(AREAterm,SAARterm,BFIHOSTterm))
+
+  roi.cd <- data.frame(cbind(AREAterm,SAARterm,BFIHOSTterm))
+  row.names(roi.cd) <- cd696[,"number"]
+
+  # roi01.50year <- new.env()
+  # for(i in 1:696) {
+  #  print(paste(i,"/ 696"))
+  #  assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  #         row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW",station.year=250,Nsim=100), env=roi01.50year)
+  # }
+  # roi01.50year <- as.list(roi01.50year)
+
+  # estrai.region <- function (x) {x$region}
+  # estrai.test <- function (x) {x$test}
+  # regioni.50year <- sapply(roi01.50year, estrai.region)
+  # test.50year <- sapply(roi01.50year, estrai.test)
+  # mL.50year <- mean(sapply(regioni.50year,length)) #  11.2
+  # mH2.50year <- mean(test.50year["H2",]) #   1.53
+  # gH2gr2.50year <- sum(test.50year["H2",]>2)/696 #   0.34
+  # gH2gr4.50year <- sum(test.50year["H2",]>4)/696 #   0.07
+
+  # roi01.100year <- new.env()
+  # for(i in 1:696) {
+  #  print(paste(i,"/ 696"))
+  #  assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  #         row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW",station.year=500,Nsim=100), env=roi01.100year)
+  # }
+  # roi01.100year <- as.list(roi01.100year)
+
+  # regioni.100year <- sapply(roi01.100year, estrai.region)
+  # test.100year <- sapply(roi01.100year, estrai.test)
+  # mL.100year <- mean(sapply(regioni.100year,length)) #  21.8
+  # mH2.100year <- mean(test.100year["H2",]) #   2.19
+  # gH2gr2.100year <- sum(test.100year["H2",]>2)/696 #   0.52
+  # gH2gr4.100year <- sum(test.100year["H2",]>4)/696 #   0.15
+
+  # table16.2 <- data.frame(signif(rbind(c(mL.50year,mH2.50year,gH2gr2.50year*100,gH2gr4.50year*100),
+  #              c(mL.100year,mH2.100year,gH2gr2.100year*100,gH2gr4.100year*100)),3), row.names=c("50-year","100-year"))
+  # names(table16.2) <- c("Avg. n sites","m(H2)","% H2>2","% H2>4")
+  # print(table16.2)
+  table16.2 <- data.frame(signif(rbind(c(11.2,1.53,0.34*100,0.07*100),
+               c(21.8,2.19,0.52*100,0.15*100)),3), row.names=c("50-year","100-year"))
+  names(table16.2) <- c("Avg. n sites","m(H2)","% H2>2","% H2>4")
+  print(table16.2)
+
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Example 16.3 pag.164, FEH Vol.3:\n
+  > roi01.50year$\"54088\"
+  > print(length(roi01.50year$\"54088\"$region))
+  [1] 11
+  > selez.reg <- factor(am[,\"number\"], levels=roi01.50year$\"54088\"$region)
+  > print(length(am[!is.na(selez.reg),\"am\"]))
+  [1] 274
+  > print(HW.tests(am[!is.na(selez.reg),\"am\"], am[!is.na(selez.reg),\"number\"], 1000))
+        H1       H2
+  6.564278 4.187761
+
+  > prova28018 <- roi.st.year(roi.cd[\"28018\",],roi.cd,row.names(roi.cd),am696[,\"am\"],
+  >                           am696[,\"number\"],test=\"HW\",station.year=250,Nsim=500)
+  > selez.reg <- factor(am[,\"number\"], levels=prova28018$region)
+  > print(length(am[!is.na(selez.reg),\"am\"]))
+  [1] 258
+  > print(HW.tests(am[!is.na(selez.reg),\"am\"], am[!is.na(selez.reg),\"number\"], 1000))
+          H1         H2
+  -0.6000429 -1.0508830
+
+  > Lmomenti696 <- as.data.frame(Lmomenti696)
+  > par(mfrow=c(1,2))
+  >  plot(Lmomenti696[c(\"lca\",\"lcv\")],xlab=\"L-CA\",ylab=\"L-CV\",cex=.7); grid()
+  >  points(Lmomenti696[c(\"54088\"),c(\"lca\",\"lcv\")],pch=19,col=\"red\",cex=1)
+  >  points(Lmomenti696[roi01.50year$\"54088\"$region[-1],c(\"lca\",\"lcv\")],pch=19,cex=1)
+  >  plot(Lmomenti696[,c(\"lca\",\"lkur\")],xlab=\"L-CA\",ylab=\"L-kur\",cex=.7); grid()
+  >  points(Lmomenti696[c(\"28018\"),c(\"lca\",\"lcv\")],pch=19,col=\"red\",cex=1)
+  >  points(Lmomenti696[roi01.50year$\"28018\"$region[-1],c(\"lca\",\"lcv\")],pch=19,cex=1)
+  > par(mfrow=c(1,1))
+  \n")
+
+  # roi01.50year$"54088"
+  # print(length(roi01.50year$"54088"$region))   # 11 OK
+  # selez.reg <- factor(am[,"number"], levels=roi01.50year$"54088"$region)
+  # print(length(am[!is.na(selez.reg),"am"]))   # 274 OK
+  # print(HW.tests(am[!is.na(selez.reg),"am"], am[!is.na(selez.reg),"number"], 1000))   # 4.03 vs 4.08  
+  prova54088 <- roi.st.year(roi.cd["54088",],roi.cd,row.names(roi.cd),am696[,"am"],
+                           am696[,"number"],test="HW",station.year=250,Nsim=500)
+  # selez.reg <- factor(am[,"number"], levels=prova54088$region)
+  # print(length(am[!is.na(selez.reg),"am"]))   # 258 OK
+  # print(HW.tests(am[!is.na(selez.reg),"am"], am[!is.na(selez.reg),"number"], 1000))
+
+  prova28018 <- roi.st.year(roi.cd["28018",],roi.cd,row.names(roi.cd),am696[,"am"],
+                            am696[,"number"],test="HW",station.year=250,Nsim=500)
+  # selez.reg <- factor(am[,"number"], levels=prova28018$region)
+  # print(length(am[!is.na(selez.reg),"am"]))   # 258 OK
+  # print(HW.tests(am[!is.na(selez.reg),"am"], am[!is.na(selez.reg),"number"], 1000))   # -1.06 vs -0.98
+
+  Lmomenti696 <- as.data.frame(Lmomenti696)
+  par(mfrow=c(1,2))
+   plot(Lmomenti696[c("lca","lcv")],xlab="L-CA",ylab="L-CV",pch=".",cex=2,main="54088"); grid()
+   points(Lmomenti696[c("54088"),c("lca","lcv")],pch=19,col="red",cex=1)
+   points(Lmomenti696[prova54088$region[-1],c("lca","lcv")],pch=19,cex=1)
+   plot(Lmomenti696[,c("lca","lkur")],xlab="L-CA",ylab="L-kur",pch=".",cex=2,main="28018"); grid()
+   points(Lmomenti696[c("28018"),c("lca","lcv")],pch=19,col="red",cex=1)
+   points(Lmomenti696[prova28018$region[-1],c("lca","lcv")],pch=19,cex=1)
+  par(mfrow=c(1,1))
+
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Figure 16.9 pag.174 (1st part), FEH Vol.3:\n
+  > figure16.9a <- function (x,r,cd) {
+  +  # x = station of interest (e.g. \"28018\")
+  +  # r = output of roi.st.year()
+  +
+  +  if(!r$region[1]==x) r$region <- c(x,r$region)
+  +  row.names(cd) <- cd[,\"number\"]
+  +  n <- length(cd[,\"number\"])
+  +  cd.r <- cd[r$region,]
+  +  par(mfrow=c(2,3))
+  +   hist(log(cd[,\"dtm_area\"]),col=\"lightgray\",border=\"lightgray\",
+  +        main=\"\",xlab=\"AREA\",axes=FALSE)
+  +   axis(1,at=c(log(1),log(10),log(100),log(1000),log(10000)),label=c(\"1\",\"10\",\"100\",\"1000\",\"10000\"))
+  +   axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+  +   box()
+  +   points(cbind(log(cd.r[-1,\"dtm_area\"]),0),pch=19,cex=.7)
+  +   points(cbind(log(cd.r[1,\"dtm_area\"]),0),pch=4,cex=2,lwd=2)
+  +
+  +   hist(cd[,\"saar\"],col=\"lightgray\",border=\"lightgray\",
+  +        main=\"\",xlab=\"SAAR\",axes=FALSE)
+  +   axis(1)
+  +   axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+  +   box()
+  +   points(cbind(cd.r[-1,\"saar\"],0),pch=19,cex=.7)
+  +   points(cbind(cd.r[1,\"saar\"],0),pch=4,cex=2,lwd=2)
+  +
+  +   hist(cd[,\"bfihost\"],col=\"lightgray\",border=\"lightgray\",
+  +        main=\"\",xlab=\"BFIHOST\",axes=FALSE)
+  +   axis(1)
+  +   axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+  +   box()
+  +   points(cbind(cd.r[-1,\"bfihost\"],0),pch=19,cex=.7)
+  +   points(cbind(cd.r[1,\"bfihost\"],0),pch=4,cex=2,lwd=2)
+  +
+  +   hist(cd[,\"farl\"],col=\"lightgray\",border=\"lightgray\",
+  +        main=\"\",xlab=\"FARL\",axes=FALSE)
+  +   axis(1)
+  +   axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+  +   box()
+  +   points(cbind(cd.r[-1,\"farl\"],0),pch=19,cex=.7)
+  +   points(cbind(cd.r[1,\"farl\"],0),pch=4,cex=2,lwd=2)
+  +
+  +   hist(cd[,\"propwet\"],col=\"lightgray\",border=\"lightgray\",
+  +        main=\"\",xlab=\"PROPWET\",axes=FALSE)
+  +   axis(1)
+  +   axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+  +   box()
+  +   points(cbind(cd.r[-1,\"propwet\"],0),pch=19,cex=.7)
+  +   points(cbind(cd.r[1,\"propwet\"],0),pch=4,cex=2,lwd=2)
+  +
+  +   hist(cd[,\"urbext1990\"],col=\"lightgray\",border=\"lightgray\",
+  +        main=\"\",xlab=\"URBEXT\",axes=FALSE)
+  +   axis(1)
+  +   axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+  +   box()
+  +   points(cbind(cd.r[-1,\"urbext1990\"],0),pch=19,cex=.7)
+  +   points(cbind(cd.r[1,\"urbext1990\"],0),pch=4,cex=2,lwd=2)
+  +  par(mfrow=c(1,1))
+  +  title(main=x,cex.main=1,font.main=1)
+  + }
+  > prova40009 <- roi.st.year(roi.cd[\"40009\",],roi.cd,row.names(roi.cd),am696[,\"am\"],
+  +                           am696[,\"number\"],test=\"HW\",station.year=500,Nsim=500)
+  > figure16.9a(\"40009\",prova40009,cd696)
+  \n")
+
+  figure16.9a <- function (x,r,cd) {
+   # x = station of interest (e.g. "28018")
+   # r = output of roi.st.year()
+
+   if(!r$region[1]==x) r$region <- c(x,r$region)
+   row.names(cd) <- cd[,"number"]
+   n <- length(cd[,"number"])
+   cd.r <- cd[r$region,]
+   par(mfrow=c(2,3))
+    hist(log(cd[,"dtm_area"]),col="lightgray",border="lightgray",
+         main="",xlab="AREA",axes=FALSE)
+    axis(1,at=c(log(1),log(10),log(100),log(1000),log(10000)),label=c("1","10","100","1000","10000"))
+    axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+    box()
+    points(cbind(log(cd.r[-1,"dtm_area"]),0),pch=19,cex=.7)
+    points(cbind(log(cd.r[1,"dtm_area"]),0),pch=4,cex=2,lwd=2)
+ 
+    hist(cd[,"saar"],col="lightgray",border="lightgray",
+         main="",xlab="SAAR",axes=FALSE)
+    axis(1)
+    axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+    box()
+    points(cbind(cd.r[-1,"saar"],0),pch=19,cex=.7)
+    points(cbind(cd.r[1,"saar"],0),pch=4,cex=2,lwd=2)
+ 
+    hist(cd[,"bfihost"],col="lightgray",border="lightgray",
+         main="",xlab="BFIHOST",axes=FALSE)
+    axis(1)
+    axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+    box()
+    points(cbind(cd.r[-1,"bfihost"],0),pch=19,cex=.7)
+    points(cbind(cd.r[1,"bfihost"],0),pch=4,cex=2,lwd=2)
+ 
+    hist(cd[,"farl"],col="lightgray",border="lightgray",
+         main="",xlab="FARL",axes=FALSE)
+    axis(1)
+    axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+    box()
+    points(cbind(cd.r[-1,"farl"],0),pch=19,cex=.7)
+    points(cbind(cd.r[1,"farl"],0),pch=4,cex=2,lwd=2)
+ 
+    hist(cd[,"propwet"],col="lightgray",border="lightgray",
+         main="",xlab="PROPWET",axes=FALSE)
+    axis(1)
+    axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+    box()
+    points(cbind(cd.r[-1,"propwet"],0),pch=19,cex=.7)
+    points(cbind(cd.r[1,"propwet"],0),pch=4,cex=2,lwd=2)
+ 
+    hist(cd[,"urbext1990"],col="lightgray",border="lightgray",
+         main="",xlab="URBEXT",axes=FALSE)
+    axis(1)
+    axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
+    box()
+    points(cbind(cd.r[-1,"urbext1990"],0),pch=19,cex=.7)
+    points(cbind(cd.r[1,"urbext1990"],0),pch=4,cex=2,lwd=2)
+   par(mfrow=c(1,1)) 
+   title(main=x,cex.main=1,font.main=1)
+  }
+  prova40009 <- roi.st.year(roi.cd["40009",],roi.cd,row.names(roi.cd),am696[,"am"],
+                            am696[,"number"],test="HW",station.year=500,Nsim=500)
+  figure16.9a("40009",prova40009,cd696)
+
+
+
+
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Figure 16.9 pag.174 (2nd part), FEH Vol.3:
+   there are differences because:
+   - I plot the empirical growth curves;
+   - site 40009 in FEH book has 14 data, while I have 25;
+   - book uses POT for the polar plot, I only use annual maximum.\n
+  > figure16.9b <- function (x,r,am,cd) {
+  +  # x = station of interest (e.g. \"28018\")
+  +  # r = output of roi.st.year()
+  +
+  +  row.names(cd) <- cd[,\"number\"]
+  +  n <- length(cd[,\"number\"])
+  +  cd.r <- cd[r$region,]
+  +  cd.x <- cd[x,]
+  +  fac <- factor(am[,\"number\"],levels=cd.r[,\"number\"])
+  +  am.r <- am[!is.na(fac),]
+  +  fac <- factor(am[,\"number\"],levels=x)
+  +  am.x <- am[!is.na(fac),]
+  +  am.xr <- rbind(am.x,am.r)
+  +  QMED.r <- tapply(am.r[,4],am.r[,1],median)
+  +  QMED.x <- median(am.x[,4])
+  +  am.r.adim <- am.r; am.r.adim[,4] <- am.r[,4]/unsplit(QMED.r,am.r[,1])
+  +  am.x.adim <- am.x; am.x.adim[,4] <- am.x[,4]/QMED.x
+  +  lcv <- tapply(am[,4],am[,1],LCV)
+  +  lca <- tapply(am[,4],am[,1],LCA)
+  +  lkur <- tapply(am[,4],am[,1],Lkur)
+  +  lcv.r <- tapply(am.r[,4],am.r[,1],LCV)
+  +  lca.r <- tapply(am.r[,4],am.r[,1],LCA)
+  +  lkur.r <- tapply(am.r[,4],am.r[,1],Lkur)
+  +  lcv.x <- LCV(am.x[,4])
+  +  lca.x <- LCA(am.x[,4])
+  +  lkur.x <- Lkur(am.x[,4])
+  +  days <- as.numeric(format(as.Date(am[,2]),\"%j\"))
+  +  days.r <- as.numeric(format(as.Date(am.r[,2]),\"%j\"))
+  +  days.x <- as.numeric(format(as.Date(am.x[,2]),\"%j\"))
+  +
+  +  par(mfrow=c(2,3))
+  +   lognormplot(am.r.adim[,4],line=FALSE,xlab=\"Q/QMED\",type=\"n\")
+  +   for(i in r$region) {
+  +    x <- am.r.adim[am.r.adim[,1]==i,4]
+  +    normpoints(x,type=\"l\",col=\"gray\")
+  +   }
+  +   normpoints(am.r.adim[,4],type=\"l\",lwd=2)
+  +   normpoints(am.x.adim[,4],type=\"l\",col=2,lwd=2)
+  +
+  +   plot(lca,lcv,pch=\".\",cex=2)
+  +   points(lca.r,lcv.r,pch=19)
+  +   points(lca.x,lcv.x,pch=4,cex=2,lwd=2)
+  +
+  +   plot(lca,lkur,pch=\".\",cex=2)
+  +   points(lca.r,lkur.r,pch=19)
+  +   points(lca.x,lkur.x,pch=4,cex=2,lwd=2)
+  +
+  +   plot(cd[c(\"ihdtm_ngr_x\",\"ihdtm_ngr_y\")],pch=\".\",cex=2,xlab=\"\",ylab=\"\",axes=FALSE)
+  +   points(cd.r[c(\"ihdtm_ngr_x\",\"ihdtm_ngr_y\")],pch=19)
+  +   points(cd.x[c(\"ihdtm_ngr_x\",\"ihdtm_ngr_y\")],pch=4,cex=2,lwd=2)
+  +
+  +   consistencyplot (am.r[,3],am.r[,1])
+  +
+  +   dummy <- seq(0,2*pi,length=100)
+  +   plot(cos(dummy),sin(dummy),type=\"l\",xlab=\"\",ylab=\"\",axes=FALSE)
+  +   abline(h=0,lty=3); abline(v=0,lty=3)
+  +   radd <- days*pi/180
+  +   XFLOOD <- tapply(cos(radd),am[,1],mean)
+  +   YFLOOD <- tapply(sin(radd),am[,1],mean)
+  +   points(XFLOOD,YFLOOD,pch=\".\",cex=2)
+  +   radd <- days.r*pi/180
+  +   XFLOOD <- tapply(cos(radd),am.r[,1],mean)
+  +   YFLOOD <- tapply(sin(radd),am.r[,1],mean)
+  +   points(XFLOOD,YFLOOD,pch=19,cex=1)
+  +   radd <- days.x*pi/180
+  +   XFLOOD <- tapply(cos(radd),am.x[,1],mean)
+  +   YFLOOD <- tapply(sin(radd),am.x[,1],mean)
+  +   points(XFLOOD,YFLOOD,pch=4,cex=2,lwd=2)
+  +   axis(1,at=0,label=\"Oct 1\")
+  +   axis(2,at=0,label=\"Jul 1\")
+  +   axis(3,at=0,label=\"Apr 1\")
+  +   axis(4,at=0,label=\"Jan 1\")
+  +  par(mfrow=c(1,1))
+  +  title(main=x,cex.main=1,font.main=1)
+  + }
+  > figure16.9b(\"40009\",prova40009,am696,cd696)
+  \n")
+
+  figure16.9b <- function (x,r,am,cd) {
+   # x = station of interest (e.g. "28018")
+   # r = output of roi.st.year()
+
+   row.names(cd) <- cd[,"number"]
+   n <- length(cd[,"number"])
+   cd.r <- cd[r$region,]
+   cd.x <- cd[x,]
+   fac <- factor(am[,"number"],levels=cd.r[,"number"])
+   am.r <- am[!is.na(fac),]
+   fac <- factor(am[,"number"],levels=x)
+   am.x <- am[!is.na(fac),]
+   am.xr <- rbind(am.x,am.r)
+   QMED.r <- tapply(am.r[,4],am.r[,1],median)
+   QMED.x <- median(am.x[,4])
+   am.r.adim <- am.r; am.r.adim[,4] <- am.r[,4]/unsplit(QMED.r,am.r[,1])
+   am.x.adim <- am.x; am.x.adim[,4] <- am.x[,4]/QMED.x
+   lcv <- tapply(am[,4],am[,1],LCV)
+   lca <- tapply(am[,4],am[,1],LCA)
+   lkur <- tapply(am[,4],am[,1],Lkur)
+   lcv.r <- tapply(am.r[,4],am.r[,1],LCV)
+   lca.r <- tapply(am.r[,4],am.r[,1],LCA)
+   lkur.r <- tapply(am.r[,4],am.r[,1],Lkur)
+   lcv.x <- LCV(am.x[,4])
+   lca.x <- LCA(am.x[,4])
+   lkur.x <- Lkur(am.x[,4])
+   days <- as.numeric(format(as.Date(am[,2]),"%j"))
+   days.r <- as.numeric(format(as.Date(am.r[,2]),"%j"))
+   days.x <- as.numeric(format(as.Date(am.x[,2]),"%j"))
+
+   par(mfrow=c(2,3))
+    lognormplot(am.r.adim[,4],line=FALSE,xlab="Q/QMED",type="n")
+    for(i in r$region) {
+     xxx <- am.r.adim[am.r.adim[,1]==i,4]
+     normpoints(xxx,type="l",col="gray")
+    }
+    normpoints(am.r.adim[,4],type="l",lwd=2)
+    normpoints(am.x.adim[,4],type="l",col=2,lwd=2)
+ 
+    plot(lca,lcv,pch=".",cex=2)
+    points(lca.r,lcv.r,pch=19)
+    points(lca.x,lcv.x,pch=4,cex=2,lwd=2)
+ 
+    plot(lca,lkur,pch=".",cex=2)
+    points(lca.r,lkur.r,pch=19)
+    points(lca.x,lkur.x,pch=4,cex=2,lwd=2)
+
+    plot(cd[c("ihdtm_ngr_x","ihdtm_ngr_y")],pch=".",cex=2,xlab="",ylab="",axes=FALSE)
+    points(cd.r[c("ihdtm_ngr_x","ihdtm_ngr_y")],pch=19)
+    points(cd.x[c("ihdtm_ngr_x","ihdtm_ngr_y")],pch=4,cex=2,lwd=2)
+
+    consistencyplot (am.r[,3],am.r[,1])
+
+    dummy <- seq(0,2*pi,length=100)
+    plot(cos(dummy),sin(dummy),type="l",xlab="",ylab="",axes=FALSE)
+    abline(h=0,lty=3); abline(v=0,lty=3)
+    radd <- days*pi/180
+    XFLOOD <- tapply(cos(radd),am[,1],mean)
+    YFLOOD <- tapply(sin(radd),am[,1],mean)
+    points(XFLOOD,YFLOOD,pch=".",cex=2)
+    radd <- days.r*pi/180
+    XFLOOD <- tapply(cos(radd),am.r[,1],mean)
+    YFLOOD <- tapply(sin(radd),am.r[,1],mean)
+    points(XFLOOD,YFLOOD,pch=19,cex=1)
+    radd <- days.x*pi/180
+    XFLOOD <- tapply(cos(radd),am.x[,1],mean)
+    YFLOOD <- tapply(sin(radd),am.x[,1],mean)
+    points(XFLOOD,YFLOOD,pch=4,cex=2,lwd=2)
+    axis(1,at=0,label="Oct 1")
+    axis(2,at=0,label="Jul 1")
+    axis(3,at=0,label="Apr 1")
+    axis(4,at=0,label="Jan 1") 
+   par(mfrow=c(1,1))
+   title(main=x,cex.main=1,font.main=1)
+  }
+  figure16.9b("40009",prova40009,am696,cd696)
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Figure 16.9 pag.174 (2nd part), FEH Vol.3:
+   there are differences because:
+   - I plot the empirical growth curves;
+   - book uses POT for the polar plot, I only use annual maximum.\n
+  > prova45001 <- roi.st.year(roi.cd[\"45001\",],roi.cd,row.names(roi.cd),am696[,\"am\"],
+  +                           am696[,\"number\"],test=\"HW\",station.year=250,Nsim=500)
+  > figure16.9a(\"45001\",prova45001,cd696)
+  > readline(\"Press Return to continue to the next graphs\")
+  > figure16.9b(\"45001\",prova45001,am696,cd696)
+  \n")
+  
+  prova45001 <- roi.st.year(roi.cd["45001",],roi.cd,row.names(roi.cd),am696[,"am"],
+                            am696[,"number"],test="HW",station.year=250,Nsim=500)
+  figure16.9a("45001",prova45001,cd696)
+  readline("Press Return to continue to the next graphs")
+  figure16.9b("45001",prova45001,am696,cd696)
+
+  cat("\n\n
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+                                          THE END
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+  \n")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exampleRFA04 <- function () {
+
+  cat("\n\n
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+                           ANALYSIS OF FEH DATA: INDEX-VALUE
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+  \n")
+
+  readline("\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Data loading: \n
+  > data(FEH1000)
+  \n")
+
+  data(FEH1000)
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Sites used in model development (pag.102 FEH Vol.3):
+   area>0.5 km2
+   digital catchment data available
+   urbext<0.025\n
+  > urbext <- cd[,\"urbext1990\"]
+  > area <- cd[,\"dtm_area\"]
+  > cd732 <- cd[(!is.nan(cd[,\"dtm_area\"]))&(urbext<0.025)&(area>0.5),]
+
+  > fac <- factor(am[,\"number\"],levels=cd732[,\"number\"])
+  > am732 <- am[!is.na(fac),]
+  > nlevels(as.factor(am732[,\"number\"]))
+  \n")
+
+  urbext <- cd[,"urbext1990"]
+  area <- cd[,"dtm_area"]
+  cd732 <- cd[(!is.nan(cd[,"dtm_area"]))&(urbext<0.025)&(area>0.5),] # vs 687 - 728 of FEH
+
+  fac <- factor(am[,"number"],levels=cd732[,"number"])
+  am732 <- am[!is.na(fac),]
+  nlevels(as.factor(am732[,"number"]))
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Index-flood = median:\n
+  > QMED <- tapply(am732[,4],am732[,1],median)
+  > lnQMED <- log(QMED)
+  \n")
+
+  QMED <- tapply(am732[,4],am732[,1],median)
+  lnQMED <- log(QMED)
+
+  cat("\n
+  Catchment descriptors (fig. 13.1 pag. 104):\n
+  > lnAREA <- log(cd732[,\"dtm_area\"])
+  > lnDPLBAR <- log(cd732[,\"dplbar\"])
+  > lnSPRHOST <- log(cd732[,\"sprhost\"])
+  > lnBFIHOST <- log(cd732[,\"bfihost\"])
+  > lnSAAR <- log(cd732[,\"saar\"])
+  > lnRMED1 <- log(cd732[,\"rmed_1d\"])
+  > lnALTBAR <- log(cd732[,\"altbar\"])
+  > lnFARL <- log(cd732[,\"farl\"])
+
+  > M <- data.frame(cbind(lnQMED,lnAREA,lnDPLBAR,lnSPRHOST,lnBFIHOST,lnSAAR,lnRMED1,lnALTBAR,lnFARL))
+  > print(cor(M))
+  > plot(M,pch=\".\",cex=2)
+  \n")
+
+  lnAREA <- log(cd732[,"dtm_area"])
+  lnDPLBAR <- log(cd732[,"dplbar"])
+  lnSPRHOST <- log(cd732[,"sprhost"])
+  lnBFIHOST <- log(cd732[,"bfihost"])
+  lnSAAR <- log(cd732[,"saar"])
+  lnRMED1 <- log(cd732[,"rmed_1d"])
+  #lnNWET <- log(cd732[,""])
+  lnALTBAR <- log(cd732[,"altbar"])
+  lnFARL <- log(cd732[,"farl"])
+
+  M <- data.frame(cbind(lnQMED,lnAREA,lnDPLBAR,lnSPRHOST,lnBFIHOST,lnSAAR,lnRMED1,lnALTBAR,lnFARL))
+  print(cor(M))
+  plot(M,pch=".",cex=2)
+
+
+  cat("\n
+  Additional variables (pag. 105):\n
+  > RESHOST <- cd732[,\"bfihost\"] + 1.30*(cd732[,\"sprhost\"]/100)-0.987
+  > lnAREAsq <- lnAREA^2
+  > lnSAARsq <- lnSAAR^2
+
+  > M <- data.frame(cbind(M,RESHOST,lnAREAsq,lnSAARsq))
+  \n")
+
+  RESHOST <- cd732[,"bfihost"] + 1.30*(cd732[,"sprhost"]/100)-0.987
+  lnAREAsq <- lnAREA^2
+  lnSAARsq <- lnSAAR^2
+
+  M <- data.frame(cbind(M,RESHOST,lnAREAsq,lnSAARsq))
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Ordinary Least Square models:\n
+   create a function using the 'leaps' function of package 'subselect'
+   to perform all-possible-regressions: \n
+  >   bestregressions <- function(dip,ind) {
+  +    Y <- as.numeric(dip)
+  +    X <- ind
+  +    Sy <- var(Y)
+  +    Sx <- var(X)
+  +    Sxy <- var(X,Y)
+  +    Dm.mat <- Sx
+  +    Dm.H <- Sxy %*% t(Sxy)/Sy
+  +    require(subselect)
+  +    Dm.leaps <- leaps(Dm.mat, kmin=1, kmax=6, H=Dm.H, r=1, nsol=3)
+  +    Dm.leaps
+  +    for(i in 6:1) {for(j in 1:3) {print(colnames(X)[Dm.leaps$subsets[j,c(1:6),i]])}}
+  +   }
+  >
+  >   bestregressions(M[,1],M[,-1])
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAAR\"    \"lnFARL\"    \"RESHOST\"   \"lnSAARsq\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnBFIHOST\" \"lnSAAR\"    \"lnFARL\"    \"lnSAARsq\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAAR\"    \"lnRMED1\"   \"lnFARL\"    \"lnSAARsq\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAAR\"    \"lnFARL\"    \"lnSAARsq\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAAR\"    \"lnFARL\"    \"RESHOST\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAAR\"    \"RESHOST\"   \"lnSAARsq\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAAR\"    \"lnSAARsq\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAAR\"    \"lnFARL\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAAR\"    \"RESHOST\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAAR\"
+  [1] \"lnAREA\"    \"lnSPRHOST\" \"lnSAARsq\"
+  [1] \"lnAREA\"    \"lnBFIHOST\" \"lnSAAR\"
+  [1] \"lnAREA\" \"lnSAAR\"
+  [1] \"lnAREA\"   \"lnSAARsq\"
+  [1] \"lnAREA\"    \"lnSPRHOST\"
+  [1] \"lnAREAsq\"
+  [1] \"lnAREA\"
+  [1] \"lnDPLBAR\"
+  \n")
+
+
+  #bestregressions <- function(dip,ind) {
+  # Y <- as.numeric(dip)
+  # X <- ind
+  # Sy <- var(Y)
+  # Sx <- var(X)
+  # Sxy <- var(X,Y)
+  # Dm.mat <- Sx
+  # Dm.H <- Sxy %*% t(Sxy)/Sy
+  # require(subselect)
+  # Dm.leaps <- leaps(Dm.mat, kmin=1, kmax=6, H=Dm.H, r=1, nsol=3)
+  # Dm.leaps
+  # for(i in 6:1) {for(j in 1:3) {print(colnames(X)[Dm.leaps$subsets[j,c(1:6),i]])}}
+  #}
+
+  #bestregressions(M[,1],M[,-1])
+
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Ordinary Least Square models (graphics and statistics):\n
+  > graphics.lm <- function (regr) {
+  +  par(mfrow=c(2,2))
+  +  plot(regr$fitted.values,regr$residuals,pch=\".\",cex=3,xlab=\"lnQMED Fitted\",ylab=\"lnQMED Residuals\")
+  +  abline(0,0,lty=3)
+  +  normplot(regr$residuals,pch=\".\",cex=3,xlab=\"lnQMED Residuals\")
+  +
+  +  plot(regr$fitted.values,lnQMED,pch=\".\",cex=3,xlab=\"lnQMED Originals\",ylab=\"lnQMED Fitted\")
+  +  abline(0,1,lty=3)
+  +  intervals <- predinterval.lm(regr)
+  +  intervals <- intervals[order(intervals[,1]),]
+  +  lines(intervals[,c(1,2)],lty=2)
+  +  lines(intervals[,c(1,3)],lty=2)
+  +  Rsq <- round(R2.lm(regr),3)
+  +  rmse <- signif(RMSE.lm(regr),3)
+  +  rmsep <- signif(RMSEP(lnQMED,regr$fitted.values)*100,3)
+  +  mtext(paste(\"R2 = \",Rsq),3,-1.5,adj=0.05)
+  +  mtext(paste(\"RMSE = \",rmse),1,-2.5,adj=0.95)
+  +  mtext(paste(\"RMSEP = \",rmsep,\"%\"),1,-1.5,adj=0.95)
+  +
+  +  plot(exp(regr$fitted.values),exp(lnQMED),pch=\".\",cex=3,xlab=\"QMED Originals\",ylab=\"QMED Fitted\")
+  +  abline(0,1,lty=3)
+  +  lines(exp(intervals[,c(1,2)]),lty=2)
+  +  lines(exp(intervals[,c(1,3)]),lty=2)
+  +  Rsq <- round(R2(exp(lnQMED),exp(regr$fitted.values)),3)
+  +  rmse <- signif(RMSE(exp(lnQMED),exp(regr$fitted.values)),3)
+  +  rmsep <- signif(RMSEP(exp(lnQMED),exp(regr$fitted.values))*100,3)
+  +  mtext(paste(\"R2 = \",Rsq),3,-1.5,adj=0.05)
+  +  mtext(paste(\"RMSE = \",rmse),1,-2.5,adj=0.95)
+  +  mtext(paste(\"RMSEP = \",rmsep,\"%\"),1,-1.5,adj=0.95)
+  +
+  +  par(mfrow=c(1,1))
+  +  title(main=paste(names(regr$coefficients)[-1], collapse=\", \"),cex.main=.7,font.main=1)
+  + }
+
+  > graphics.lm(lm(lnQMED ~ lnDPLBAR))
+  > graphics.lm(lm(lnQMED ~ lnAREA))
+  > graphics.lm(lm(lnQMED ~ lnAREAsq))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSAARsq))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSAAR))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnBFIHOST + lnSAAR))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAARsq))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + RESHOST))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnFARL))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnSAARsq))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + RESHOST + lnSAARsq))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnFARL + RESHOST))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnFARL + lnSAARsq))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnRMED1 + lnFARL + lnSAARsq))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnBFIHOST + lnSAAR + lnFARL + lnSAARsq))
+  > graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnFARL + RESHOST + lnSAARsq))
+  \n")
+
+
+  graphics.lm <- function (regr) {
+   par(mfrow=c(2,2), cex=.7)
+   plot(regr$fitted.values,regr$residuals,pch=".",cex=3,xlab="lnQMED Fitted",ylab="lnQMED Residuals")
+   abline(0,0,lty=3)
+   normplot(regr$residuals,pch=".",cex=3,xlab="lnQMED Residuals")
+ 
+   plot(regr$fitted.values,lnQMED,pch=".",cex=3,xlab="lnQMED Originals",ylab="lnQMED Fitted")
+   abline(0,1,lty=3)
+   intervals <- predinterval.lm(regr)
+   intervals <- intervals[order(intervals[,1]),]
+   lines(intervals[,c(1,2)],lty=2)
+   lines(intervals[,c(1,3)],lty=2)
+   Rsq <- signif(R2.lm(regr),3)
+   rmse <- signif(RMSE.lm(regr),3)
+   rmsep <- signif(RMSEP(lnQMED,regr$fitted.values)*100,3)
+   mtext(paste("R2 = ",Rsq),3,-1.5,adj=0.05,cex=.7)
+   mtext(paste("RMSE = ",rmse),1,-2.5,adj=0.95,cex=.7)
+   mtext(paste("RMSEP = ",rmsep,"%"),1,-1.5,adj=0.95,cex=.7)
+
+   plot(exp(regr$fitted.values),exp(lnQMED),pch=".",cex=3,xlab="QMED Originals",ylab="QMED Fitted")
+   abline(0,1,lty=3)
+   lines(exp(intervals[,c(1,2)]),lty=2)
+   lines(exp(intervals[,c(1,3)]),lty=2)
+   Rsq <- signif(R2(exp(lnQMED),exp(regr$fitted.values)),3)
+   rmse <- signif(RMSE(exp(lnQMED),exp(regr$fitted.values)),3)
+   rmsep <- signif(RMSEP(exp(lnQMED),exp(regr$fitted.values))*100,3)
+   mtext(paste("R2 = ",Rsq),3,-1.5,adj=0.05,cex=.7)
+   mtext(paste("RMSE = ",rmse),1,-2.5,adj=0.95,cex=.7)
+   mtext(paste("RMSEP = ",rmsep,"%"),1,-1.5,adj=0.95,cex=.7)
+
+   par(mfrow=c(1,1),cex=1)
+   title(main=paste(names(regr$coefficients)[-1], collapse=", "),cex.main=.7,font.main=1)
+  }
+
+  graphics.lm(lm(lnQMED ~ lnDPLBAR))
+  readline("Press Return to continue to the next graphs") 
+  graphics.lm(lm(lnQMED ~ lnAREA))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREAsq))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSAARsq))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSAAR))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnBFIHOST + lnSAAR))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAARsq))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + RESHOST))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnFARL))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnSAARsq))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + RESHOST + lnSAARsq))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnFARL + RESHOST))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnFARL + lnSAARsq))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnRMED1 + lnFARL + lnSAARsq))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnBFIHOST + lnSAAR + lnFARL + lnSAARsq))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lnQMED ~ lnAREA + lnSPRHOST + lnSAAR + lnFARL + RESHOST + lnSAARsq))
+
+
+
+  cat("\n\n
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+                                          THE END
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+  \n")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exampleRFA05 <- function () {
+
+  cat("\n\n
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+                        ANALYSIS OF FEH DATA: CLASSIFICATION-VARIABLES
+  # ------------------------------------------------------------------------------------- #
+  # ------------------------------------------------------------------------------------- #
+  \n")
+
+  readline("\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Data loading: \n
+  > data(FEH1000)
+  \n")
+
+  data(FEH1000)
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Criteria used in the FEH to choose stations for pooling groups:
+   n>7
+   area, saar and bfihost are known
+   urbext<0.025
+   area>0.5 \n
+  > n <- tapply(am[,3],am[,1],length)
+  > urbext <- cd[,\"urbext1990\"]
+  > area <- cd[,\"dtm_area\"]
+  > cd696 <- cd[(!is.nan(cd[,\"dtm_area\"]))&(!is.nan(cd[,\"saar\"]))&(!is.nan(cd[,\"bfihost\"]))&(n>7)&(urbext<0.025)&(area>0.5),]
+
+  > fac <- factor(am[,\"number\"],levels=cd696[,\"number\"])
+  > am696 <- am[!is.na(fac),]
+  > nlevels(as.factor(am696[,\"number\"]))
+  \n")
+
+  n <- tapply(am[,4],am[,1],length)
+  urbext <- cd[,"urbext1990"]
+  area <- cd[,"dtm_area"]
+  cd696 <- cd[(!is.nan(cd[,"dtm_area"]))&(!is.nan(cd[,"saar"]))&(!is.nan(cd[,"bfihost"]))&(n>7)&(urbext<0.025)&(area>0.5),]
+
+  fac <- factor(am[,"number"],levels=cd696[,"number"])
+  am696 <- am[!is.na(fac),]
+  nlevels(as.factor(am696[,"number"]))
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  FEH classification variables:
+   lnAREA, lnSAAR, BFIHOST. \n
+  > lcv <- tapply(am696[,4],am696[,1],LCV)
+  > lca <- tapply(am696[,4],am696[,1],LCA)
+
+  > lnAREA <- log(cd696[,\"dtm_area\"])
+  > lnSAAR <- log(cd696[,\"saar\"])
+  > BFIHOST <- cd696[,\"bfihost\"]
+
+  > lcvVSclassvarFEH <- lm(lcv ~ lnAREA + lnSAAR + BFIHOST)
+  > lcaVSclassvarFEH <- lm(lca ~ lnAREA + lnSAAR + BFIHOST)
+  
+  > graphics.lm <- function (regr) {
+  +  par(mfrow=c(1,2), cex=1)
+  +   plot(regr$fitted.values,regr$model[,1],pch=\".\",cex=3,xlab=\"Originals\",ylab=\"Fitted\")
+  +   abline(0,1,lty=3)
+  +   intervals <- predinterval.lm(regr)
+  +   intervals <- intervals[order(intervals[,1]),]
+  +   lines(intervals[,c(1,2)],lty=2)
+  +   lines(intervals[,c(1,3)],lty=2)
+  +   Rsq <- signif(R2.lm(regr),3)
+  +   rmse <- signif(RMSE.lm(regr),3)
+  +   rmsep <- signif(RMSEP(regr$model[,1],regr$fitted.values)*100,3)
+  +   mtext(paste(\"R2 = \",Rsq[1]),3,-1.5,adj=0.05,cex=1)
+  +   mtext(paste(\"R2adj = \",Rsq[2]),3,-2.5,adj=0.05,cex=1)
+  +   mtext(paste(\"RMSE = \",rmse),1,-2.5,adj=0.95,cex=1)
+  +   mtext(paste(\"RMSEP = \",rmsep,\"%\"),1,-1.5,adj=0.95,cex=1)
+  +
+  +   normplot(regr$residuals,pch=\".\",cex=3,xlab=\"Residuals\")
+  +  par(mfrow=c(1,1),cex=1)
+  +  title(main=paste(names(regr$model[1]),\"~\",paste(names(regr$model[-1]), collapse=\", \")),cex.main=1,font.main=1)
+  + }
+
+  > graphics.lm(lcvVSclassvarFEH)
+  > graphics.lm(lcaVSclassvarFEH)
+  \n")
+
+  lcv <- tapply(am696[,4],am696[,1],LCV)
+  lca <- tapply(am696[,4],am696[,1],LCA)
+
+  lnAREA <- log(cd696[,"dtm_area"])
+  lnSAAR <- log(cd696[,"saar"])
+  BFIHOST <- cd696[,"bfihost"]
+
+  lcvVSclassvarFEH <- lm(lcv ~ lnAREA + lnSAAR + BFIHOST)
+  lcaVSclassvarFEH <- lm(lca ~ lnAREA + lnSAAR + BFIHOST)
+
+  graphics.lm <- function (regr) {
+   par(mfrow=c(1,2), cex=1)
+    plot(regr$fitted.values,regr$model[,1],pch=".",cex=3,xlab="Originals",ylab="Fitted")
+    abline(0,1,lty=3)
+    intervals <- predinterval.lm(regr)
+    intervals <- intervals[order(intervals[,1]),]
+    lines(intervals[,c(1,2)],lty=2)
+    lines(intervals[,c(1,3)],lty=2)
+    Rsq <- signif(R2.lm(regr),3)
+    rmse <- signif(RMSE.lm(regr),3)
+    rmsep <- signif(RMSEP(regr$model[,1],regr$fitted.values)*100,3)
+    mtext(paste("R2 = ",Rsq[1]),3,-1.5,adj=0.05,cex=1)
+    mtext(paste("R2adj = ",Rsq[2]),3,-2.5,adj=0.05,cex=1)
+    mtext(paste("RMSE = ",rmse),1,-2.5,adj=0.95,cex=1)
+    mtext(paste("RMSEP = ",rmsep,"%"),1,-1.5,adj=0.95,cex=1)
+
+    normplot(regr$residuals,pch=".",cex=3,xlab="Residuals")
+   par(mfrow=c(1,1),cex=1)
+   title(main=paste(names(regr$model[1]),"~",paste(names(regr$model[-1]), collapse=", ")),cex.main=1,font.main=1)
+  }
+
+  graphics.lm(lcvVSclassvarFEH)
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lcaVSclassvarFEH)
+
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Alternative classification variables:
+  > NGRX <- cd696[,\"ihdtm_ngr_x\"]
+  > NGRY <- cd696[,\"ihdtm_ngr_y\"]
+  > AREA <- cd696[,\"dtm_area\"]
+  > SAAR <- cd696[,\"saar\"]
+  > SPRHOST <- cd696[,\"sprhost\"]
+  > FARL <- cd696[,\"farl\"]
+  > RMED1D <- cd696[,\"rmed_1d\"]
+  > RMED2D <- cd696[,\"rmed_2d\"]
+  > RMED1H <- cd696[,\"rmed_1h\"]
+  > SMDBAR <- cd696[,\"smdbar\"]
+  > PROPWET <- cd696[,\"propwet\"]
+  > LDP <- cd696[,\"ldp\"]
+  > DPLBAR <- cd696[,\"dplbar\"]
+  > ALTBAR <- cd696[,\"altbar\"]
+  > DPSBAR <- cd696[,\"dpsbar\"]
+  > ASPBAR <- cd696[,\"aspbar\"]
+  > ASPVAR <- cd696[,\"aspvar\"]
+  > URBEXT <- cd696[,\"urbext1990\"]
+
+  > potCVnat <- data.frame(cbind(NGRX,NGRY,AREA,SAAR,BFIHOST,SPRHOST,FARL,RMED1D,RMED2D,RMED1H,
+  >                              SMDBAR,PROPWET,LDP,DPLBAR,ALTBAR,DPSBAR,ASPBAR,ASPVAR,URBEXT))
+  > potCVln <- log(potCVnat[-c(17,19)]); names(potCVln) <- paste(\"ln\",names(potCVln),sep=\"\")
+  > potCV <- cbind(potCVnat,potCVln)
+  > bestregressions <- function(dip,ind) {
+  >  Y <- as.numeric(dip)
+  >  X <- ind
+  >  Sy <- var(Y)
+  >  Sx <- var(X)
+  >  Sxy <- var(X,Y)
+  >  Dm.mat <- Sx
+  >  Dm.H <- Sxy %*% t(Sxy)/Sy
+  >  require(subselect)
+  >  Dm.leaps <- leaps(Dm.mat, kmin=1, kmax=6, H=Dm.H, r=1, nsol=3)
+  >  Dm.leaps
+  >  for(i in 6:1) {for(j in 1:3) {print(colnames(X)[Dm.leaps$subsets[j,c(1:6),i]])}}
+  > }
+
+  > bestregressions(lcv,potCVnat[-19])
+  > bestregressions(lcv,potCVln)
+  > bestregressions(lcv,cbind(potCVnat[-19],potCVln[-c(1,4:5,7:13)]))
+  > bestregressions(lcv,cbind(potCVnat[-c(1,4:5,7:13,19)],potCVln))
+  > bestregressions(lcv,cbind(potCVnat[-c(1:2,19)],potCVln))
+  [1] \"RMED1D\"   \"ALTBAR\"   \"lnAREA\"   \"lnSAAR\"   \"lnRMED2D\" \"lnALTBAR\"
+  [1] \"RMED1D\"   \"DPLBAR\"   \"ALTBAR\"   \"lnSAAR\"   \"lnRMED2D\" \"lnALTBAR\"
+  [1] \"RMED1D\"   \"LDP\"      \"ALTBAR\"   \"lnSAAR\"   \"lnRMED2D\" \"lnALTBAR\"
+  [1] \"DPLBAR\"   \"ALTBAR\"   \"lnSAAR\"   \"lnRMED2D\" \"lnALTBAR\"
+  [1] \"SAAR\"     \"RMED1D\"   \"lnAREA\"   \"lnSAAR\"   \"lnRMED2D\"
+  [1] \"RMED1D\"   \"DPSBAR\"   \"lnAREA\"   \"lnSAAR\"   \"lnRMED2D\"
+  [1] \"lnAREA\"   \"lnSAAR\"   \"lnRMED1D\" \"lnRMED2D\"
+  [1] \"RMED1D\"   \"lnAREA\"   \"lnSAAR\"   \"lnRMED2D\"
+  [1] \"DPLBAR\"   \"ALTBAR\"   \"lnSAAR\"   \"lnRMED2D\"
+  [1] \"DPLBAR\"   \"lnSAAR\"   \"lnRMED2D\"
+  [1] \"lnAREA\"   \"lnSAAR\"   \"lnRMED2D\"
+  [1] \"LDP\"      \"lnSAAR\"   \"lnRMED2D\"
+  [1] \"lnAREA\" \"lnSAAR\"
+  [1] \"lnSAAR\"   \"lnDPLBAR\"
+  [1] \"lnSAAR\" \"lnLDP\"
+  [1] \"lnSAAR\"
+  [1] \"SMDBAR\"
+  [1] \"lnPROPWET\"
+
+  > names(cbind(potCVnat[-c(1:2,19)],potCVln))
+
+  > graphics.lm(lm(lcv ~ lnAREA + lnSAAR + lnRMED2D,data=potCV))
+  > readline(\"Press Return to continue to the next graphs\")
+  > graphics.lm(lm(lcv ~ DPLBAR + lnSAAR + lnRMED2D,data=potCV))
+  > readline(\"Press Return to continue to the next graphs\")
+  > graphics.lm(lm(lcv ~ DPLBAR + ALTBAR + lnSAAR + lnRMED2D,data=potCV))
+  > readline(\"Press Return to continue to the next graphs\")
+  > graphics.lm(lm(lcv ~ RMED1D + ALTBAR + lnAREA + lnSAAR + lnRMED2D + lnALTBAR,data=potCV))
+
+  > prt.lm(lm(lcv ~ DPLBAR + lnSAAR + lnRMED2D,data=potCV))
+  > prt.lm(lm(lcv ~ lnAREA + lnSAAR + lnRMED1D + lnRMED2D,data=potCV))
+  > prt.lm(lm(lcv ~ DPLBAR + ALTBAR + lnSAAR + lnRMED2D + lnALTBAR,data=potCV))
+  > prt.lm(lm(lcv ~ RMED1D + ALTBAR + lnAREA + lnSAAR + lnRMED2D + lnALTBAR,data=potCV))
+  \n")
+
+  NGRX <- cd696[,"ihdtm_ngr_x"]
+  NGRY <- cd696[,"ihdtm_ngr_y"]
+  AREA <- cd696[,"dtm_area"]
+  SAAR <- cd696[,"saar"]
+  SPRHOST <- cd696[,"sprhost"]
+  FARL <- cd696[,"farl"]
+  RMED1D <- cd696[,"rmed_1d"]
+  RMED2D <- cd696[,"rmed_2d"]
+  RMED1H <- cd696[,"rmed_1h"]
+  SMDBAR <- cd696[,"smdbar"]
+  PROPWET <- cd696[,"propwet"]
+  LDP <- cd696[,"ldp"]
+  DPLBAR <- cd696[,"dplbar"]
+  ALTBAR <- cd696[,"altbar"]
+  DPSBAR <- cd696[,"dpsbar"]
+  ASPBAR <- cd696[,"aspbar"]
+  ASPVAR <- cd696[,"aspvar"]
+  URBEXT <- cd696[,"urbext1990"]
+
+  potCVnat <- data.frame(cbind(NGRX,NGRY,AREA,SAAR,BFIHOST,SPRHOST,FARL,RMED1D,RMED2D,RMED1H,
+                               SMDBAR,PROPWET,LDP,DPLBAR,ALTBAR,DPSBAR,ASPBAR,ASPVAR,URBEXT))
+  potCVln <- log(potCVnat[-c(17,19)]); names(potCVln) <- paste("ln",names(potCVln),sep="")
+  potCV <- cbind(potCVnat,potCVln)
+
+  # bestregressions <- function(dip,ind) {
+  #  Y <- as.numeric(dip)
+  #  X <- ind
+  #  Sy <- var(Y)
+  #  Sx <- var(X)
+  #  Sxy <- var(X,Y)
+  #  Dm.mat <- Sx
+  #  Dm.H <- Sxy %*% t(Sxy)/Sy
+  #  require(subselect)
+  #  Dm.leaps <- leaps(Dm.mat, kmin=1, kmax=6, H=Dm.H, r=1, nsol=3)
+  #  Dm.leaps
+  #  for(i in 6:1) {for(j in 1:3) {print(colnames(X)[Dm.leaps$subsets[j,c(1:6),i]])}}
+  # }
+
+  # bestregressions(lcv,potCVnat[-19])
+  # bestregressions(lcv,potCVln)
+  # bestregressions(lcv,cbind(potCVnat[-19],potCVln[-c(1,4:5,7:13)]))
+  # bestregressions(lcv,cbind(potCVnat[-c(1,4:5,7:13,19)],potCVln))
+  # bestregressions(lcv,cbind(potCVnat[-c(1:2,19)],potCVln))
+  names(cbind(potCVnat[-c(1:2,19)],potCVln))
+
+  graphics.lm(lm(lcv ~ lnAREA + lnSAAR + lnRMED2D,data=potCV))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lcv ~ DPLBAR + lnSAAR + lnRMED2D,data=potCV))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lcv ~ DPLBAR + ALTBAR + lnSAAR + lnRMED2D,data=potCV))
+  readline("Press Return to continue to the next graphs")
+  graphics.lm(lm(lcv ~ RMED1D + ALTBAR + lnAREA + lnSAAR + lnRMED2D + lnALTBAR,data=potCV))
+
+  print(prt.lm(lm(lcv ~ DPLBAR + lnSAAR + lnRMED2D,data=potCV)))
+  print(prt.lm(lm(lcv ~ lnAREA + lnSAAR + lnRMED1D + lnRMED2D,data=potCV)))
+  print(prt.lm(lm(lcv ~ DPLBAR + ALTBAR + lnSAAR + lnRMED2D + lnALTBAR,data=potCV)))
+  print(prt.lm(lm(lcv ~ RMED1D + ALTBAR + lnAREA + lnSAAR + lnRMED2D + lnALTBAR,data=potCV)))
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Distance matrices and Mantel test approach: best models\n
+  > distancesAD <- AD.dist(am696[,4],am696[,1])     # if run, it takes 1 hour
+  > distancesCVnat <- data.frame(apply(potCVnat,2,dist))
+  > distancesCVln <- data.frame(apply(potCVln,2,dist))
+  > distancesCV <- data.frame(apply(cbind(potCVnat[-c(1:2,19)],potCVln),2,dist))
+
+  > bestregressions(as.numeric(distancesAD),distancesCVnat)
+  > bestregressions(as.numeric(distancesAD),distancesCVln)
+  > bestregressions(as.numeric(distancesAD),distancesCV)
+  [1] \"FARL\"     \"SMDBAR\"   \"DPLBAR\"   \"lnNGRY\"   \"lnSAAR\"   \"lnRMED2D\"
+  [1] \"FARL\"   \"RMED2D\" \"DPLBAR\" \"lnNGRX\" \"lnNGRY\" \"lnSAAR\"
+  [1] \"FARL\"     \"RMED2D\"   \"lnNGRX\"   \"lnNGRY\"   \"lnSAAR\"   \"lnDPLBAR\"
+  [1] \"FARL\"     \"RMED2D\"   \"lnNGRY\"   \"lnSAAR\"   \"lnDPLBAR\"
+  [1] \"FARL\"   \"RMED2D\" \"DPLBAR\" \"lnNGRY\" \"lnSAAR\"
+  [1] \"RMED2D\"   \"lnNGRY\"   \"lnSAAR\"   \"lnFARL\"   \"lnDPLBAR\"
+  [1] \"FARL\"   \"RMED2D\" \"DPLBAR\" \"lnSAAR\"
+  [1] \"FARL\"     \"RMED2D\"   \"lnSAAR\"   \"lnDPLBAR\"
+  [1] \"RMED2D\" \"DPLBAR\" \"lnSAAR\" \"lnFARL\"
+  [1] \"FARL\"   \"RMED2D\" \"lnSAAR\"
+  [1] \"RMED2D\" \"lnSAAR\" \"lnFARL\"
+  [1] \"RMED2D\" \"DPLBAR\" \"lnSAAR\"
+  [1] \"RMED2D\" \"lnSAAR\"
+  [1] \"lnSAAR\"   \"lnRMED2D\"
+  [1] \"RMED1D\" \"lnSAAR\"
+  [1] \"SMDBAR\"
+  [1] \"lnSAAR\"
+  [1] \"lnPROPWET\"
+  \n")
+
+  # distancesAD <- AD.dist(am696[,4],am696[,1])                                   # 1 hour
+  # distancesCVnat <- data.frame(apply(potCVnat,2,dist))                          
+  # distancesCVln <- data.frame(apply(potCVln,2,dist))                            
+  # distancesCV <- data.frame(apply(cbind(potCVnat[-c(1:2,19)],potCVln),2,dist))  
+
+  # bestregressions(as.numeric(distancesAD),distancesCVnat)  
+  # bestregressions(as.numeric(distancesAD),distancesCVln)   
+  # bestregressions(as.numeric(distancesAD),distancesCV)     
+  
+
+  # graphics.lm(lm(distancesAD ~ FARL + RMED2D + lnSAAR,data=distancesCV))
+  # graphics.lm(lm(distancesAD ~ FARL + SMDBAR + DPLBAR + lnNGRY + lnSAAR + lnRMED2D,data=distancesCV))
+  # graphics.lm(lm(distancesAD ~ DPLBAR + lnSAAR + lnRMED2D,data=distancesCV))
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Distance matrices and Mantel test approach: mantel test\n
+  > regr1CV <- lm(distancesAD ~ SMDBAR,data=distancesCV)
+  > regr2CV <- lm(distancesAD ~ RMED2D + lnSAAR,data=distancesCV)
+  > regr3CV <- lm(distancesAD ~ FARL + RMED2D + lnSAAR,data=distancesCV)
+  > regr4CV <- lm(distancesAD ~ FARL + RMED2D + DPLBAR + lnSAAR,data=distancesCV)
+  > regr5CV <- lm(distancesAD ~ FARL + RMED2D + lnNGRY + lnSAAR + lnDPLBAR,data=distancesCV)
+  > regr6CV <- lm(distancesAD ~ FARL + SMDBAR + DPLBAR + lnNGRY + lnSAAR + lnRMED2D,data=distancesCV)
+
+  > mantel.lm(regr1CV, Nperm=100) # if run, it takes some time
+  P.SMDBAR
+         1
+  > mantel.lm(regr2CV, Nperm=100)
+  P.RMED2D P.lnSAAR
+         1        1
+  > mantel.lm(regr3CV, Nperm=100)
+  P.FARL P.RMED2D P.lnSAAR
+       1        1        1
+  > mantel.lm(regr4CV, Nperm=100)
+  P.FARL P.RMED2D P.DPLBAR P.lnSAAR
+       1        1        1        1
+  > mantel.lm(regr5CV, Nperm=100)
+  P.FARL   P.RMED2D   P.lnNGRY   P.lnSAAR P.lnDPLBAR
+       1          1          1          1          1
+  > mantel.lm(regr6CV, Nperm=100)
+  P.FARL   P.SMDBAR   P.DPLBAR   P.lnNGRY   P.lnSAAR P.lnRMED2D
+       1          1          1          1          1          1
+  > mantel.lm(lm(distancesAD ~ RMED2D + RMED1D,data=distancesCV), Nperm=100)
+  P.RMED2D P.RMED1D
+      1.00     0.91
+  > prt.lm(lm(lcv ~ FARL + SMDBAR + DPLBAR + lnNGRY + lnSAAR + lnRMED2D,data=potCV))
+          FARL       SMDBAR       DPLBAR       lnNGRY       lnSAAR     lnRMED2D
+  2.076164e-01 6.356903e-01 8.685326e-10 4.455110e-01 3.362767e-13 2.852258e-08
+  \n")
+
+  # regr1CV <- lm(distancesAD ~ SMDBAR,data=distancesCV)
+  # regr2CV <- lm(distancesAD ~ RMED2D + lnSAAR,data=distancesCV)
+  # regr3CV <- lm(distancesAD ~ FARL + RMED2D + lnSAAR,data=distancesCV)
+  # regr4CV <- lm(distancesAD ~ FARL + RMED2D + DPLBAR + lnSAAR,data=distancesCV)
+  # regr5CV <- lm(distancesAD ~ FARL + RMED2D + lnNGRY + lnSAAR + lnDPLBAR,data=distancesCV)
+  # regr6CV <- lm(distancesAD ~ FARL + SMDBAR + DPLBAR + lnNGRY + lnSAAR + lnRMED2D,data=distancesCV)
+
+  # mantel.lm(regr1CV, Nperm=100)   # 2 min 
+  # mantel.lm(regr2CV, Nperm=100)   # 4 min
+  # mantel.lm(regr3CV, Nperm=100)   # 6 min
+  # mantel.lm(regr4CV, Nperm=100)   # 6 min
+  # mantel.lm(regr5CV, Nperm=100)   # 6 min
+  # mantel.lm(regr6CV, Nperm=100)   # 6 min
+  # mantel.lm(lm(distancesAD ~ RMED2D + RMED1D,data=distancesCV), Nperm=100)
+  # prt.lm(lm(lcv ~ FARL + SMDBAR + DPLBAR + lnNGRY + lnSAAR + lnRMED2D,data=potCV))
+
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Distance matrices and Mantel test approach: regression statistics\n
+  > R2.lm(regr1CV)
+          R2      adjR2
+  0.01794498 0.01794091
+  > R2.lm(regr2CV)
+          R2      adjR2
+  0.02638443 0.02637638
+  > R2.lm(regr3CV)
+          R2      adjR2
+  0.03162555 0.03161354
+  > R2.lm(regr4CV)
+          R2      adjR2
+  0.03612941 0.03611347
+  > R2.lm(regr5CV)
+          R2      adjR2
+  0.03838762 0.03836774
+  > R2.lm(regr6CV)
+          R2      adjR2
+  0.03957432 0.03955050
+
+  > RMSEP(regr1CV$model[,1],regr1CV$fitted.values)*100
+  [1] 104.1658
+  > RMSEP(regr2CV$model[,1],regr2CV$fitted.values)*100
+  [1] 103.6993
+  > RMSEP(regr3CV$model[,1],regr3CV$fitted.values)*100
+  [1] 103.4915
+  > RMSEP(regr4CV$model[,1],regr4CV$fitted.values)*100
+  [1] 103.4556
+  > RMSEP(regr5CV$model[,1],regr5CV$fitted.values)*100
+  [1] 103.0755
+  > RMSEP(regr6CV$model[,1],regr6CV$fitted.values)*100
+  [1] 102.9498
+  \n")
+
+  # R2.lm(regr1CV)
+  # R2.lm(regr2CV)
+  # R2.lm(regr3CV)
+  # R2.lm(regr4CV)
+  # R2.lm(regr5CV)
+  # R2.lm(regr6CV)
+
+  # RMSEP(regr1CV$model[,1],regr1CV$fitted.values)*100
+  # RMSEP(regr2CV$model[,1],regr2CV$fitted.values)*100
+  # RMSEP(regr3CV$model[,1],regr3CV$fitted.values)*100
+  # RMSEP(regr4CV$model[,1],regr4CV$fitted.values)*100
+  # RMSEP(regr5CV$model[,1],regr5CV$fitted.values)*100
+  # RMSEP(regr6CV$model[,1],regr6CV$fitted.values)*100
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Formation of groups and homogeneity.
+  Classification variables:
+   0) lnAREA, lnSAAR, BFIHOST (same weights + lnAREA/sqrt(2))\n
+  > term1 <- log(cd696[,\"dtm_area\"])/(sd(log(cd696[,\"dtm_area\"]))*sqrt(2))
+  > term2 <- log(cd696[,\"saar\"])/sd(log(cd696[,\"saar\"]))
+  > term3 <- cd696[,\"bfihost\"]/sd(cd696[,\"bfihost\"])
+
+  > quantile(term1)
+          0%        25%        50%        75%       100%
+  0.03555657 2.18981948 2.67119010 3.09257122 4.64171915
+  > quantile(term2)
+        0%      25%      50%      75%     100%
+  16.36074 17.35620 18.02938 18.77770 21.15735
+  > quantile(term3)
+        0%      25%      50%      75%     100%
+  1.528373 2.693169 3.137541 3.724989 6.517468
+  > roi.cd <- data.frame(cbind(term1,term2,term3))
+  > row.names(roi.cd) <- cd696[,\"number\"]
+
+  > roi00.50year <- new.env()
+  > for(i in 1:696) {
+  + print(paste(i,\"/ 696\"))
+  + assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  +         row.names(roi.cd),am696[,\"am\"],am696[,\"number\"],test=\"HW and AD\",station.year=250,Nsim=100), env=roi00.50year)
+  + }
+  > roi00.50year <- as.list(roi00.50year)
+
+  > estrai.region <- function (x) {x$region}
+  > estrai.test <- function (x) {x$test}
+  > regioni.50year.0 <- sapply(roi00.50year, estrai.region)
+  > test.50year.0 <- sapply(roi00.50year, estrai.test)
+  > mL.50year.0 <- mean(sapply(regioni.50year.0,length))
+  > mH1.50year.0 <- mean(test.50year.0[\"H1\",])
+  > mH2.50year.0 <- mean(test.50year.0[\"H2\",])
+  > mAD.50year.0 <- median(test.50year.0[\"P\",])
+  > gH1gr2.50year.0 <- sum(test.50year.0[\"H1\",]>2)/696
+  > gH1gr4.50year.0 <- sum(test.50year.0[\"H1\",]>4)/696
+  > gH2gr2.50year.0 <- sum(test.50year.0[\"H2\",]>2)/696
+  > gH2gr4.50year.0 <- sum(test.50year.0[\"H2\",]>4)/696
+  > gADgr99.50year.0 <- sum(test.50year.0[\"P\",]>.99)/696
+  > gADgr95.50year.0 <- sum(test.50year.0[\"P\",]>.95)/696
+
+  > table.0 <- signif(c(mL.50year.0,mH1.50year.0,mH2.50year.0,mAD.50year.0,
+  +            gH1gr2.50year.0*100,gH1gr4.50year.0*100,gH2gr2.50year.0*100,gH2gr4.50year.0*100,
+  +            gADgr95.50year.0*100,gADgr99.50year.0*100),3)
+  > names(table.0) <- c(\"Avg. n sites\",\"m(H1)\",\"m(H2)\",\"med(p(AD))\",\"% H1>2\",\"% H1>4\",
+  +                     \"% H2>2\",\"% H2>4\",\"% p(AD)>0.95\",\"% p(AD)>0.99\")
+  > print(table.0)
+  \n")
+
+  # term1 <- log(cd696[,"dtm_area"])/(sd(log(cd696[,"dtm_area"]))*sqrt(2))
+  # term2 <- log(cd696[,"saar"])/sd(log(cd696[,"saar"]))
+  # term3 <- cd696[,"bfihost"]/sd(cd696[,"bfihost"])
+
+  # roi.cd <- data.frame(cbind(term1,term2,term3))
+  # row.names(roi.cd) <- cd696[,"number"]
+
+  # roi00.50year <- new.env()
+  # for(i in 1:696) {
+  # print(paste(i,"/ 696"))
+  # assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  #         row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW and AD",station.year=250,Nsim=100), env=roi00.50year)
+  # }
+  # roi00.50year <- as.list(roi00.50year)
+
+  # estrai.region <- function (x) {x$region}
+  # estrai.test <- function (x) {x$test}
+  # regioni.50year.0 <- sapply(roi00.50year, estrai.region)
+  # test.50year.0 <- sapply(roi00.50year, estrai.test)
+  # mL.50year.0 <- mean(sapply(regioni.50year.0,length))
+  # mH1.50year.0 <- mean(test.50year.0["H1",])
+  # mH2.50year.0 <- mean(test.50year.0["H2",])
+  # mAD.50year.0 <- median(test.50year.0["P",])
+  # gH1gr2.50year.0 <- sum(test.50year.0["H1",]>2)/696
+  # gH1gr4.50year.0 <- sum(test.50year.0["H1",]>4)/696
+  # gH2gr2.50year.0 <- sum(test.50year.0["H2",]>2)/696
+  # gH2gr4.50year.0 <- sum(test.50year.0["H2",]>4)/696
+  # gADgr99.50year.0 <- sum(test.50year.0["P",]>.99)/696
+  # gADgr95.50year.0 <- sum(test.50year.0["P",]>.95)/696
+
+  # table.0 <- signif(c(mL.50year.0,mH1.50year.0,mH2.50year.0,mAD.50year.0,
+  #            gH1gr2.50year.0*100,gH1gr4.50year.0*100,gH2gr2.50year.0*100,gH2gr4.50year.0*100,
+  #            gADgr95.50year.0*100,gADgr99.50year.0*100),3)
+  # names(table.0) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+  #                     "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+  # print(table.0)
+
+  table.0 <- c(11.20,2.87,1.53,0.99,62.50,25.10,33.80,5.89,68.20,46.00)
+  names(table.0) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+                     "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+  print(table.0)
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Formation of groups and homogeneity. 
+  Classification variables:
+   1) DPLBAR, lnSAAR, lnRMED2D (with the same weight)\n
+  > term1 <- cd696[,\"dplbar\"]/sd(cd696[,\"dplbar\"])
+  > term2 <- log(cd696[,\"saar\"])/sd(log(cd696[,\"saar\"]))
+  > term3 <- log(cd696[,\"rmed_2d\"])/sd(log(cd696[,\"rmed_2d\"]))
+
+  > quantile(term1)
+          0%        25%        50%        75%       100%
+  0.06404583 0.56222690 0.90338333 1.45325051 7.57763327
+  > quantile(term2)
+        0%      25%      50%      75%     100%
+  16.36074 17.35620 18.02938 18.77770 21.15735
+  > quantile(term3)
+        0%      25%      50%      75%     100%
+  13.79527 14.99042 15.55170 16.24327 19.08796
+
+  > roi.cd <- data.frame(cbind(term1,term2,term3))
+  > row.names(roi.cd) <- cd696[,\"number\"]
+
+  > roi.st.year(roi.cd[\"54088\",],roi.cd,row.names(roi.cd),am696[,\"am\"],
+  +             am696[,\"number\"],test=\"HW and AD\",station.year=250,Nsim=500)
+
+  > roi01.50year <- new.env()
+  > for(i in 1:696) {
+  + print(paste(i,\"/ 696\"))
+  + assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  +     row.names(roi.cd),am696[,\"am\"],am696[,\"number\"],test=\"HW and AD\",station.year=250,Nsim=100), env=roi01.50year)
+  + }
+  > roi01.50year <- as.list(roi01.50year)
+
+  > estrai.region <- function (x) {x$region}
+  > estrai.test <- function (x) {x$test}
+  > regioni.50year.1 <- sapply(roi01.50year, estrai.region)
+  > test.50year.1 <- sapply(roi01.50year, estrai.test)
+  > mL.50year.1 <- mean(sapply(regioni.50year.1,length))
+  > mH1.50year.1 <- mean(test.50year.1[\"H1\",])
+  > mH2.50year.1 <- mean(test.50year.1[\"H2\",])
+  > mAD.50year.1 <- median(test.50year.1[\"P\",])
+  > gH1gr2.50year.1 <- sum(test.50year.1[\"H1\",]>2)/696
+  > gH1gr4.50year.1 <- sum(test.50year.1[\"H1\",]>4)/696
+  > gH2gr2.50year.1 <- sum(test.50year.1[\"H2\",]>2)/696
+  > gH2gr4.50year.1 <- sum(test.50year.1[\"H2\",]>4)/696
+  > gADgr99.50year.1 <- sum(test.50year.1[\"P\",]>.99)/696
+  > gADgr95.50year.1 <- sum(test.50year.1[\"P\",]>.95)/696
+
+  > table.1 <- signif(c(mL.50year.1,mH1.50year.1,mH2.50year.1,mAD.50year.1,
+  +            gH1gr2.50year.1*100,gH1gr4.50year.1*100,gH2gr2.50year.1*100,gH2gr4.50year.1*100,
+  +            gADgr95.50year.1*100,gADgr99.50year.1*100),3)
+  > names(table.1) <- c(\"Avg. n sites\",\"m(H1)\",\"m(H2)\",\"med(p(AD))\",\"% H1>2\",\"% H1>4\",
+  +                    \"% H2>2\",\"% H2>4\",\"% p(AD)>0.95\",\"% p(AD)>0.99\")
+  > print(table.1)
+  \n")
+
+  # term1 <- cd696[,"dplbar"]/sd(cd696[,"dplbar"])
+  # term2 <- log(cd696[,"saar"])/sd(log(cd696[,"saar"]))
+  # term3 <- log(cd696[,"rmed_2d"])/sd(log(cd696[,"rmed_2d"]))
+
+  # roi.cd <- data.frame(cbind(term1,term2,term3))
+  # row.names(roi.cd) <- cd696[,"number"]
+
+  # roi.st.year(roi.cd["54088",],roi.cd,row.names(roi.cd),am696[,"am"],
+  #             am696[,"number"],test="HW and AD",station.year=250,Nsim=500)
+
+  # roi01.50year <- new.env()
+  # for(i in 1:696) {
+  # print(paste(i,"/ 696"))
+  # assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  #         row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW and AD",station.year=250,Nsim=100), env=roi01.50year)
+  # }
+  # roi01.50year <- as.list(roi01.50year)
+
+  # estrai.region <- function (x) {x$region}
+  # estrai.test <- function (x) {x$test}
+  # regioni.50year.1 <- sapply(roi01.50year, estrai.region)
+  # test.50year.1 <- sapply(roi01.50year, estrai.test)
+  # mL.50year.1 <- mean(sapply(regioni.50year.1,length))
+  # mH1.50year.1 <- mean(test.50year.1["H1",])
+  # mH2.50year.1 <- mean(test.50year.1["H2",])
+  # mAD.50year.1 <- median(test.50year.1["P",])
+  # gH1gr2.50year.1 <- sum(test.50year.1["H1",]>2)/696
+  # gH1gr4.50year.1 <- sum(test.50year.1["H1",]>4)/696
+  # gH2gr2.50year.1 <- sum(test.50year.1["H2",]>2)/696
+  # gH2gr4.50year.1 <- sum(test.50year.1["H2",]>4)/696
+  # gADgr99.50year.1 <- sum(test.50year.1["P",]>.99)/696
+  # gADgr95.50year.1 <- sum(test.50year.1["P",]>.95)/696
+
+  # table.1 <- signif(c(mL.50year.1,mH1.50year.1,mH2.50year.1,mAD.50year.1,
+  #            gH1gr2.50year.1*100,gH1gr4.50year.1*100,gH2gr2.50year.1*100,gH2gr4.50year.1*100,
+  #            gADgr95.50year.1*100,gADgr99.50year.1*100),3)
+  # names(table.1) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+  #                    "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+  # print(table.1)
+  table.1 <- c(11.30,2.94,1.67,0.99,60.90,27.00,38.20,8.62,65.80,44.70)
+  names(table.1) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+                     "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+  print(table.1)
+
+
+
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Formation of groups and homogeneity.
+  Classification variables:
+   2) DPLBAR, lnSAAR, lnRMED2D (weighted with regression coefficients)\n
+  > coeff <- lm(lcv ~ DPLBAR + lnSAAR + lnRMED2D,data=potCV)$coefficients[-1]
+  > print(coeff)
+
+  > term1 <- cd696[,\"dplbar\"]*coeff[1]
+  > term2 <- log(cd696[,\"saar\"])*coeff[2]
+  > term3 <- log(cd696[,\"rmed_2d\"])*coeff[3]
+
+  > quantile(term1)
+            0%          25%          50%          75%         100%
+  -0.120140237 -0.023040685 -0.014322768 -0.008913875 -0.001015420
+  > quantile(term2)
+         0%       25%       50%       75%      100%
+  -1.755994 -1.558490 -1.496383 -1.440511 -1.357891
+  > quantile(term3)
+         0%       25%       50%       75%      100%
+  0.6600229 0.7172041 0.7440577 0.7771454 0.9132472
+
+  > roi.cd <- data.frame(cbind(term1,term2,term3))
+  > row.names(roi.cd) <- cd696[,\"number\"]
+
+  > roi02.50year <- new.env()
+  > for(i in 1:696) {
+  + print(paste(i,\"/ 696\"))
+  + assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  +     row.names(roi.cd),am696[,\"am\"],am696[,\"number\"],test=\"HW and AD\",station.year=250,Nsim=100), env=roi02.50year)
+  + }
+  > roi02.50year <- as.list(roi02.50year)
+
+  > estrai.region <- function (x) {x$region}
+  > estrai.test <- function (x) {x$test}
+  > regioni.50year.2 <- sapply(roi02.50year, estrai.region)
+  > test.50year.2 <- sapply(roi02.50year, estrai.test)
+  > mL.50year.2 <- mean(sapply(regioni.50year.2,length))
+  > mH1.50year.2 <- mean(test.50year.2[\"H1\",])
+  > mH2.50year.2 <- mean(test.50year.2[\"H2\",])
+  > mAD.50year.2 <- median(test.50year.2[\"P\",])
+  > gH1gr2.50year.2 <- sum(test.50year.2[\"H1\",]>2)/696
+  > gH1gr4.50year.2 <- sum(test.50year.2[\"H1\",]>4)/696
+  > gH2gr2.50year.2 <- sum(test.50year.2[\"H2\",]>2)/696
+  > gH2gr4.50year.2 <- sum(test.50year.2[\"H2\",]>4)/696
+  > gADgr99.50year.2 <- sum(test.50year.2[\"P\",]>.99)/696
+  > gADgr95.50year.2 <- sum(test.50year.2[\"P\",]>.95)/696
+
+  > table.2 <- signif(c(mL.50year.2,mH1.50year.2,mH2.50year.2,mAD.50year.2,
+  +            gH1gr2.50year.2*100,gH1gr4.50year.2*100,gH2gr2.50year.2*100,gH2gr4.50year.2*100,
+  +            gADgr95.50year.2*100,gADgr99.50year.2*100),3)
+  > names(table.2) <- c(\"Avg. n sites\",\"m(H1)\",\"m(H2)\",\"med(p(AD))\",\"% H1>2\",\"% H1>4\",
+  +                     \"% H2>2\",\"% H2>4\",\"% p(AD)>0.95\",\"% p(AD)>0.99\")
+  > print(table.2)
+  \n")
+
+  coeff <- lm(lcv ~ DPLBAR + lnSAAR + lnRMED2D,data=potCV)$coefficients[-1]
+  print(coeff)
+
+  # term1 <- cd696[,"dplbar"]*coeff[1]
+  # term2 <- log(cd696[,"saar"])*coeff[2]
+  # term3 <- log(cd696[,"rmed_2d"])*coeff[3]
+
+  # roi.cd <- data.frame(cbind(term1,term2,term3))
+  # row.names(roi.cd) <- cd696[,"number"]
+
+  # roi02.50year <- new.env()
+  # for(i in 1:696) {
+  # print(paste(i,"/ 696"))
+  # assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  #         row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW and AD",station.year=250,Nsim=100), env=roi02.50year)
+  # }
+  # roi02.50year <- as.list(roi02.50year)
+
+  # estrai.region <- function (x) {x$region}
+  # estrai.test <- function (x) {x$test}
+  # regioni.50year.2 <- sapply(roi02.50year, estrai.region)
+  # test.50year.2 <- sapply(roi02.50year, estrai.test)
+  # mL.50year.2 <- mean(sapply(regioni.50year.2,length))
+  # mH1.50year.2 <- mean(test.50year.2["H1",])
+  # mH2.50year.2 <- mean(test.50year.2["H2",])
+  # mAD.50year.2 <- median(test.50year.2["P",])
+  # gH1gr2.50year.2 <- sum(test.50year.2["H1",]>2)/696
+  # gH1gr4.50year.2 <- sum(test.50year.2["H1",]>4)/696
+  # gH2gr2.50year.2 <- sum(test.50year.2["H2",]>2)/696
+  # gH2gr4.50year.2 <- sum(test.50year.2["H2",]>4)/696
+  # gADgr99.50year.2 <- sum(test.50year.2["P",]>.99)/696
+  # gADgr95.50year.2 <- sum(test.50year.2["P",]>.95)/696
+
+  # table.2 <- signif(c(mL.50year.2,mH1.50year.2,mH2.50year.2,mAD.50year.2,
+  #            gH1gr2.50year.2*100,gH1gr4.50year.2*100,gH2gr2.50year.2*100,gH2gr4.50year.2*100,
+  #            gADgr95.50year.2*100,gADgr99.50year.2*100),3)
+  # names(table.2) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+  #                     "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+  # print(table.2)
+
+  table.2 <- c(11.20,2.95,1.64,0.99,57.20,28.60,37.90,9.34,66.40,45.10) # weigths doesnt change the result
+  names(table.2) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+                     "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+  print(table.2)
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Formation of groups and homogeneity.
+  Classification variables:
+   3) FARL, RMED2D, lnSAAR (same weight)\n
+  > term1 <- cd696[,\"farl\"]/sd(cd696[,\"farl\"])
+  > term2 <- cd696[,\"rmed_2d\"]/sd(cd696[,\"rmed_2d\"])
+  > term3 <- log(cd696[,\"saar\"])/sd(log(cd696[,\"saar\"]))
+
+  > quantile(term1)
+        0%      25%      50%      75%     100%
+  12.79836 20.77582 21.24136 21.45746 21.50261
+  > quantile(term2)
+        0%      25%      50%      75%     100%
+  2.165229 2.925077 3.368881 4.009372 8.203663
+  > quantile(term3)
+        0%      25%      50%      75%     100%
+  16.36074 17.35620 18.02938 18.77770 21.15735
+
+  > roi.cd <- data.frame(cbind(term1,term2,term3))
+  > row.names(roi.cd) <- cd696[,\"number\"]
+
+  > roi03.50year <- new.env()
+  > for(i in 1:696) {
+  + print(paste(i,\"/ 696\"))
+  + assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  +         row.names(roi.cd),am696[,\"am\"],am696[,\"number\"],test=\"HW and AD\",station.year=250,Nsim=100), env=roi03.50year)
+  + }
+  > roi03.50year <- as.list(roi03.50year)
+
+  > estrai.region <- function (x) {x$region}
+  > estrai.test <- function (x) {x$test}
+  > regioni.50year.3 <- sapply(roi03.50year, estrai.region)
+  > test.50year.3 <- sapply(roi03.50year, estrai.test)
+  > mL.50year.3 <- mean(sapply(regioni.50year.3,length))
+  > mH1.50year.3 <- mean(test.50year.3[\"H1\",])
+  > mH2.50year.3 <- mean(test.50year.3[\"H2\",])
+  > mAD.50year.3 <- median(test.50year.3[\"P\",])
+  > gH1gr2.50year.3 <- sum(test.50year.3[\"H1\",]>2)/696
+  > gH1gr4.50year.3 <- sum(test.50year.3[\"H1\",]>4)/696
+  > gH2gr2.50year.3 <- sum(test.50year.3[\"H2\",]>2)/696
+  > gH2gr4.50year.3 <- sum(test.50year.3[\"H2\",]>4)/696
+  > gADgr99.50year.3 <- sum(test.50year.3[\"P\",]>.99)/696
+  > gADgr95.50year.3 <- sum(test.50year.3[\"P\",]>.95)/696
+
+  > table.3 <- signif(c(mL.50year.3,mH1.50year.3,mH2.50year.3,mAD.50year.3,
+  +            gH1gr2.50year.3*100,gH1gr4.50year.3*100,gH2gr2.50year.3*100,gH2gr4.50year.3*100,
+  +            gADgr95.50year.3*100,gADgr99.50year.3*100),3)
+  > names(table.3) <- c(\"Avg. n sites\",\"m(H1)\",\"m(H2)\",\"med(p(AD))\",\"% H1>2\",\"% H1>4\",
+  +                     \"% H2>2\",\"% H2>4\",\"% p(AD)>0.95\",\"% p(AD)>0.99\")
+  > print(table.3)
+  \n")
+
+  # term1 <- cd696[,"farl"]/sd(cd696[,"farl"])
+  # term2 <- cd696[,"rmed_2d"]/sd(cd696[,"rmed_2d"])
+  # term3 <- log(cd696[,"saar"])/sd(log(cd696[,"saar"]))
+
+  # roi.cd <- data.frame(cbind(term1,term2,term3))
+  # row.names(roi.cd) <- cd696[,"number"]
+
+  # roi03.50year <- new.env()
+  # for(i in 1:696) {
+  # print(paste(i,"/ 696"))
+  # assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  #         row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW and AD",station.year=250,Nsim=100), env=roi03.50year)
+  # }
+  # roi03.50year <- as.list(roi03.50year)
+
+  # estrai.region <- function (x) {x$region}
+  # estrai.test <- function (x) {x$test}
+  # regioni.50year.3 <- sapply(roi03.50year, estrai.region)
+  # test.50year.3 <- sapply(roi03.50year, estrai.test)
+  # mL.50year.3 <- mean(sapply(regioni.50year.3,length))
+  # mH1.50year.3 <- mean(test.50year.3["H1",])
+  # mH2.50year.3 <- mean(test.50year.3["H2",])
+  # mAD.50year.3 <- median(test.50year.3["P",])
+  # gH1gr2.50year.3 <- sum(test.50year.3["H1",]>2)/696
+  # gH1gr4.50year.3 <- sum(test.50year.3["H1",]>4)/696
+  # gH2gr2.50year.3 <- sum(test.50year.3["H2",]>2)/696
+  # gH2gr4.50year.3 <- sum(test.50year.3["H2",]>4)/696
+  # gADgr99.50year.3 <- sum(test.50year.3["P",]>.99)/696
+  # gADgr95.50year.3 <- sum(test.50year.3["P",]>.95)/696
+
+  # table.3 <- signif(c(mL.50year.3,mH1.50year.3,mH2.50year.3,mAD.50year.3,
+  #            gH1gr2.50year.3*100,gH1gr4.50year.3*100,gH2gr2.50year.3*100,gH2gr4.50year.3*100,
+  #            gADgr95.50year.3*100,gADgr99.50year.3*100),3)
+  # names(table.3) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+  #                     "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+  # print(table.3)
+
+  table.3 <- c(11.00,3.37,1.60,0.99,67.20,35.10,34.60,8.05,67.40,46.30)
+  names(table.3) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+                     "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+  print(table.3)
+
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Formation of groups and homogeneity.
+  Classification variables:
+   0) lnAREA, lnSAAR, BFIHOST (same weight + lnAREA/sqrt(2))
+   1) DPLBAR, lnSAAR, lnRMED2D (with the same weight)
+   2) DPLBAR, lnSAAR, lnRMED2D (weighted with regression coefficients)
+   3) FARL, RMED2D, lnSAAR (with the same weight)\n
+  > table.0123 <- rbind(table.0,table.1,table.2,table.3)
+  > print(table.0123)
+  \n")
+
+  table.0123 <- rbind(table.0,table.1,table.2,table.3)
+  print(table.0123)
+
+
+  readline("\n
+  # ------------------------------------------------------------------------------------- #\n
+  Press Return to continue
+  \n")
+
+  cat("\n
+  Formation of groups and homogeneity (other cases).
+  Classification variables:
+  > poolingroupsum <- function(roi.cd) {
+  +  roi.50year <- new.env()
+  +  for(i in 1:696) {
+  +  print(paste(i,\"/ 696\"))
+  +  assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+  +          row.names(roi.cd),am696[,\"am\"],am696[,\"number\"],test=\"HW and AD\",station.year=250,Nsim=100), env=roi.50year)
+  +  }
+  +  roi.50year <- as.list(roi.50year)
+  +
+  +  estrai.region <- function (x) {x$region}
+  +  estrai.test <- function (x) {x$test}
+  +  regioni.50year <- sapply(roi.50year, estrai.region)
+  +  test.50year <- sapply(roi.50year, estrai.test)
+  +  mL.50year <- mean(sapply(regioni.50year,length))
+  +  mH1.50year <- mean(test.50year[\"H1\",])
+  +  mH2.50year <- mean(test.50year[\"H2\",])
+  +  mAD.50year <- median(test.50year[\"P\",])
+  +  gH1gr2.50year <- sum(test.50year[\"H1\",]>2)/696
+  +  gH1gr4.50year <- sum(test.50year[\"H1\",]>4)/696
+  +  gH2gr2.50year <- sum(test.50year[\"H2\",]>2)/696
+  +  gH2gr4.50year <- sum(test.50year[\"H2\",]>4)/696
+  +  gADgr99.50year <- sum(test.50year[\"P\",]>.99)/696
+  +  gADgr95.50year <- sum(test.50year[\"P\",]>.95)/696
+  +
+  +  table <- signif(c(mL.50year,mH1.50year,mH2.50year,mAD.50year,
+  +             gH1gr2.50year*100,gH1gr4.50year*100,gH2gr2.50year*100,gH2gr4.50year*100,
+  +             gADgr95.50year*100,gADgr99.50year*100),3)
+  +  names(table) <- c(\"Avg. n sites\",\"m(H1)\",\"m(H2)\",\"med(p(AD))\",\"% H1>2\",\"% H1>4\",
+  +                      \"% H2>2\",\"% H2>4\",\"% p(AD)>0.95\",\"% p(AD)>0.99\")
+  +  table
+  + }
+
+  > termFARL <- cd696[,\"farl\"]/sd(cd696[,\"farl\"])
+  > termSMDBAR <- cd696[,\"smdbar\"]/sd(cd696[,\"smdbar\"])
+  > termDPLBAR <- cd696[,\"dplbar\"]/sd(cd696[,\"dplbar\"])
+  > termlnNGRY <- log(cd696[,\"ihdtm_ngr_y\"])/sd(log(cd696[,\"ihdtm_ngr_y\"]))
+  > termlnSAAR <- log(cd696[,\"saar\"])/sd(log(cd696[,\"saar\"]))
+  > termlnRMED2D <- log(cd696[,\"rmed_2d\"])/sd(log(cd696[,\"rmed_2d\"]))
+  > termRMED1D <- cd696[,\"rmed_1d\"]/sd(cd696[,\"rmed_1d\"])
+  > termALTBAR <- cd696[,\"altbar\"]/sd(cd696[,\"altbar\"])
+  > termlnAREA <- log(cd696[,\"dtm_area\"])/sd(log(cd696[,\"dtm_area\"]))
+  > termlnALTBAR <- log(cd696[,\"altbar\"])/sd(log(cd696[,\"altbar\"]))
+
+  > table.4 <- poolingroupsum(data.frame(cbind(termFARL,termSMDBAR,termDPLBAR,termlnNGRY,termlnSAAR,termlnRMED2D),
+  >            row.names=cd696[,\"number\"]))
+  > table.5 <- poolingroupsum(data.frame(cbind(termRMED1D,termALTBAR,termlnAREA,termlnSAAR,termlnRMED2D,termlnALTBAR),
+  >            row.names=cd696[,\"number\"]))
+
+  \nClassification variables:
+   0) lnAREA, lnSAAR, BFIHOST (same weight + lnAREA/sqrt(2))
+   1) DPLBAR, lnSAAR, lnRMED2D (with the same weight)
+   2) DPLBAR, lnSAAR, lnRMED2D (weighted with regression coefficients)
+   3) FARL, RMED2D, lnSAAR (with the same weight)
+   4) FARL, SMDBAR, DPLBAR, lnNGRY, lnSAAR, lnRMED2D (with the same weight)
+   5) RMED1D, ALTBAR, lnAREA, lnSAAR, lnRMED2D, lnALTBAR (with the same weight)\n
+  > print(rbind(table.4,table.5))
+  > print(rbind(table.0123,table.4,table.5))
+  \n")
+
+  poolingroupsum <- function(roi.cd) {
+   roi.50year <- new.env()
+   for(i in 1:696) {
+   print(paste(i,"/ 696"))
+   assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
+           row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW and AD",station.year=250,Nsim=100), env=roi.50year)
+   }
+   roi.50year <- as.list(roi.50year)
+
+   estrai.region <- function (x) {x$region}
+   estrai.test <- function (x) {x$test}
+   regioni.50year <- sapply(roi.50year, estrai.region)
+   test.50year <- sapply(roi.50year, estrai.test)
+   mL.50year <- mean(sapply(regioni.50year,length))
+   mH1.50year <- mean(test.50year["H1",])
+   mH2.50year <- mean(test.50year["H2",])
+   mAD.50year <- median(test.50year["P",])
+   gH1gr2.50year <- sum(test.50year["H1",]>2)/696
+   gH1gr4.50year <- sum(test.50year["H1",]>4)/696
+   gH2gr2.50year <- sum(test.50year["H2",]>2)/696
+   gH2gr4.50year <- sum(test.50year["H2",]>4)/696
+   gADgr99.50year <- sum(test.50year["P",]>.99)/696
+   gADgr95.50year <- sum(test.50year["P",]>.95)/696
+ 
+   table <- signif(c(mL.50year,mH1.50year,mH2.50year,mAD.50year,
+              gH1gr2.50year*100,gH1gr4.50year*100,gH2gr2.50year*100,gH2gr4.50year*100,
+              gADgr95.50year*100,gADgr99.50year*100),3)
+   names(table) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+                       "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+   table
+  }
+
+  termFARL <- cd696[,"farl"]/sd(cd696[,"farl"])
+  termSMDBAR <- cd696[,"smdbar"]/sd(cd696[,"smdbar"])
+  termDPLBAR <- cd696[,"dplbar"]/sd(cd696[,"dplbar"])
+  termlnNGRY <- log(cd696[,"ihdtm_ngr_y"])/sd(log(cd696[,"ihdtm_ngr_y"]))
+  termlnSAAR <- log(cd696[,"saar"])/sd(log(cd696[,"saar"]))
+  termlnRMED2D <- log(cd696[,"rmed_2d"])/sd(log(cd696[,"rmed_2d"]))
+  termRMED1D <- cd696[,"rmed_1d"]/sd(cd696[,"rmed_1d"])
+  termALTBAR <- cd696[,"altbar"]/sd(cd696[,"altbar"])
+  termlnAREA <- log(cd696[,"dtm_area"])/sd(log(cd696[,"dtm_area"]))
+  termlnALTBAR <- log(cd696[,"altbar"])/sd(log(cd696[,"altbar"]))
+
+  # table.4 <- poolingroupsum(data.frame(cbind(termFARL,termSMDBAR,termDPLBAR,termlnNGRY,termlnSAAR,termlnRMED2D),
+  #            row.names=cd696[,"number"]))
+  # table.5 <- poolingroupsum(data.frame(cbind(termRMED1D,termALTBAR,termlnAREA,termlnSAAR,termlnRMED2D,termlnALTBAR),
+  #            row.names=cd696[,"number"]))
+
+  table.4 <- c(11.10,2.68,1.56,0.98,61.20,24.10,35.20,6.03,61.90,40.40)
+  names(table.4) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+                     "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+  table.5 <- c(11.1,2.91,1.77,0.99,62.5,24.9,39.9,9.05,65.9,44.8)
+  names(table.4) <- c("Avg. n sites","m(H1)","m(H2)","med(p(AD))","% H1>2","% H1>4",
+                     "% H2>2","% H2>4","% p(AD)>0.95","% p(AD)>0.99")
+
+  print(rbind(table.4,table.5))
+  print(rbind(table.0123,table.4,table.5))
 
   cat("\n\n
   # ------------------------------------------------------------------------------------- #

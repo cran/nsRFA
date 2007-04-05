@@ -41,19 +41,21 @@ rand.kappa (numerosita, xi, alfa, k, h)
 
 Parameters (4): \eqn{\xi} (location), \eqn{\alpha} (scale), \eqn{k}, \eqn{h}.
 
-Range of \eqn{x}: upper bound is \eqn{\xi + \alpha/k} if \eqn{k>0}, \eqn{\infty} if \eqn{k \le 0};
-lower bound is \eqn{\xi + \alpha(1-h^{-k})/k} if \eqn{h>0}, \eqn{\xi + \alpha/k} if \eqn{h \le 0} and \eqn{k<0}
-and \eqn{-\infty} if \eqn{h \le 0} and \eqn{k \ge 0}
+Range of \eqn{x}: upper bound is \eqn{\xi + \alpha/k} if \eqn{k>0}, \eqn{\infty}{inf} if \eqn{k \le 0};
+lower bound is \eqn{\xi + \alpha(1-h^{-k})/k}{xi + \alpha(1-h^(-k))/k} if \eqn{h>0}, \eqn{\xi + \alpha/k} if \eqn{h \le 0} and \eqn{k<0} and \eqn{-\infty}{-inf} if \eqn{h \le 0} and \eqn{k \ge 0}
 
 
 Probability density function:
-\deqn{f(x)=\alpha^{-1} [1-k(x-\xi)/\alpha]^{1/k-1} [F(x)]^{1-h}}
+\deqn{f(x)=\alpha^{-1} [1-k(x-\xi)/\alpha]^{1/k-1} [F(x)]^{1-h}}{%
+      f(x) = \alpha^(-1) [1 - k (x - \xi)/\alpha]^(1/k-1) [F(x)]^(1-h)}
 
 Cumulative distribution function:
-\deqn{F(x)=\{1-h[1-k(x-\xi)/\alpha]^{1/k}\}^{1/h}}
+\deqn{F(x)=\{1-h[1-k(x-\xi)/\alpha]^{1/k}\}^{1/h}}{%
+      F(x) = \{1 - h[1 - k(x - \xi)/\alpha]^(1/k)\}^(1/h)}
 
 Quantile function:
-\deqn{x(F)= \xi + \frac{\alpha}{k} \left[ 1-\left( \frac{1-F^h}{h} \right)^k \right]}
+\deqn{x(F)= \xi + \frac{\alpha}{k} \left[ 1-\left( \frac{1-F^h}{h} \right)^k \right]}{%
+      x(F) = \xi + \alpha/k [1 - ((1-F^h)/h)^k]}
 
 
 
@@ -66,24 +68,24 @@ Quantile function:
 
 L-moments are defined for \eqn{h \ge 0} and \eqn{k>-1}, or if \eqn{h<0} and \eqn{-1<k<-1/h}.
 
-\deqn{\lambda_1 = \xi + \alpha(1-g_1)/k}
-\deqn{\lambda_2 = \alpha(g_1 - g_2)/k}
-\deqn{\tau_3 = (-g_1 + 3g_2 - 2g_3)/(g_1 - g_2)}
-\deqn{\tau_4 = (-g_1 + 6g_2 - 10g_3 + 5g_4)/(g_1 - g_2)}
+\deqn{\lambda_1 = \xi + \alpha(1-g_1)/k}{\lambda1 = \xi + \alpha(1 - g1)/k}
+\deqn{\lambda_2 = \alpha(g_1 - g_2)/k}{\lambda2 = \alpha(g1 - g2)/k}
+\deqn{\tau_3 = (-g_1 + 3g_2 - 2g_3)/(g_1 - g_2)}{\tau3 = (-g1 + 3g2 - 2g3)/(g1 - g2)}
+\deqn{\tau_4 = (-g_1 + 6g_2 - 10g_3 + 5g_4)/(g_1 - g_2)}{\tau4 = (-g1 + 6g2 - 10g3 + 5g4)/(g1 - g2)}
 where
-\eqn{g_r = \frac{r \Gamma(1+k)\Gamma(r/h)}{h^{1+k}\Gamma(1+k+r/h)}} if \eqn{h>0};
-\eqn{g_r = \frac{r \Gamma(1+k)\Gamma(-k-r/h)}{(-h)^{1+k}\Gamma(1-r/h)}} if \eqn{h<0};
+\eqn{g_r = \frac{r\Gamma(1+k)\Gamma(r/h)}{h^{1+k}\Gamma(1+k+r/h)}}{gr = (r \Gamma(1+k)\Gamma(r/h))/(h^(1+k) \Gamma(1+k+r/h))} if \eqn{h>0};
+\eqn{g_r = \frac{r \Gamma(1+k)\Gamma(-k-r/h)}{(-h)^{1+k}\Gamma(1-r/h)}}{gr = (r\Gamma(1+k)\Gamma(-k-r/h))/((-h)^(1+k)\Gamma(1-r/h))} if \eqn{h<0};
 
 Here \eqn{\Gamma} denote the gamma function
-\deqn{\Gamma (x) = \int_0^{\infty} t^{x-1} e^{-t} dt}
+\deqn{\Gamma (x) = \int_0^{\infty} t^{x-1} e^{-t} dt}{\Gamma(x) = integral[from 0 to inf] t^(x-1) e^(-t) dt}
 
 
 
 \bold{Parameters}
 
 There are no simple expressions for the parameters in terms of the L-moments.
-However they can be obtained with a numerical algorithm considering the formulations of \eqn{\tau_3} and \eqn{\tau_4} in terms of \eqn{k} and \eqn{h}.
-Here we use the function \code{optim} to minimize \eqn{(t_3-\tau_3)^2 + (t_4-\tau_4)^2} where \eqn{t_3} and \eqn{t_4} are the sample L-moment ratios.
+However they can be obtained with a numerical algorithm considering the formulations of \eqn{\tau_3}{\tau3} and \eqn{\tau_4}{\tau4} in terms of \eqn{k} and \eqn{h}.
+Here we use the function \code{optim} to minimize \eqn{(t_3-\tau_3)^2 + (t_4-\tau_4)^2}{(t3-\tau3)^2 + (t4-\tau4)^2} where \eqn{t_3}{t3} and \eqn{t_4}{t4} are the sample L-moment ratios.
 }
 \value{
  \code{f.kappa} gives the density \eqn{f}, \code{F.kappa} gives the distribution function \eqn{F}, \code{invFkappa} gives

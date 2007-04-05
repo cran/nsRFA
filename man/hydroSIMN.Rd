@@ -2,6 +2,7 @@
 %
 \name{hydroSIMN}
 \docType{data}
+\alias{hydroSIMN}
 \alias{annualflows}
 \alias{parameters}
 \alias{meanmonthlyflows}

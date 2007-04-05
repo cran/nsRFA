@@ -6,9 +6,16 @@
 
 f.gamma <- function (x,xi,beta,alfa) {
 
-  f <- ((x - xi)^(alfa - 1) * exp(-(x - xi)/beta))/(abs(beta)*beta^(alfa-1) * gamma(alfa))
+  #f <- ((x - xi)^(alfa - 1) * exp(-(x - xi)/beta))/(abs(beta)*beta^(alfa-1) * gamma(alfa))
 
-  return(f)
+  if (beta > 0) {
+    f <- dgamma(x-xi,shape=alfa,scale=beta)
+  }
+  else {
+    f <- dgamma(xi-x,shape=alfa,scale=-beta)
+  }
+
+ return(f)
 }
 
 F.gamma <- function (x,xi,beta,alfa) {
@@ -32,15 +39,11 @@ invF.gamma <- function (F,xi,beta,alfa) {
   # } 
 
   if (beta >= 0) {
-    #x.st <- qgamma(F, alfa)
-    #x <- x.st*beta + xi
     x.st <- qgamma(F, shape=alfa,scale=beta)
     x <- x.st + xi
   }
   else if (beta < 0) {
-    #x.st <- qgamma(F, alfa)
-    #x <- xi - x.st*beta
-    x.st <- qgamma(F, shape=alfa,scale=-beta)
+    x.st <- qgamma(1-F, shape=alfa,scale=-beta)
     x <- xi - x.st
   }
 
@@ -82,7 +85,7 @@ Lmom.gamma <- function(xi,beta,alfa) {
   for (i in 1:quanti) {
     if (beta[i] >= 0) {
       lambda1[i] <- xi + alfa*beta
-      lambda2[i] <- pi^(-0.5) *beta * gamma(alfa + 0.5)/gamma(alfa)
+      lambda2[i] <- abs(pi^(-0.5) *beta * gamma(alfa + 0.5)/gamma(alfa))
       # tau3 <- 6 * pbeta(1/3,alfa,2*alfa) - 3
       if (alfa >= 1) {
         tau3[i] <- alfa^(-0.5) * (A0 + A1*alfa^(-1) + A2*alfa^(-2) + A3*alfa^(-3))/(1 + B1*alfa^(-1) + B2*alfa^(-2))
@@ -94,8 +97,8 @@ Lmom.gamma <- function(xi,beta,alfa) {
       }
     }
     else if (beta[i] < 0) {
-      lambda1[i] <- -(-xi + alfa*beta)
-      lambda2[i] <- pi^(-0.5) *beta * gamma(alfa + 0.5)/gamma(alfa)
+      lambda1[i] <- xi + alfa*beta
+      lambda2[i] <- abs(pi^(-0.5) *beta * gamma(alfa + 0.5)/gamma(alfa))
       if (alfa >= 1) {
         tau3[i] <- -(alfa^(-0.5) * (A0 + A1*alfa^(-1) + A2*alfa^(-2) + A3*alfa^(-3))/(1 + B1*alfa^(-1) + B2*alfa^(-2)))
         tau4[i] <- (C0 + C1*alfa^(-1) + C2*alfa^(-2) + C3*alfa^(-3))/(1 + D1*alfa^(-1) + D2*alfa^(-2))
@@ -129,6 +132,7 @@ par.gamma <- function(lambda1,lambda2,tau3) {
   if(alfa<100) {
    sigma <- lambda2*pi^(0.5) * alfa^(0.5) * gamma(alfa)/gamma(alfa + 0.5)
    beta <- 0.5*sigma*abs(2*alfa^(-0.5))
+   beta <- sign(tau3)*beta
    if(beta>0) {xi <- lambda1 - alfa*beta} else {xi <- lambda1 + alfa*beta}
    output <- list(xi=xi, beta=beta, alfa=alfa)
   }

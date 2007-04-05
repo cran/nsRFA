@@ -10,6 +10,7 @@
  Formation of clusters for Regional Frequency Analysis: region of influence (Burn, 1990).
 }
 \usage{
+ roi (p.ungauged, p.gauged, cod.p, x=NULL, cod=NULL)
  roi.hom (p.ungauged, p.gauged, cod.p, x, cod,
    test="HW", limit=2, Nsim=500, index=2)
  roi.st.year (p.ungauged, p.gauged, cod.p, x, cod,
@@ -24,7 +25,7 @@
  \item{p.ungauged}{parameters of the ungauged site (1 row)}
  \item{p.gauged}{parameters of gauged sites}
  \item{cod.p}{code of gauged sites}
- \item{test}{homogeneity test to apply: \code{"HW"} (default) or \code{"AD"}}
+ \item{test}{homogeneity test to apply: \code{"HW"} (default) or \code{"AD"} (in \code{roi.st.year} you can choose \code{"HW and AD"} too}
  \item{limit}{limit over which regions must be considered heterogeneous: for example 2 for \code{"HW"} or .95 for \code{"AD"}}
  \item{Nsim}{number of simulations in \code{"HW"} or \code{"AD"} tests}
  \item{station.year}{number of station years to form the region}
@@ -35,6 +36,11 @@ Given \eqn{p} different classification variables, the distance between two eleme
 where \eqn{x_{h i}} is the value of the \eqn{h}-th variable of the \eqn{i}-th element.
 }
 \value{
+ \code{roi} returns the \sQuote{region of influence} for the site defined with \code{p.ungauged}.
+ It the gauged sites ordered according to the euclidean distance against the site of interest (the distance is evaluated in the space defined by parameters \code{p.ungauged} and \code{p.gauged}).
+ If \code{x=NULL} and \code{cod=NULL} (default), a data.frame with the ordered sites and the distances against the site of interest is returned.
+ If \code{x} and \code{cod} are provided, the data.frame will contain also statistics of samples (number of data \code{n} and L-moments).
+
  \code{roi.hom} returns the \sQuote{region of influence} for the site defined with \code{p.ungauged}.
  It returns codes of gauged sites that form an homogeneous region according to the Hosking and Wallis \code{"HW"} or Anderson-Darling \code{"AD"} tests.
  The region is formed using distances in the space defined by parameters \code{p.ungauged} and \code{p.gauged}.
@@ -67,6 +73,9 @@ annualflows
 summary(annualflows)
 x <- annualflows["dato"][,]
 cod <- annualflows["cod"][,]
+
+roi(parameters[5,3:5],parameters[-5,3:5],parameters[-5,1])
+roi(parameters[5,3:5],parameters[-5,3:5],parameters[-5,1],x,cod)
 
 # roi.hom
 #roi.hom(parameters[5,3:5],parameters[-5,3:5],parameters[-5,1],x,cod)

@@ -1,3 +1,31 @@
+roi <- function (p.ungauged,p.gauged,cod.p,x=NULL,cod=NULL) {
+
+ parametri <- rbind(p.ungauged,p.gauged)
+ n <- dim(parametri)[1]
+ k <- dim(parametri)[2]
+ matrice.distanze <- dist(parametri)
+ distanze <- as.matrix(matrice.distanze)[-1,1]
+ ordini <- order(distanze)
+ if(!((is.null(x))&(is.null(cod)))) {
+  dum.reg <- factor(cod,levels=cod.p)
+  x <- x[!is.na(dum.reg)]
+  cod <- cod[!is.na(dum.reg)]
+  n.reg <- tapply(x,cod,length)
+  l.reg <- t(sapply(split(x,cod),Lmoments))
+  tabella <- data.frame(cod.p,cbind(distanze,n.reg,l.reg))
+  names(tabella)[1:3] <- c("cod","dist","n")
+  output <- tabella[ordini,]
+ }
+ else {
+  tabella <- data.frame(cod.p,distanze)
+  names(tabella) <- c("cod","dist")
+  output <- tabella[ordini,]
+ }
+ return(output)
+}
+
+
+# -------------------------------------------------------------------- #
 
 roi.hom <- function (p.ungauged,p.gauged,cod.p,x,cod,test="HW",limit=2,Nsim=500,index=2) {
 
@@ -68,6 +96,14 @@ roi.st.year <- function (p.ungauged,p.gauged,cod.p,x,cod,test="HW",station.year=
    cod.reg <- cod[!is.na(dum.reg)]
    P.AD <- ADbootstrap.test(x.reg,cod.reg,Nsim,index)
    homtest <- P.AD
+ }
+ else if (test=="HW and AD") {
+   dum.reg <- factor(cod,levels=bacini)
+   x.reg <- x[!is.na(dum.reg)]
+   cod.reg <- cod[!is.na(dum.reg)]
+   H.HW <- HW.tests(x.reg,cod.reg,Nsim)
+   P.AD <- ADbootstrap.test(x.reg,cod.reg,Nsim,index)
+   homtest <- c(H.HW,P.AD)
  }
 
  roiout <- list(region=bacini,test=homtest)
