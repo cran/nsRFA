@@ -133,7 +133,7 @@ par.gamma <- function(lambda1,lambda2,tau3) {
    sigma <- lambda2*pi^(0.5) * alfa^(0.5) * gamma(alfa)/gamma(alfa + 0.5)
    beta <- 0.5*sigma*abs(2*alfa^(-0.5))
    beta <- sign(tau3)*beta
-   if(beta>0) {xi <- lambda1 - alfa*beta} else {xi <- lambda1 + alfa*beta}
+   xi <- lambda1 - alfa*beta
    output <- list(xi=xi, beta=beta, alfa=alfa)
   }
   else {
