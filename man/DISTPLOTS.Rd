@@ -3,10 +3,12 @@
 \name{DISTPLOTS}
 \alias{DISTPLOTS}
 \alias{plotpos}
+\alias{unifplot}
 \alias{normplot}
 \alias{lognormplot}
 \alias{gumbelplot}
 \alias{pointspos}
+\alias{unifpoints}
 \alias{normpoints}
 \alias{gumbelpoints}
 \alias{regionalplotpos}
@@ -20,10 +22,12 @@
 }
 \usage{
  plotpos (x, ...)
+ unifplot (x, line=TRUE, ...)
  normplot (x, line=TRUE, ...)
  lognormplot (x, line=TRUE, ...)
  gumbelplot (x, line=TRUE, ...)
  pointspos (x, ...)
+ unifpoints (x, ...)
  normpoints (x, ...)
  gumbelpoints (x, ...)
  regionalplotpos (x, cod, ...)
@@ -40,12 +44,13 @@
 }
 %\details{}
 \value{
- Representation of the values of \code{x} vs their empirical probability function \eqn{F} in a cartesian, normal, lognormal or Gumbel plot. 
+ Representation of the values of \code{x} vs their empirical probability function \eqn{F} in a cartesian, uniform, normal, lognormal or Gumbel plot. 
+ \code{plotpos} and \code{unifplot} are analogous except for the axis notation, \code{unifplot} has the same notation as \code{normplot}, \code{lognormplot}, ...
  \eqn{F} is defined with the plotting position \eqn{F=(n-0.5)/n}.
- The straigth line (if \code{line}=TRUE) indicate the normal, lognormal or Gumbel distribution with parameters estimated from \code{x}.
+ The straigth line (if \code{line}=TRUE) indicate the uniform, normal, lognormal or Gumbel distribution with parameters estimated from \code{x}.
  The regional plots draw samples of a region on the same plot. 
 
- \code{pointspos}, \code{normpoints} and \code{gumbelpoints} are the analogous of \code{points}, they can be used to add points or lines to \code{plotpos}, \code{normplot}, \code{lognormplot} and \code{gumbelplot}.
+ \code{pointspos}, \code{normpoints}, ... are the analogous of \code{points}, they can be used to add points or lines to \code{plotpos}, \code{normplot}, ...
  \code{normpoints} can be used either in \code{normplot} or \code{lognormplot}.
 
 }

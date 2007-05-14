@@ -13,16 +13,17 @@
  Diagnostics of model results, it compares estimated values \code{y} with observed values \code{x}. 
 }
 \usage{
- R2 (x, y)
- RMSE (x, y) 
- MAE (x, y)
- RMSEP (x, y)
- MAEP (x, y)
+ R2 (x, y, na.rm=FALSE)
+ RMSE (x, y, na.rm=FALSE) 
+ MAE (x, y, na.rm=FALSE)
+ RMSEP (x, y, na.rm=FALSE)
+ MAEP (x, y, na.rm=FALSE)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{observed values}
  \item{y}{estimated values}
+ \item{na.rm}{logical. Should missing values be removed?}
 }
 \details{
  If \eqn{x_i} are the observed values, \eqn{y_i} the estimated values, with \eqn{i=1,...,n}, and \eqn{\bar{x}} the sample mean of \eqn{x_i}, then:

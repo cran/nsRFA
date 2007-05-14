@@ -211,6 +211,41 @@ gumbelpoints <- function(x,...) {
 
 # ---------------------------------------------------------------- #
 
+unifplot <- function (x, line=TRUE, ...) {
+    ordinato <- sort(x)
+    n <- length(ordinato)
+    plotpos <- seq(1,n)/n
+    uteorica <- qunif(plotpos)
+    pp <- c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99)
+    qq <- qunif(pp)
+    x = ordinato
+    F = uteorica
+    plot(x, F, axes = FALSE, ...)
+    axis(1)
+    axis(2, at = qq, labels = pp)
+    abline(h = qq, col = "gray", lty = "dotted")
+    #grid(nx = NULL, ny = NA)
+    box()
+    if (line == TRUE)
+        lines(ordinato, qunif(ordinato), lty = 2)
+}
+
+
+# ---------------------------------------------------------------- #
+
+unifpoints <- function (x, ...) {
+    ordinato <- sort(x)
+    n <- length(ordinato)
+    plotpos <- seq(1,n)/n
+    uteorica <- qunif(plotpos)
+    x = ordinato
+    F = uteorica
+    points(x, F, ...)
+}
+
+
+# ---------------------------------------------------------------- #
+
 regionalplotpos <- function(x,cod,...) {
 
   # INPUT

@@ -1,9 +1,15 @@
-R2 <- function(x, y) {
+R2 <- function(x, y, na.rm=FALSE) {
 
  # INPUT
  # x = observed values
  # y = estimated values
 
+ if (na.rm==TRUE) {
+  x <- x[!is.na(x)]
+  y <- y[!is.na(x)]
+  x <- x[!is.na(y)]
+  y <- y[!is.na(y)]
+ }
  n <- length(x)
  if (!length(y)==n) stop("R2: x and y must have the same length")
  SST <- sum(x^2) - n*mean(x)^2
@@ -16,12 +22,18 @@ R2 <- function(x, y) {
 
 # ------------------------------------------------------------------ #
 
-RMSE <- function(x, y) {
+RMSE <- function(x, y, na.rm=FALSE) {
 
  # INPUT
  # x = observed values
  # y = estimated values
 
+ if (na.rm==TRUE) {
+  x <- x[!is.na(x)]
+  y <- y[!is.na(x)]
+  x <- x[!is.na(y)]
+  y <- y[!is.na(y)]
+ }
  n <- length(x)
  if (!length(y)==n) stop("RMSE: x and y must have the same length")
  res <- x-y
@@ -33,13 +45,19 @@ RMSE <- function(x, y) {
 
 # ------------------------------------------------------------------ #
 
-MAE <- function(x, y) {
+MAE <- function(x, y, na.rm=FALSE) {
 
  # INPUT
  # INPUT
  # x = observed values
  # y = estimated values
 
+ if (na.rm==TRUE) {
+  x <- x[!is.na(x)]
+  y <- y[!is.na(x)]
+  x <- x[!is.na(y)]
+  y <- y[!is.na(y)]
+ }
  n <- length(x)
  if (!length(y)==n) stop("MAE: x and y must have the same length")
  res <- x-y
@@ -51,12 +69,18 @@ MAE <- function(x, y) {
 
 # ------------------------------------------------------------------ #
 
-RMSEP <- function(x, y) {
+RMSEP <- function(x, y, na.rm=FALSE) {
 
  # INPUT
  # x = observed values
  # y = estimated values
 
+ if (na.rm==TRUE) {
+  x <- x[!is.na(x)]
+  y <- y[!is.na(x)]
+  x <- x[!is.na(y)]
+  y <- y[!is.na(y)]
+ }
  n <- length(x)
  if (!length(y)==n) stop("RMSE: x and y must have the same length")
  res <- (x-y)/x
@@ -68,13 +92,19 @@ RMSEP <- function(x, y) {
 
 # ------------------------------------------------------------------ #
 
-MAEP <- function(x, y) {
+MAEP <- function(x, y, na.rm=FALSE) {
 
  # INPUT
  # INPUT
  # x = observed values
  # y = estimated values
 
+ if (na.rm==TRUE) {
+  x <- x[!is.na(x)]
+  y <- y[!is.na(x)]
+  x <- x[!is.na(y)]
+  y <- y[!is.na(y)]
+ }
  n <- length(x)
  if (!length(y)==n) stop("MAE: x and y must have the same length")
  res <- (x-y)/x

@@ -74,8 +74,8 @@ Lmom.gamma <- function(xi,beta,alfa) {
   G2 = 4.1670213
   G3 = 3.1925299
   H1 = 9.0551443
-  H2 = 0.26649995
-  H3 = 0.26193668
+  H2 = 26.649995
+  H3 = 26.193668
   
   quanti <- length(xi)
   lambda1 <- rep(NA,quanti)
@@ -84,28 +84,30 @@ Lmom.gamma <- function(xi,beta,alfa) {
   tau4 <- rep(NA,quanti)
   for (i in 1:quanti) {
     if (beta[i] >= 0) {
-      lambda1[i] <- xi + alfa*beta
-      lambda2[i] <- abs(pi^(-0.5) *beta * gamma(alfa + 0.5)/gamma(alfa))
+      lambda1[i] <- xi[i] + alfa[i]*beta[i]
+      lambda2[i] <- abs(pi^(-0.5) *beta[i] * gamma(alfa[i] + 0.5)/gamma(alfa[i]))
       # tau3 <- 6 * pbeta(1/3,alfa,2*alfa) - 3
-      if (alfa >= 1) {
-        tau3[i] <- alfa^(-0.5) * (A0 + A1*alfa^(-1) + A2*alfa^(-2) + A3*alfa^(-3))/(1 + B1*alfa^(-1) + B2*alfa^(-2))
-        tau4[i] <- (C0 + C1*alfa^(-1) + C2*alfa^(-2) + C3*alfa^(-3))/(1 + D1*alfa^(-1) + D2*alfa^(-2))
+      if (alfa[i] >= 1) {
+        tau3[i] <- alfa[i]^(-0.5) * (A0 + A1*alfa[i]^(-1) + A2*alfa[i]^(-2) + A3*alfa[i]^(-3))/
+                   (1 + B1*alfa[i]^(-1) + B2*alfa[i]^(-2))
+        tau4[i] <- (C0 + C1*alfa[i]^(-1) + C2*alfa[i]^(-2) + C3*alfa[i]^(-3))/(1 + D1*alfa[i]^(-1) + D2*alfa[i]^(-2))
       }
-      else if (alfa < 1) {
-        tau3[i] <- (1 + E1*alfa + E2*alfa^2 + E3*alfa^3)/(1 + F1*alfa + F2*alfa^2 + F3*alfa^3)
-        tau4[i] <- (1 + G1*alfa + G2*alfa^2 + G3*alfa^3)/(1 + H1*alfa + H2*alfa^2 + H3*alfa^3)
+      else if (alfa[i] < 1) {
+        tau3[i] <- (1 + E1*alfa[i] + E2*alfa[i]^2 + E3*alfa[i]^3)/(1 + F1*alfa[i] + F2*alfa[i]^2 + F3*alfa[i]^3)
+        tau4[i] <- (1 + G1*alfa[i] + G2*alfa[i]^2 + G3*alfa[i]^3)/(1 + H1*alfa[i] + H2*alfa[i]^2 + H3*alfa[i]^3)
       }
     }
     else if (beta[i] < 0) {
-      lambda1[i] <- xi + alfa*beta
-      lambda2[i] <- abs(pi^(-0.5) *beta * gamma(alfa + 0.5)/gamma(alfa))
-      if (alfa >= 1) {
-        tau3[i] <- -(alfa^(-0.5) * (A0 + A1*alfa^(-1) + A2*alfa^(-2) + A3*alfa^(-3))/(1 + B1*alfa^(-1) + B2*alfa^(-2)))
-        tau4[i] <- (C0 + C1*alfa^(-1) + C2*alfa^(-2) + C3*alfa^(-3))/(1 + D1*alfa^(-1) + D2*alfa^(-2))
+      lambda1[i] <- xi[i] + alfa[i]*beta[i]
+      lambda2[i] <- abs(pi^(-0.5) *beta[i] * gamma(alfa[i] + 0.5)/gamma(alfa[i]))
+      if (alfa[i] >= 1) {
+        tau3[i] <- -(alfa[i]^(-0.5) * (A0 + A1*alfa[i]^(-1) + A2*alfa[i]^(-2) + A3*alfa[i]^(-3))/
+                   (1 + B1*alfa[i]^(-1) + B2*alfa[i]^(-2)))
+        tau4[i] <- (C0 + C1*alfa[i]^(-1) + C2*alfa[i]^(-2) + C3*alfa[i]^(-3))/(1 + D1*alfa[i]^(-1) + D2*alfa[i]^(-2))
       }
-      else if (alfa < 1) {
-        tau3[i] <- -(1 + E1*alfa + E2*alfa^2 + E3*alfa^3)/(1 + F1*alfa + F2*alfa^2 + F3*alfa^3)
-        tau4[i] <- (1 + G1*alfa + G2*alfa^2 + G3*alfa^3)/(1 + H1*alfa + H2*alfa^2 + H3*alfa^3)
+      else if (alfa[i] < 1) {
+        tau3[i] <- -(1 + E1*alfa[i] + E2*alfa[i]^2 + E3*alfa[i]^3)/(1 + F1*alfa[i] + F2*alfa[i]^2 + F3*alfa[i]^3)
+        tau4[i] <- (1 + G1*alfa[i] + G2*alfa[i]^2 + G3*alfa[i]^3)/(1 + H1*alfa[i] + H2*alfa[i]^2 + H3*alfa[i]^3)
       }
     }
   }
