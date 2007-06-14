@@ -5,8 +5,8 @@ R2 <- function(x, y, na.rm=FALSE) {
  # y = estimated values
 
  if (na.rm==TRUE) {
-  x <- x[!is.na(x)]
   y <- y[!is.na(x)]
+  x <- x[!is.na(x)]
   x <- x[!is.na(y)]
   y <- y[!is.na(y)]
  }
@@ -29,8 +29,8 @@ RMSE <- function(x, y, na.rm=FALSE) {
  # y = estimated values
 
  if (na.rm==TRUE) {
-  x <- x[!is.na(x)]
   y <- y[!is.na(x)]
+  x <- x[!is.na(x)]
   x <- x[!is.na(y)]
   y <- y[!is.na(y)]
  }
@@ -53,8 +53,8 @@ MAE <- function(x, y, na.rm=FALSE) {
  # y = estimated values
 
  if (na.rm==TRUE) {
-  x <- x[!is.na(x)]
   y <- y[!is.na(x)]
+  x <- x[!is.na(x)]
   x <- x[!is.na(y)]
   y <- y[!is.na(y)]
  }
@@ -76,8 +76,8 @@ RMSEP <- function(x, y, na.rm=FALSE) {
  # y = estimated values
 
  if (na.rm==TRUE) {
-  x <- x[!is.na(x)]
   y <- y[!is.na(x)]
+  x <- x[!is.na(x)]
   x <- x[!is.na(y)]
   y <- y[!is.na(y)]
  }
@@ -100,8 +100,8 @@ MAEP <- function(x, y, na.rm=FALSE) {
  # y = estimated values
 
  if (na.rm==TRUE) {
-  x <- x[!is.na(x)]
   y <- y[!is.na(x)]
+  x <- x[!is.na(x)]
   x <- x[!is.na(y)]
   y <- y[!is.na(y)]
  }
