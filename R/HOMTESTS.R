@@ -269,6 +269,6 @@ criticalD <- function () {
   Dc <- c(1.333,1.648,1.917,2.140,2.329,2.491,2.632,2.757,2.869,2.971,3)
 
   critD <- data.frame(cbind(N,Dc))
-  print(critD)
+  critD
 }
 

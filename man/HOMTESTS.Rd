@@ -262,7 +262,7 @@ Viglione A. (2007) Metodi statistici non-supervised per la stima di grandezze id
 
 %\note{.}
 
-\seealso{\code{\link{traceWminim}}, \code{\link{roi}}, \code{\link{KAPPA}}.}
+\seealso{\code{\link{traceWminim}}, \code{\link{roi}}, \code{\link{KAPPA}}, \code{HW.original}.}
 
 \examples{
 data(hydroSIMN)
