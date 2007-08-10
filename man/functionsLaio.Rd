@@ -19,11 +19,7 @@ Functions for inversion calculation.
  \code{polig} represents the poligamma function.
 }
 %\source{}
-\references{
+%\references{}
 
-}
-
-\examples{
-
-}
+%\examples{}
 \keyword{datasets}

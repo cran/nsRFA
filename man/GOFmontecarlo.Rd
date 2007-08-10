@@ -27,21 +27,23 @@
  \item{Nsim}{number of simulated samples from the hypothetical parent distribution}
 }
 \details{
-Given a sample \eqn{x_i \  (i=1,\ldots,m)} of data extracted from a distribution \eqn{F_R(x)}, the test is used to check the null hypothesis \eqn{H_0 : F_R(x) = F(x,\theta)}, where \eqn{F(x,\theta)} is the hypothetical distribution and \eqn{\theta} is an array of parameters estimated from the sample \eqn{x_i}.
+An introduction, analogous to the following one, on the Anderson-Darling test is available on \url{http://en.wikipedia.org/wiki/Anderson-Darling_test}.
 
-The Anderson-Darling goodness of fit test measures the departure between the hypothetical distribution \eqn{F(x,\theta)} and the cumulative frequency function \eqn{F_m(x)} defined as:
-\deqn{F_m(x) = 0 \ , \ x < x_{(1)}}
-\deqn{F_m(x) = i/m \ , \  x_{(i)} \leq x < x_{(i+1)}}
-\deqn{F_m(x) = 1 \ , \ x_{(m)} \leq x}
-where \eqn{x_{(i)}} is the \eqn{i}-th element of the ordered sample (in increasing order).
+Given a sample \eqn{x_i \  (i=1,\ldots,m)}{xi (i=1,...,m)} of data extracted from a distribution \eqn{F_R(x)}{FR(x)}, the test is used to check the null hypothesis \eqn{H_0 : F_R(x) = F(x,\theta)}{H0 : FR(x) = F(x,\theta)}, where \eqn{F(x,\theta)} is the hypothetical distribution and \eqn{\theta} is an array of parameters estimated from the sample \eqn{x_i}{xi}.
+
+The Anderson-Darling goodness of fit test measures the departure between the hypothetical distribution \eqn{F(x,\theta)} and the cumulative frequency function \eqn{F_m(x)}{Fm(x)} defined as:
+\deqn{F_m(x) = 0 \ , \ x < x_{(1)}}{Fm(x)=0, x<x(1)}
+\deqn{F_m(x) = i/m \ , \  x_{(i)} \leq x < x_{(i+1)}}{Fm(x)=i/m, x(i)<=x<x(i+1)}
+\deqn{F_m(x) = 1 \ , \ x_{(m)} \leq x}{Fm(x)=1, x(m)<=x}
+where \eqn{x_{(i)}}{x(i)} is the \eqn{i}-th element of the ordered sample (in increasing order).
 
 The test statistic is:
-\deqn{Q^2 = m \! \int_x \left[ F_m(x) - F(x,\theta) \right]^2 \Psi(x) \,dF(x)}
+\deqn{Q^2 = m \! \int_x \left[ F_m(x) - F(x,\theta) \right]^2 \Psi(x) \,dF(x)}{Q2 = m int[Fm(x) - F(x,\theta)]^2 \Psi(x) dF(x)}
 where \eqn{\Psi(x)}, in the case of the Anderson-Darling test (Laio, 2004), is \eqn{\Psi(x) = [F(x,\theta) (1 - F(x,\theta))]^{-1}}.
 In practice, the statistic is calculated as:
-\deqn{A^2 = -m -\frac{1}{m} \sum_{i=1}^m \left\{ (2i-1)\ln[F(x_{(i)},\theta)] + (2m+1-2i)\ln[1 - F(x_{(i)},\theta)] \right\}}
+\deqn{A^2 = -m -\frac{1}{m} \sum_{i=1}^m \left\{ (2i-1)\ln[F(x_{(i)},\theta)] + (2m+1-2i)\ln[1 - F(x_{(i)},\theta)] \right\}}{A2 = -m -1/m sum\{(2i-1)\ln[F(x(i),\theta)] + (2m+1-2i)\ln[1 - F(x(i),\theta)]\}}
 
-The statistic \eqn{A^2}, obtained in this way, may be confronted with the population of the \eqn{A^2}'s that one obtain if samples effectively belongs to the \eqn{F(x,\theta)} hypothetical distribution.
+The statistic \eqn{A^2}{A2}, obtained in this way, may be confronted with the population of the \eqn{A^2}{A2}'s that one obtain if samples effectively belongs to the \eqn{F(x,\theta)} hypothetical distribution.
 In the case of the test of normality, this distribution is defined (see Laio, 2004).
 In other cases, e.g. the Pearson Type III case here, can be derived with a Monte-Carlo procedure.
 }
@@ -58,8 +60,9 @@ In other cases, e.g. the Pearson Type III case here, can be derived with a Monte
 
   \code{gofP3test} tests the goodness of fit of a Pearson type III (gamma) distribution with the sample \code{x}.
 
-  They return the value \eqn{A_2} of the Anderson-Darling statistics and its probability \eqn{P}.
-  If \eqn{P} is, for example, 0.92, the sample shouldn't be considered extracted from the hypothetical parent distribution with significance level greater than 8%.
+  They return the value \eqn{A_2}{A2} of the Anderson-Darling statistics and its probability \eqn{P}.
+  If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the test is not passed at level \eqn{\alpha=10\%}.
+  %If \eqn{P} is, for example, 0.92, the sample shouldn't be considered extracted from the hypothetical parent distribution with significance level greater than 8%.
 }
 \references{
 D'Agostino R., Stephens M. (1986) Goodness-of-Fit Techniques, chapter Tests based on EDF statistics. Marcel Dekker, New York.

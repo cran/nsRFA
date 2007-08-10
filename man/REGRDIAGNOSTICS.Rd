@@ -40,11 +40,11 @@
  \code{R2.lm} returns the coefficient of determination \eqn{R^2} and the adjusted coefficient of determination \eqn{R^2_{adj}} of the regression.
 
  \code{prt.lm} returns the probability \eqn{Pr(>|t|)} of the significance test (Student t) of the independent variables.
- If the value is 0.06 for a regressor, its coefficient is not significantly different from 0 for a test with significance level of 5%. 
+ If the value is 0.06 for a regressor, its coefficient is not significantly different from 0 for a test with significance level of 5\%. 
 
  \code{mantel.lm} returns the probability \eqn{P} of the Mantel test on every variable conditionated to the others.
  It substitutes \code{prt.lm} when dealing with distance matrices.
- If \eqn{P} is, for example, 0.92, the variable should be considered significant with significance level greater of 8%.
+ If \eqn{P} is, for example, 0.92, the variable should be considered significant with significance level greater of 8\%.
 
  \code{vif.lm} returns the variance inflation factors (VIF) of the independent values of the regression. If \eqn{VIF > 5} (or 10) there is a problem of multicollinearity.
 

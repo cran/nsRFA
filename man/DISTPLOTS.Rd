@@ -42,7 +42,9 @@
  \item{cod}{array that defines the data subdivision among sites}
  \item{...}{graphical parameters as \code{xlab}, \code{ylab}, \code{main}, ...}
 }
-%\details{}
+\details{
+ A brief introduction on Probability Plots (or Quantile-Quantile plots) is available on \url{http://en.wikipedia.org/wiki/Q-Q_plot}.
+}
 \value{
  Representation of the values of \code{x} vs their empirical probability function \eqn{F} in a cartesian, uniform, normal, lognormal or Gumbel plot. 
  \code{plotpos} and \code{unifplot} are analogous except for the axis notation, \code{unifplot} has the same notation as \code{normplot}, \code{lognormplot}, ...

@@ -105,8 +105,15 @@ roi.st.year <- function (p.ungauged,p.gauged,cod.p,x,cod,test="HW",station.year=
    P.AD <- ADbootstrap.test(x.reg,cod.reg,Nsim,index)
    homtest <- c(H.HW,P.AD)
  }
+ li <- t(sapply(split(x.reg,cod.reg),Lmoments))[bacini,]
+ ni <- tapply(x.reg,cod.reg,length)[bacini]
+ Si <- 1 - c(0,cumsum(ni)[-length(ni)])/sum(ni) #1 - cumsum(ni)/sum(ni)
+ wi <- ni*Si
+ di <- distanze[bacini]
+ tabella <- data.frame(cbind(li,ni,Si,wi,di))
+ Rli <- apply(li*matrix(wi, nrow=dim(li)[1], ncol=dim(li)[2]),2,sum)/sum(wi)
 
- roiout <- list(region=bacini,test=homtest)
+ roiout <- list(region=bacini,test=homtest,char.sites=tabella,regLmom=Rli)
 
  return(roiout)
 }

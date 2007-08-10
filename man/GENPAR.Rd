@@ -35,6 +35,8 @@ rand.genpar (numerosita, xi, alfa, k)
  \item{numerosita}{numeric value indicating the length of the vector to be generated}
 }
 \details{
+See \url{http://en.wikipedia.org/wiki/Pareto_distribution} for an introduction to the Pareto distribution.
+ 
 \bold{Definition}
 
 Parameters (3): \eqn{\xi} (location), \eqn{\alpha} (scale), \eqn{k} (shape).

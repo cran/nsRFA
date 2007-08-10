@@ -35,6 +35,8 @@ rand.lognorm (numerosita, xi, alfa, k)
  \item{numerosita}{numeric value indicating the length of the vector to be generated}
 }
 \details{
+See \url{http://en.wikipedia.org/wiki/Log-normal_distribution} for an introduction to the lognormal distribution.
+
 \bold{Definition}
 
 Parameters (3): \eqn{\xi} (location), \eqn{\alpha} (scale), \eqn{k} (shape).

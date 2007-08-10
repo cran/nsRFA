@@ -33,6 +33,8 @@ rand.exp (numerosita, xi, alfa)
  \item{numerosita}{numeric value indicating the length of the vector to be generated}
 }
 \details{
+See \url{http://en.wikipedia.org/wiki/Exponential_distribution} for a brief introduction on the Exponential distribution.
+
 \bold{Definition}
 
 Parameters (2): \eqn{\xi} (lower endpoint of the distribution), \eqn{\alpha} (scale).

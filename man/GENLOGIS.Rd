@@ -35,6 +35,8 @@ rand.genlogis (numerosita, xi, alfa, k)
  \item{numerosita}{numeric value indicating the length of the vector to be generated}
 }
 \details{
+See \url{http://en.wikipedia.org/wiki/Logistic_distribution} for an introduction to the Logistic Distribution.
+
 \bold{Definition}
 
 Parameters (3): \eqn{\xi} (location), \eqn{\alpha} (scale), \eqn{k} (shape).

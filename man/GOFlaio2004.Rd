@@ -27,11 +27,12 @@
  \item{T}{parameters (position, scale, shape, ...)}
  %\item{w}{Transformed test statistic (Laio, 2004)}
 }
-\details{
+\details{An introduction on the Anderson-Darling test is available on \url{http://en.wikipedia.org/wiki/Anderson-Darling_test} and in the \code{GOFmontecarlo} help page.
+ The oroginal paper of Laio (2004) is available on his web site.
 }
 \value{
-  \code{A2_GOFlaio} tests the goodness of fit of a distribution with the sample \code{x}; it return the value \eqn{A_2} of the Anderson-Darling statistics and its probability \eqn{P(A_2)}. 
-  If \eqn{P(A_2)} is, for example, 0.92, the sample shouldn't be considered extracted from the hypothetical parent distribution with significance level greater than 8%.
+  \code{A2_GOFlaio} tests the goodness of fit of a distribution with the sample \code{x}; it return the value \eqn{A_2} of the Anderson-Darling statistics and its probability \eqn{P(A_2)}{P(A2)}. 
+  If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the test is not passed at level \eqn{\alpha=10\%}.
 
   \code{A2} is the Anderson-Darling test statistic; it is used by \code{A2_GOFlaio}.
 
