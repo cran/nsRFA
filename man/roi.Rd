@@ -32,8 +32,8 @@
 }
 \details{The Euclidean distance is used.
 Given \eqn{p} different classification variables, the distance between two elements \eqn{i} and \eqn{j} is:
-\deqn{d_{i j} = \sqrt{\frac{1}{p} \sum_{h=1}^{p} (x_{h i} - x_{h j})^2}}
-where \eqn{x_{h i}} is the value of the \eqn{h}-th variable of the \eqn{i}-th element.
+\deqn{d_{i j} = \sqrt{\frac{1}{p} \sum_{h=1}^{p} (x_{h i} - x_{h j})^2}}{d_ij = \sqrt{1/p sum[h from 1 to p](x_hi - x_hj)^2}}
+where \eqn{x_{h i}}{x_hi} is the value of the \eqn{h}-th variable of the \eqn{i}-th element.
 }
 \value{
  \code{roi} returns the \sQuote{region of influence} for the site defined with \code{p.ungauged}.

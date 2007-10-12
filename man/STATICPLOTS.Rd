@@ -17,7 +17,6 @@
 }
 %- maybe also `usage' for other objects documented here.
 %\arguments{\item{}{}}
-}
 %\details{}
 \value{
  \code{Lmoment.ratio.diagram} plots points corresponding to two parameters distributions and lines corresponding to three parameters distributions on the 'L-CA - L-kur' plane.

@@ -18,8 +18,8 @@
 }
 \usage{
  HW.original (data, cod, Nsim=500)
- print.HWorig (x, ...)
- plot.HWorig (x, interactive=TRUE, ...)
+ \method{print}{HWorig} (x, ...)
+ \method{plot}{HWorig} (x, interactive=TRUE, ...)
  LMR (PARA, distr="EXP")
  PEL (XMOM, distr="EXP")
  SAMLMR (X, A=0, B=0)

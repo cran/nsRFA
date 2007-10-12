@@ -22,10 +22,10 @@
 }
 \details{
 Skewness and kurtosis are defined as:
-\deqn{skew = n^(-1) sd(x)^(-3) sum_i (x_i - mean(x))^3}
-\deqn{kurt = n^(-1) sd(x)^(-4) sum_i (x_i - mean(x))^4 - 3}
+\deqn{skew = n^{-1} \frac{\sum_{i=1}^n \left(x_i - mean(x)\right)^3}{sd(x)^{3}}}{skew = n^(-1) sd(x)^(-3) sum_i (x_i - mean(x))^3}
+\deqn{kurt = n^{-1} \frac{\sum_{i=1}^n \left(x_i - mean(x)\right)^4}{sd(x)^{4}} - 3}{kurt = n^(-1) sd(x)^(-4) sum_i (x_i - mean(x))^4 - 3}
 where \eqn{n} is the size of \code{x}.
-
+See \url{http://en.wikipedia.org/wiki/Skewness} and \url{http://en.wikipedia.org/wiki/Kurtosis} for additional informations.
 }
 %\references{}
 

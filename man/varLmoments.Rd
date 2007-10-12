@@ -19,15 +19,19 @@
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{vector representing a data-sample}
- \item{matrix}{if \code{TRUE} (default), the matrix of estimates of the variance structure (variance and covariance) of sample L-moments is returned; if \code{FALSE}, a vector containing \eqn{var(l_1)}, \eqn{var(l_2)}, \eqn{var(l_3)}, \eqn{var(l_4)}, \eqn{var(t)}, \eqn{var(t_3)} and \eqn{var(t_4)} is returned.}
+ \item{matrix}{if \code{TRUE} (default), the matrix of estimates of the variance structure (variance and covariance) i
+               of sample L-moments is returned; if \code{FALSE}, a vector containing \eqn{var(l_1)}{var(l1)}, 
+               \eqn{var(l_2)}{var(l2)}, \eqn{var(l_3)}{var(l3)}, \eqn{var(l_4)}{var(l4)}, \eqn{var(t)}, 
+               \eqn{var(t_3)}{var(t3)} and \eqn{var(t_4)}{var(t4)} is returned.}
 }
 \details{
-The estimation of the exact variance structure of sample L-moments is based on Elamir et Seheult (2004)
+The estimation of the exact variance structure of sample L-moments is based on Elamir et Seheult (2004).
 }
 \value{
  \code{varLmoments} gives the matrix of unbiased estimates of the variance structure of sample L-moments: 
-  this is a 4x4 matrix containg \eqn{var(l_1)}, \eqn{var(l_2)}, \eqn{var(l_3)}, \eqn{var(l_4)} on the main diagonal, 
-  and the correspondant covariances elsewhere (\eqn{cov(l_1,l_2)}, \eqn{cov(l_1,l_3)}, etc.);
+  this is a 4x4 matrix containg \eqn{var(l_1)}{var(l1)}, \eqn{var(l_2)}{var(l2)}, \eqn{var(l_3)}{var(l3)}, 
+  \eqn{var(l_4)}{var(l4)} on the main diagonal, 
+  and the correspondant covariances elsewhere (\eqn{cov(l_1,l_2)}{cov(l1,l2)}, \eqn{cov(l_1,l_3)}{cov(l1,l3)}, etc.);
 
  \code{varLCV} gives the unbiased estimate of the variance of sample coefficient of L-variation of \code{x};
 

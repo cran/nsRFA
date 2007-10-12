@@ -12,6 +12,8 @@ traceWminim <- function (X,centers) {
   #          all numeric columns).
   # centers  The number of clusters.
 
+  X <- data.frame(X)    # to be sure that row.names exist  (12-10-2007)
+
   n <- dim(X)[1]
   k <- dim(X)[2]
 
@@ -21,6 +23,7 @@ traceWminim <- function (X,centers) {
   tree <- hclust(d, method = "ward")
 
   clusters <- cutree(tree,centers)
+  names(clusters) <- row.names(X)    # to be sure that row.names exist  (12-10-2007)
 
   fine=FALSE
   cont=1

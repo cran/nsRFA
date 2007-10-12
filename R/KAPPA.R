@@ -118,7 +118,7 @@ Lmom.kappa <- function(xi,alfa,k,h) {
     } 
 
     if (h[i] == 0) {
-      output <- Lmom.GEV(F,xi[i],alfa[i],k[i])
+      output <- Lmom.GEV(xi[i],alfa[i],k[i])
     } 
     else {
       g <- rep(NA,4)

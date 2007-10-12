@@ -23,13 +23,13 @@
 }
 \details{The Euclidean distance is used.
 Given \eqn{p} different classification variables, the distance between two elements \eqn{i} and \eqn{j} is:
-\deqn{d_{i j} = \sqrt{\frac{1}{p} \sum_{h=1}^{p} (x_{h i} - x_{h j})^2}}
-where \eqn{x_{h i}} is the value of the \eqn{h}-th variable of the \eqn{i}-th element.
+\deqn{d_{i j} = \sqrt{\frac{1}{p} \sum_{h=1}^{p} (x_{h i} - x_{h j})^2}}{d_ij = \sqrt{1/p sum[h from 1 to p](x_hi - x_hj)^2}}
+where \eqn{x_{h i}}{x_hi} is the value of the \eqn{h}-th variable of the \eqn{i}-th element.
 
 The function \code{traceWminim} is a composition of a jerarchical algorithm, the Ward (1963) one, and an optimisation procedure consisting in the minimisation of:
-\deqn{W = \sum_{i=1}^k \left( \sum_{j=1}^{n_i} \delta_{i j}^2 \right)}
+\deqn{W = \sum_{i=1}^k \left( \sum_{j=1}^{n_i} \delta_{i j}^2 \right)}{W = sum[i from 1 to k](sum[j from 1 to ni]delta_ij^2)}
 where
-\eqn{k} is the number of clusters (obtained initially with Ward's algorithm), \eqn{n_i} is the number of sites in the \eqn{i}-th cluster and \eqn{\delta_{i j}} is the Euclidean distance between the \eqn{j}-th element of the \eqn{i}-th group and the center of mass of the \eqn{i}-th cluster.
+\eqn{k} is the number of clusters (obtained initially with Ward's algorithm), \eqn{n_i}{ni} is the number of sites in the \eqn{i}-th cluster and \eqn{\delta_{i j}}{delta_ij} is the Euclidean distance between the \eqn{j}-th element of the \eqn{i}-th group and the center of mass of the \eqn{i}-th cluster.
 \eqn{W} is calculated with \code{sumtraceW}.
 The algorithm consist in moving a site from one cluster to another if this makes \eqn{W} decrease.
 }

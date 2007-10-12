@@ -71,7 +71,7 @@ A2_GOFlaio <- function (x, dist="NORM") {
   beta1corr <- beta1*(1-0.5/n-0.3/sqrt(n)+0.3/(sqrt(n)*T[3]))
   csi1corr <- csi1*(1+2.0/n-0.3/sqrt(n)-0.4/(sqrt(n)*T[3]))
  }
- else stop("A2_GOFtest(x,T,dist,case): distribution unknown")
+ else stop("A2_GOFlaio(x,T,dist,case): distribution unknown")
  A <- A2(F)
  if (A <= eps1*csi1corr) {
   w <- max((csi0+beta0*((eps1-1)*csi1corr/beta1corr)^(eta1corr/eta0))/((eps1-eps2)*csi1corr)*(A-eps2*csi1corr),0.00001)
@@ -126,46 +126,46 @@ typeIerrorA2_GOFlaio <- function (n, T, alfa=0.05, dist="NORM", Nsim=1000) {
  if (dist=="NORM") {
   for (i in 1:Nsim) {
    x <- sample_generator(n,T,dist="NORM")
-   A[i] <- A2_GOFtest(x,dist="NORM")[2] 
+   A[i] <- A2_GOFlaio(x,dist="NORM")[2] 
   }
  }
  else if (dist=="LN") {
   for (i in 1:Nsim) {
    x <- sample_generator(n,T,dist="NORM")
    x <- log(x)
-   A[i] <- A2_GOFtest(x,dist="LN")[2]
+   A[i] <- A2_GOFlaio(x,dist="LN")[2]
   }
  }
  else if (dist=="EV1") {
   for (i in 1:Nsim) {
    x <- sample_generator(n,T,dist="EV1")
-   A[i] <- A2_GOFtest(x,dist="EV1")[2]
+   A[i] <- A2_GOFlaio(x,dist="EV1")[2]
   }
  }
  else if (dist=="EV2") {
   for (i in 1:Nsim) {
    x <- sample_generator(n,T,dist="EV1")
    x <- log(x)
-   A[i] <- A2_GOFtest(x,dist="EV2")[2]
+   A[i] <- A2_GOFlaio(x,dist="EV2")[2]
   }
  }
  else if (dist=="GEV") {
   for (i in 1:Nsim) {
    x <- sample_generator(n,T,dist="GEV")
-   A[i] <- A2_GOFtest(x,dist="GEV")[2]
+   A[i] <- A2_GOFlaio(x,dist="GEV")[2]
   }
  }
  else if (dist=="GAM") {
   for (i in 1:Nsim) {
    x <- sample_generator(n,T,dist="GAM")
-   A[i] <- A2_GOFtest(x,dist="GAM")[2]
+   A[i] <- A2_GOFlaio(x,dist="GAM")[2]
   }
  }
  else if (dist=="LP3") {
   for (i in 1:Nsim) {
    x <- sample_generator(n,T,dist="GAM")
    x <- log(x)
-   A[i] <- A2_GOFtest(x,dist="LP3")[2]
+   A[i] <- A2_GOFlaio(x,dist="LP3")[2]
   }
  }
  else stop("typeIerror(n,T,dist,case,Nsim): distribution unknown")
