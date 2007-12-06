@@ -232,7 +232,7 @@ if \eqn{t_3^R > 0.23}{t3^R > 0.23}, the bootstrap Anderson-Darling test is prefe
 }
 \value{
   \code{ADbootstrap.test} and \code{DK.test} test gives its test statistic and its distribution value \eqn{P}.
-  If \eqn{P} is, for example, 0.92, samples shouldn't be considered heterogeneous with significance level minor of 8%.
+  If \eqn{P} is, for example, 0.92, samples shouldn't be considered heterogeneous with significance level minor of 8\%.
 
   \code{HW.tests} gives the two Hosking and Wallis heterogeneity measures \eqn{H_1} and \eqn{H_2}; following Hosking and Wallis (1997), the region under analysis can therefore be regarded as \sQuote{acceptably homogeneous} if \eqn{H_1<1}, \sQuote{possibly heterogeneous} if \eqn{1 \leq H_1 < 2}, and \sQuote{definitely heterogeneous} if \eqn{H \geq 2}.
 

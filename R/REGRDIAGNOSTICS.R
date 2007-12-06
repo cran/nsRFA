@@ -143,30 +143,60 @@ MAEjk.lm <- function(x) {
 
 # ------------------------------------------------------------------ #
 
-mantel.lm <- function (x, Nperm=1000) {
+# mantel.lm <- function (x, Nperm=1000) {
+#  
+#  f <- x$term
+#  m <- x$model
+#  betas <- x$coefficients[-1]
+#  k <- length(betas)
+#  
+#  betas0 <- matrix(NA,Nperm,k)
+#  for (i in 1:Nperm) {
+#   m0 <- data.frame(cbind(sample(m[,1]),m[,-1]))
+#   names(m0) <- names(m)
+#   x0 <- lm(f, m0)
+#   betas0[i,] <- x0$coefficients[-1]
+#  }
+# 
+#  Ps <- rep(NA,k)
+#  for (i in 1:k) {
+#   Ps[i] <- ecdf(betas0[,i])(betas[i])
+#  }
+#  Ps <- 1 - abs((sign(betas)>0) - Ps)
+#  Ps <- round(Ps,4)
+# 
+#  output <- c(Ps)
+#  names(output) <- paste("P.",names(m)[-1],sep="")
+#  return(output)
+# }
  
- f <- x$term
- m <- x$model
- betas <- x$coefficients[-1]
- k <- length(betas)
- 
- betas0 <- matrix(NA,Nperm,k)
- for (i in 1:Nperm) {
-  m0 <- data.frame(cbind(sample(m[,1]),m[,-1]))
-  names(m0) <- names(m)
-  x0 <- lm(f, m0)
-  betas0[i,] <- x0$coefficients[-1]
- }
-
- Ps <- rep(NA,k)
- for (i in 1:k) {
-  Ps[i] <- ecdf(betas0[,i])(betas[i])
- }
- Ps <- 1 - abs((sign(betas)>0) - Ps)
- Ps <- round(Ps,4)
-
- output <- c(Ps)
- names(output) <- paste("P.",names(m)[-1],sep="")
- return(output)
+mantel.lm <- function (x, Nperm = 1000) {
+    f <- x$term
+    m <- x$model
+    betas <- x$coefficients[-1]
+    mY <- m[, 1]
+    mX <- m[, -1]
+    if (class(mY) != "dist") stop("mantel.lm: distance matrices of class \"dist\" must be tested.")
+    M <- as.matrix(mY)
+    nsiti <- dim(M)[1]
+    k <- length(betas)
+    betas0 <- matrix(NA, Nperm, k)
+    for (i in 1:Nperm) {
+        permutazione <- sample(1:nsiti)
+        mYperm <- as.dist(M[permutazione,permutazione])
+        m0 <- data.frame(cbind(as.numeric(mYperm), mX))
+        names(m0) <- names(m)
+        x0 <- lm(f, m0)
+        betas0[i, ] <- x0$coefficients[-1]
+    }
+    Ps <- rep(NA, k)
+    for (i in 1:k) {
+        Ps[i] <- ecdf(betas0[, i])(betas[i])
+    }
+    Ps <- 1 - abs((sign(betas) > 0) - Ps)
+    Ps <- round(Ps, 4)
+    output <- c(Ps)
+    names(output) <- paste("P.", names(m)[-1], sep = "")
+    return(output)
 }
-
+ 

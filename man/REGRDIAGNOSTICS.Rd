@@ -35,7 +35,10 @@
  \item{Nperm}{number of permutations}
  \item{level}{significance level}
 }
-%\details{}
+\details{
+\code{mantel.lm} is performed under the assumption that the dependent distance matrix is variable, while the independent distance matrices are fixed and measured without error (they are not related to random variables, see Smouse et al., 1986).
+Under this assumption, the significance of the regression between distance matrices can be evaluated simultaneously permuting the rows and corresponding columns in only the dependent distance matrix, while the others are held constant.
+}
 \value{
  \code{R2.lm} returns the coefficient of determination \eqn{R^2} and the adjusted coefficient of determination \eqn{R^2_{adj}} of the regression.
 
@@ -62,6 +65,8 @@
  \code{MAEjk.lm} returns the mean absolute error of the cross-validation (performed with \code{jackknife1.lm}).
 }
 \references{
+ Smouse P.E., Long J.C. and Sokal R.R. (1986) Multiple regression and correlation extensions of the Mantel test of matrix correspondence. Systematic Zoology, 35(4), 627-632.
+
  Viglione A., Claps P., Laio F. (2006) Utilizzo di criteri di prossimit\`a nell'analisi regionale del deflusso annuo, XXX Convegno di Idraulica e Costruzioni Idrauliche - IDRA 2006, Roma, 10-15 Settembre 2006.
 
  Viglione A., Claps P., Laio F. (2006) Water resources assessment and management under water scarcity scenarios, chapter Meanannual runoff estimation in North-Western Italy. CDSU, Milan.
@@ -114,7 +119,7 @@ MAEjk.lm(regr1)
 # mantel test on distance matrices
 #Y <- AD.dist(D,cod)             # it takes some time
 #X <- data.frame(apply(datregr[,c("Hm","Ybar")],2,dist))
-#dati <- cbind(as.numeric(Y),X)
+#dati <- cbind(X)
 #modello <- lm(Y ~ Hm + Ybar, dati)
 #mantel.lm(modello, Nperm=100)
 
