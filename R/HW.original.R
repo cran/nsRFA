@@ -34,7 +34,12 @@ print.HWorig <- function(x, ...) {
  d <- x$D
  rlm <- x$RMOM[2:4]
  names(rlm) <- c("L-CV", "L-SKEW", "L-KURT")
- tabella01 <- data.frame(cbind(len,t(xmom)[,2:4],d), row.names=names)
+ if (length(d) > 1) {
+  tabella01 <- data.frame(cbind(len,t(xmom)[,2:4],d), row.names=names)
+ }
+ else {
+  tabella01 <- c(len,t(xmom)[,2:4],d)
+ }
  names(tabella01) <- c("n", "L-CV", "L-SKEW", "L-KURT", "D(I)")
  print(tabella01)
 
