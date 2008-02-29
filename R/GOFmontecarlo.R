@@ -134,7 +134,7 @@ gofP3test <- function (x,Nsim=1000) {
  Lmom.x <- Lmoments(x)
 
  par <- par.gamma(Lmom.x["l1"],Lmom.x["l2"],Lmom.x["lca"])
- if(is.null(par$beta)) F <- pnorm(x,par$mu,par$sigma)
+ if(is.na(par$beta)) F <- pnorm(x,par$mu,par$sigma)
  else F <- F.gamma(x,par$xi,par$beta,par$alfa)
  F[F<0.00000001] <- 0.00000001
  F[F>0.99999999] <- 0.99999999
@@ -146,7 +146,7 @@ gofP3test <- function (x,Nsim=1000) {
   x.sim <- sort(x.sim)
   Lmom.xsim <- Lmoments(x.sim)
   par.sim <- par.gamma(Lmom.xsim["l1"],Lmom.xsim["l2"],Lmom.xsim["lca"])
-  if(is.null(par.sim$beta)) F <- pnorm(x.sim,par.sim$mu,par.sim$sigma)
+  if(is.na(par.sim$beta)) F <- pnorm(x.sim,par.sim$mu,par.sim$sigma)
   else F <- F.gamma(x.sim,par.sim$xi,par.sim$beta,par.sim$alfa)
   F[F<0.00000001] <- 0.00000001
   F[F>0.99999999] <- 0.99999999

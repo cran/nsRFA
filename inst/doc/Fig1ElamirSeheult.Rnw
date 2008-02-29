@@ -1,0 +1,115 @@
+
+\documentclass[a4paper]{article}
+\usepackage{graphics}                 % Packages to allow inclusion of graphics
+\usepackage[pdftex]{graphicx}
+\usepackage{fancyhdr}
+\usepackage[figuresright]{rotating}
+
+
+% Margini
+\setlength{\textwidth} {170mm}
+\setlength{\textheight}{240mm}      %Altezza testo 227 mm
+%\setlength{\topmargin} {0.1mm}
+
+\setlength{\evensidemargin}{-5mm} %Margini per l'opzione twoside
+\setlength{\oddsidemargin} {-5mm}
+\setlength{\topmargin}{-10mm}
+
+
+%\VignetteIndexEntry{Fig1ElamirSeheult} 
+
+
+\title{Figure 1 in Elamir and Seheult (2004)}
+\author{Alberto Viglione}
+
+\begin{document}
+\maketitle
+
+
+
+
+First of all load the library:
+<<>>=
+library(nsRFA)
+@
+and generate the samples from the Normal distribution:
+<<eval=TRUE>>=
+Nsim=1000
+n=60
+@
+<<eval=TRUE>>=
+campsimulati <- rnorm(n*Nsim)
+@
+<<a, eval=TRUE>>=
+campsimulati <- matrix(campsimulati, ncol=n)
+@
+Then calculate $l_3$ and $SE(l_3)$:
+<<b, eval=TRUE>>=
+lmom <- t(apply(campsimulati, 1, Lmoments))
+vlmom <- t(apply(campsimulati, 1, varLmoments, matrix=FALSE))
+
+l3 <- lmom[,"lca"]*lmom[,"l2"]
+sl3 <- sqrt(vlmom[,"var.l3"])
+@
+<<eval=TRUE>>=
+l3gaussian <- l3/sl3
+@
+and plot the results:
+<<fig=FALSE, eval=FALSE>>=
+qqnorm(l3gaussian, main="Normal Q-Q Plot for Gaussian samples")
+ qqline(l3gaussian)
+@
+
+Repeat the same procedure for the Student distribution:
+<<eval=TRUE>>=
+campsimulati <- rt(n*Nsim, df=5)
+@
+<<eval=TRUE>>=
+<<a>>
+<<b>>
+@
+<<eval=TRUE>>=
+l3student <- l3/sl3
+@
+the Cauchy distribution:
+<<eval=TRUE>>=
+campsimulati <- rcauchy(n*Nsim)
+@
+<<eval=TRUE>>=
+<<a>>
+<<b>>
+@
+<<eval=TRUE>>=
+l3cauchy <- l3/sl3
+@
+and the Uniform distribution:
+<<eval=TRUE>>=
+campsimulati <- runif(n*Nsim)
+@
+<<eval=TRUE>>=
+<<a>>
+<<b>>
+@
+<<eval=TRUE>>=
+l3unif <- l3/sl3
+@
+
+Plot the result:
+\begin{figure}
+\begin{center}
+<<fig=TRUE, eval=TRUE, width=7, height=9>>=
+layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE))
+qqnorm(l3gaussian, main="Normal Plot: Gaussian samples")
+ qqline(l3gaussian)
+qqnorm(l3student, main="Normal Plot: Student (df=5) samples")
+ qqline(l3student)
+qqnorm(l3cauchy, main="Normal Plot: Cauchy samples")
+ qqline(l3cauchy)
+qqnorm(l3unif, main="Normal Plot: Uniform samples")
+ qqline(l3unif)
+@
+\end{center}
+\caption{Normal quantile plots and added line for $N=1000$ simulated values of $l_3/SE(l_3)$ from Gaussian, Student(5), Cauchy and Uniform samples of size $n=60$.}
+\end{figure}
+\end{document}
+

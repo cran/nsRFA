@@ -77,7 +77,7 @@ Lmom.gamma <- function(xi,beta,alfa) {
   H2 = 26.649995
   H3 = 26.193668
   
-  quanti <- length(xi)
+  quanti <- length(beta)
   lambda1 <- rep(NA,quanti)
   lambda2 <- rep(NA,quanti)
   tau3 <- rep(NA,quanti)
@@ -117,35 +117,74 @@ Lmom.gamma <- function(xi,beta,alfa) {
   return(output)
 }
 
+#par.gamma <- function(lambda1,lambda2,tau3) {
+#
+#  lambda1 <- as.numeric(lambda1)
+#  lambda2 <- as.numeric(lambda2)
+#  tau3 <- as.numeric(tau3)
+#
+#  if ((abs(tau3) > 0)&&(abs(tau3) < 1/3)) {
+#   z <- 3*pi*tau3^2
+#   alfa <- (1 + 0.2906*z)/(z + 0.1882*z^2 + 0.0442*z^3)
+#  }
+#  else if ((abs(tau3) >= 1/3)&&(abs(tau3) < 1)) {
+#   z <- 1 - abs(tau3)
+#   alfa <- (0.36067*z - 0.59567*z^2 + 0.25361*z^3)/(1 - 2.78861*z + 2.56096*z^2 - 0.77045*z^3)
+#  }
+#  if(alfa<100) {
+#   sigma <- lambda2*pi^(0.5) * alfa^(0.5) * gamma(alfa)/gamma(alfa + 0.5)
+#   beta <- 0.5*sigma*abs(2*alfa^(-0.5))
+#   beta <- sign(tau3)*beta
+#   xi <- lambda1 - alfa*beta
+#   output <- list(xi=xi, beta=beta, alfa=alfa)
+#  }
+#  else {
+#   mu <- lambda1
+#   sigma <- sqrt(pi)*lambda2/(1-1/(8*alfa)+1/(128*alfa^2))
+#   output <- list(mu=mu, sigma=sigma)
+#  }
+#
+#  return(output)
+#}
+
 par.gamma <- function(lambda1,lambda2,tau3) {
 
   lambda1 <- as.numeric(lambda1)
   lambda2 <- as.numeric(lambda2)
   tau3 <- as.numeric(tau3)
+  quanti <- length(tau3)
 
-  if ((abs(tau3) > 0)&&(abs(tau3) < 1/3)) {
-   z <- 3*pi*tau3^2
-   alfa <- (1 + 0.2906*z)/(z + 0.1882*z^2 + 0.0442*z^3)
+  xis <- rep(NA, quanti)
+  betas <- rep(NA, quanti)
+  alfas <- rep(NA, quanti)
+  mus <- rep(NA, quanti)
+  sigmas <- rep(NA, quanti)
+  for (i in 1:quanti) {
+   if ((abs(tau3[i]) > 0)&&(abs(tau3[i]) < 1/3)) {
+    z <- 3*pi*tau3[i]^2
+    alfa <- (1 + 0.2906*z)/(z + 0.1882*z^2 + 0.0442*z^3)
+   }
+   else if ((abs(tau3[i]) >= 1/3)&&(abs(tau3[i]) < 1)) {
+    z <- 1 - abs(tau3[i])
+    alfa <- (0.36067*z - 0.59567*z^2 + 0.25361*z^3)/(1 - 2.78861*z + 2.56096*z^2 - 0.77045*z^3)
+   }
+   if(alfa<100) {
+    sigma <- lambda2[i]*pi^(0.5) * alfa^(0.5) * gamma(alfa)/gamma(alfa + 0.5)
+    beta <- 0.5*sigma*abs(2*alfa^(-0.5))
+    beta <- sign(tau3[i])*beta
+    xi <- lambda1[i] - alfa*beta
+    xis[i] <- xi; betas[i] <- beta; alfas[i] <- alfa
+   }
+   else {
+    mu <- lambda1[i]
+    sigma <- sqrt(pi)*lambda2[i]/(1-1/(8*alfa)+1/(128*alfa^2))
+    mus[i] <- mu; sigmas[i] <- sigma
+   }
   }
-  else if ((abs(tau3) >= 1/3)&&(abs(tau3) < 1)) {
-   z <- 1 - abs(tau3)
-   alfa <- (0.36067*z - 0.59567*z^2 + 0.25361*z^3)/(1 - 2.78861*z + 2.56096*z^2 - 0.77045*z^3)
-  }
-  if(alfa<100) {
-   sigma <- lambda2*pi^(0.5) * alfa^(0.5) * gamma(alfa)/gamma(alfa + 0.5)
-   beta <- 0.5*sigma*abs(2*alfa^(-0.5))
-   beta <- sign(tau3)*beta
-   xi <- lambda1 - alfa*beta
-   output <- list(xi=xi, beta=beta, alfa=alfa)
-  }
-  else {
-   mu <- lambda1
-   sigma <- sqrt(pi)*lambda2/(1-1/(8*alfa)+1/(128*alfa^2))
-   output <- list(mu=mu, sigma=sigma)
-  }
-
+  output <- list(xi=xis, beta=betas, alfa=alfas, mu=mus, sigma=sigmas)
   return(output)
 }
+
 
 rand.gamma <- function(numerosita,xi,beta,alfa) {
 
