@@ -30,8 +30,7 @@
  \item{T1}{position parameter of the Gamma (Pearson type III) distribution}
  \item{n}{sample length}
 }
-\details{
-}
+%\details{}
 \value{
   \code{ML_estimation} estimate the parameters of the distribution \code{dist} from a sample \code{x} using the maximum likelihood approach. 
 

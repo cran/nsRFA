@@ -16,7 +16,7 @@
 \setlength{\topmargin}{-10mm}
 
 
-%\VignetteIndexEntry{Fig1ElamirSeheult} 
+%\VignetteIndexEntry{Figure 1 in Elamir and Seheult (2004)}
 
 
 \title{Figure 1 in Elamir and Seheult (2004)}
@@ -33,7 +33,7 @@ First of all load the library:
 library(nsRFA)
 @
 and generate the samples from the Normal distribution:
-<<eval=TRUE>>=
+<<>>=
 Nsim=1000
 n=60
 @
@@ -55,7 +55,7 @@ sl3 <- sqrt(vlmom[,"var.l3"])
 l3gaussian <- l3/sl3
 @
 and plot the results:
-<<fig=FALSE, eval=FALSE>>=
+<<fig=FALSE, eval=TRUE>>=
 qqnorm(l3gaussian, main="Normal Q-Q Plot for Gaussian samples")
  qqline(l3gaussian)
 @
@@ -95,9 +95,10 @@ l3unif <- l3/sl3
 @
 
 Plot the result:
-\begin{figure}
-\begin{center}
-<<fig=TRUE, eval=TRUE, width=7, height=9>>=
+<<echo=FALSE, eval=TRUE>>=
+bitmap(file="Fig1.png", type="png256", height=10, width=8, res=144, pointsize=16)
+@
+<<fig=FALSE, eval=TRUE, width=7, height=9>>=
 layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE))
 qqnorm(l3gaussian, main="Normal Plot: Gaussian samples")
  qqline(l3gaussian)
@@ -108,6 +109,13 @@ qqnorm(l3cauchy, main="Normal Plot: Cauchy samples")
 qqnorm(l3unif, main="Normal Plot: Uniform samples")
  qqline(l3unif)
 @
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.9\textwidth]{Fig1.png}
 \end{center}
 \caption{Normal quantile plots and added line for $N=1000$ simulated values of $l_3/SE(l_3)$ from Gaussian, Student(5), Cauchy and Uniform samples of size $n=60$.}
 \end{figure}
