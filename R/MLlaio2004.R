@@ -43,9 +43,9 @@ moment_estimation <- function (x, dist="NORM") {
  }
  else if (dist=="GEV") {
   data(functionsLaio)
-  #kgev <- read.table("kgev.dat") # kgev is a matrix with the skewness coefficient (first column) 
+  #.kgev <- read.table("kgev.dat") # .kgev is a matrix with the skewness coefficient (first column) 
                                  # and the corresponding shape parameter of the GEV (second column)
-  T3 <- approx(kgev[,1], kgev[,2], skx)$y
+  T3 <- approx(.kgev[,1], .kgev[,2], skx)$y
   T2 <- abs(T3)*sdx/(gamma(1+2*T3)-(gamma(1+T3))^2)^0.5
   T1 <- mux-T2/T3*(1-gamma(1+T3))
   c(T1,T2,T3)
@@ -132,22 +132,22 @@ ML_estimation <- function (x, dist="NORM") {
   T4 <- 0
   if ((T3<2)&&(T2>0)) {   # non-regular estimation, see Smith [1985]
    data(functionsLaio)
-   #polig <- read.table("polig.dat")  # Funzione poligamma
+   #.polig <- read.table("polig.dat")  # Funzione poligamma
    T4 <- 1
    b <- sort(x)
    T1 <- b[1]    # position parameter= first order statistic
    z <- b[2:n]-T1
-   T3 <- approx(polig[,2], polig[,1], sum(log(z))/(n-1)-log(mean(z)))$y  # shape parameter, Johnson et al. [1994], eq. 17.48
+   T3 <- approx(.polig[,2], .polig[,1], sum(log(z))/(n-1)-log(mean(z)))$y  # shape parameter, Johnson et al. [1994], eq. 17.48
    T2 <- mean(z)/T3
   }
   else if ((T3<2)&&(T2<0)) {
    data(functionsLaio)
-   #polig <- read.table("polig.dat")
+   #.polig <- read.table("polig.dat")
    T4 <- 1
    b <- sort(x)
    T1 <- b[n]    # position parameter= n-th order statistic
    z <- b[1:(n-1)]-T1
-   T3 <- approx(polig[,2], polig[,1], sum(log(abs(z)))/(n-1)-log(mean(abs(z))))$y  # shape parameter, Johnson et al. [1994], eq. 17.45
+   T3 <- approx(.polig[,2], .polig[,1], sum(log(abs(z)))/(n-1)-log(mean(abs(z))))$y  # shape parameter, Johnson et al. [1994], eq. 17.45
    T2 <- mean(z)/T3
   }
   c(T1,T2,T3)

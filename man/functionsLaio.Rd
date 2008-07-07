@@ -2,8 +2,8 @@
 %
 \name{functionsLaio}
 \docType{data}
-\alias{kgev}
-\alias{polig}
+\alias{.kgev}
+\alias{.polig}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Data-sample}
 \description{
@@ -14,9 +14,9 @@ Functions for inversion calculation.
 }
 \format{Data.frames:
 
- \code{kgev} is a matrix with the skewness coefficient (first column) and the corresponding shape parameter of the GEV (second column) 
+ \code{.kgev} is a matrix with the skewness coefficient (first column) and the corresponding shape parameter of the GEV (second column) 
  
- \code{polig} represents the poligamma function.
+ \code{.polig} represents the poligamma function.
 }
 %\source{}
 %\references{}

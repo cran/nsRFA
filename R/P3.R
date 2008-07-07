@@ -42,7 +42,7 @@ invF.gamma <- function (F,xi,beta,alfa) {
     x.st <- qgamma(F, shape=alfa,scale=beta)
     x <- x.st + xi
   }
-  else if (beta < 0) {
+  else {
     x.st <- qgamma(1-F, shape=alfa,scale=-beta)
     x <- xi - x.st
   }
@@ -92,12 +92,12 @@ Lmom.gamma <- function(xi,beta,alfa) {
                    (1 + B1*alfa[i]^(-1) + B2*alfa[i]^(-2))
         tau4[i] <- (C0 + C1*alfa[i]^(-1) + C2*alfa[i]^(-2) + C3*alfa[i]^(-3))/(1 + D1*alfa[i]^(-1) + D2*alfa[i]^(-2))
       }
-      else if (alfa[i] < 1) {
+      else {
         tau3[i] <- (1 + E1*alfa[i] + E2*alfa[i]^2 + E3*alfa[i]^3)/(1 + F1*alfa[i] + F2*alfa[i]^2 + F3*alfa[i]^3)
         tau4[i] <- (1 + G1*alfa[i] + G2*alfa[i]^2 + G3*alfa[i]^3)/(1 + H1*alfa[i] + H2*alfa[i]^2 + H3*alfa[i]^3)
       }
     }
-    else if (beta[i] < 0) {
+    else {
       lambda1[i] <- xi[i] + alfa[i]*beta[i]
       lambda2[i] <- abs(pi^(-0.5) *beta[i] * gamma(alfa[i] + 0.5)/gamma(alfa[i]))
       if (alfa[i] >= 1) {
@@ -105,7 +105,7 @@ Lmom.gamma <- function(xi,beta,alfa) {
                    (1 + B1*alfa[i]^(-1) + B2*alfa[i]^(-2)))
         tau4[i] <- (C0 + C1*alfa[i]^(-1) + C2*alfa[i]^(-2) + C3*alfa[i]^(-3))/(1 + D1*alfa[i]^(-1) + D2*alfa[i]^(-2))
       }
-      else if (alfa[i] < 1) {
+      else {
         tau3[i] <- -(1 + E1*alfa[i] + E2*alfa[i]^2 + E3*alfa[i]^3)/(1 + F1*alfa[i] + F2*alfa[i]^2 + F3*alfa[i]^3)
         tau4[i] <- (1 + G1*alfa[i] + G2*alfa[i]^2 + G3*alfa[i]^3)/(1 + H1*alfa[i] + H2*alfa[i]^2 + H3*alfa[i]^3)
       }

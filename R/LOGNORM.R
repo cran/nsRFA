@@ -20,7 +20,8 @@ f.lognorm <- function (x,xi,alfa,k) {
   #   } 
   # }
 
-  if (k == 0) {
+  #if (k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # normal distribution for k=0
     y <- (x - xi)/alfa
   }
   else {
@@ -46,7 +47,8 @@ F.lognorm <- function (x,xi,alfa,k) {
   #   } 
   # }
 
-  if (k == 0) {
+  #if (k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # normal distribution for k=0
     y <- (x - xi)/alfa
   }
   else {
@@ -66,7 +68,8 @@ invF.lognorm <- function (F,xi,alfa,k) {
 
   y <- qnorm(F)
   
-  if (k == 0) {
+  #if (k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # normal distribution for k=0
     x <- xi + alfa*y
   }
   else {

@@ -15,7 +15,8 @@ f.genpar <- function(x,xi,alfa,k) {
   #   if(x < xi) stop("if k<0 x must higher than xi") 
   # }
  
-  if(k == 0) {
+  #if(k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # exponential distribution for k=0
     y <- (x - xi)/alfa  
   }
   else {
@@ -37,7 +38,8 @@ F.genpar <- function(x,xi,alfa,k) {
   #  if(x < xi) stop("if k<0 x must higher than xi") 
   # }
  
-  if(k == 0) {
+  #if(k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # exponential distribution for k=0
     y <- (x - xi)/alfa  
   }
   else {
@@ -56,7 +58,8 @@ invF.genpar <- function(F,xi,alfa,k) {
   #   stop("F must be between 0 and 1")
   # } 
 
-  if(k == 0) {
+  #if(k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # exponential distribution for k=0
     x <- xi - alfa*log(1 - F)  
   }
   else {

@@ -18,7 +18,8 @@ f.genlogis <- function (x,xi,alfa,k) {
   #   } 
   # }
 
-  if (k == 0) {
+  #if (k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # logistic distribution for k=0
     y <- (x - xi)/alfa
   }
   else {
@@ -44,7 +45,8 @@ F.genlogis <- function (x,xi,alfa,k) {
   #   } 
   # }
 
-  if (k == 0) {
+  #if (k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # logistic distribution for k=0
     y <- (x - xi)/alfa
   }
   else {
@@ -62,7 +64,8 @@ invF.genlogis <- function (F,xi,alfa,k) {
   #   stop("F must be between 0 and 1")
   # } 
 
-  if (k == 0) {
+  #if (k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # logistic distribution for k=0
     x <- xi - alfa * log((1 - F)/F)
   }
   else {

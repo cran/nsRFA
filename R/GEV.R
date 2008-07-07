@@ -20,7 +20,8 @@ f.GEV <- function (x,xi,alfa,k) {
   #   } 
   # }
 
-  if (k == 0) {
+  #if (k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # gumbel distribution for k=0
     y <- (x - xi)/alfa
   }
   else {
@@ -45,7 +46,8 @@ F.GEV <- function (x,xi,alfa,k) {
   #   } 
   # }
 
-  if (k == 0) {
+  #if (k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # gumbel distribution for k=0
     y <- (x - xi)/alfa
   }
   else {
@@ -64,7 +66,8 @@ invF.GEV <- function (F,xi,alfa,k) {
   #   stop("F must be between 0 and 1")
   # } 
 
-  if (k == 0) {
+  #if (k == 0) {
+  if ((k > -0.0000001) & (k < 0.0000001)) {   # gumbel distribution for k=0
     x <- xi - alfa * log(-log(F))
   }
   else {
@@ -90,7 +93,8 @@ Lmom.GEV <- function(xi,alfa,k) {
       stop("L-moments are defined for k>-1")
     } 
 
-    if (k[i] == 0) {
+    #if (k[i] == 0) {
+    if ((k > -0.0000001) & (k < 0.0000001)) {   # gumbel distribution for k=0
       output <- Lmom.gumb(xi,alfa)
     }
     else {
