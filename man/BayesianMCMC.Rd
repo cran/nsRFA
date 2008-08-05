@@ -12,7 +12,7 @@
 \usage{
  BayesianMCMC (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA,
                           nbpas=1000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
- \method{plot}{BayesianMCMC} (x, which=c(1:2), ask=TRUE, ...)
+ \method{plot}{BayesianMCMC} (x, which=1, ask=FALSE, ...)
  \method{print}{BayesianMCMC} (x, ...)
 }
 %- maybe also `usage' for other objects documented here.
@@ -55,9 +55,12 @@
 
   \code{plot.BayesianMCMC} plots the following figures:
 
-   \code{1} diagnostic plot of the MCMC simulation;
+   \code{1} data as plotting position, fitted distribution (maximum likelihood) and confidence intervals;
 
-   \code{2} data as plotting position, fitted distribution (maximum likelihood) and confidence intervals;
+   \code{2} diagnostic plot of the MCMC simulation (parameters);
+
+   \code{3} diagnostic plot of the MCMC simulation (likelyhood and MCMC acceptance rate);
+
 }
 %\references{}
 \author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
@@ -83,28 +86,28 @@ points(serie100, col=2)
 # Using only sistematic data
 only_sist <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA,
                            nbpas=5000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
-plot(only_sist, ylim=c(1,600))
+plot(only_sist, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 
 # Adding the information that the threshold 250 m3/s was exceeded 3 times in the past 100 years
 with_hist_thresh <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=rep(250,3), suphist=NA, nbans=100, seuil=250,
                                   nbpas=5000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
-plot(with_hist_thresh, ylim=c(1,600))
+plot(with_hist_thresh, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 
 # Assuming that the 3 historical events are known with high uncertainty
 with_hist_limits <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=c(320,320,250), suphist=c(360,400,270), nbans=100, seuil=250,
                                   nbpas=5000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
-plot(with_hist_limits, ylim=c(1,600))
+plot(with_hist_limits, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 
 # Assuming that the 3 historical events are perfectly known
 with_hist_known <- BayesianMCMC (xcont=serie20, xhist=serie100[!is.na(serie100)], infhist=NA, suphist=NA, nbans=100, seuil=250,
                                  nbpas=5000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
-plot(with_hist_known, ylim=c(1,600))
+plot(with_hist_known, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 }

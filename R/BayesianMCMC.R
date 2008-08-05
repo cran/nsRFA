@@ -70,7 +70,47 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  }
  else stop("BayesianMCMC(xcont, xhist, infhist, suphist, nbpas, nbchaines, dist): inconsistency in input data")
 
+ # Algorithm with no repetitions
+ #   # initialisation
+ #   for (j in 1:nbchaines) {
+ #    parameters[1,,j] <- rnorm(rep(1, lpar), mean=parameters0, sd=sqrt(varparameters0))
+ #    varparameters[1,,j] <- varparameters0
+ #    #vraistest[j] <- .lnvrais5(parameters[1,,j], xcont, dist)
+ #    vraistest <- eval(funzionetest)
+ #    vraisdist[1,j] <- vraistest
+ #    qq[1,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[1,,j], dist=dist)
+ #    nbsaut <- 0
+ #    i=1
+ #    cont=0
+ #    while (i < nbpas) {
+ #     cont <- cont+1
+ #     parameterscand <- rnorm(rep(1, lpar), mean=parameters[i,,j], sd=sqrt(varparameters[i,,j]))
+ #     #vraiscand <- .lnvrais5(parameterscand, xcont, dist)
+ #     vraiscand <- eval(funzionecand)
+ #     valtest <- min((exp(vraiscand - vraistest)), 1)
+ #     test <- runif(1)
+ #     if ((valtest > test) & (vraiscand > .thresML)) {
+ #      i <- i+1
+ #      nbsaut <- nbsaut + 1
+ #      parameters[i,,j] <- parameterscand
+ #      varparameters[i,,j] <- varparameters[i-1,,j]
+ #      vraistest <- vraiscand
+ #      vraisdist[i,j] <- vraistest
+ #      qq[i,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[i,,j], dist=dist)
+ #     }
+ #     propsaut <- nbsaut/cont
+ #     if (propsaut < 0.33) {
+ #      varparameters[i,,j] <- varparameters[i,,j]*(1+(propsaut-0.34)/0.34/1000)
+ #     }
+ #     else if (propsaut > 0.35) {
+ #      varparameters[i,,j] <- varparameters[i,,j]*(1+(propsaut-0.34)/0.34/1000)
+ #     }
+ #    }
+ #   }
+
+ # Algorithm with repetitions
  # initialisation
+ propsaut <- array(data=NA, dim=c(nbpas, nbchaines))
  for (j in 1:nbchaines) {
   parameters[1,,j] <- rnorm(rep(1, lpar), mean=parameters0, sd=sqrt(varparameters0))
   varparameters[1,,j] <- varparameters0
@@ -79,30 +119,31 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
   vraisdist[1,j] <- vraistest
   qq[1,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[1,,j], dist=dist)
   nbsaut <- 0
-  i=1
-  cont=0
-  while (i < nbpas) {
-   cont <- cont+1
-   parameterscand <- rnorm(rep(1, lpar), mean=parameters[i,,j], sd=sqrt(varparameters[i,,j]))
-   #vraiscand <- .lnvrais5(parameterscand, xcont, dist)
+  for (i in 2:nbpas) {
+   parameterscand <- rnorm(rep(1, lpar), mean=parameters[i-1,,j], sd=sqrt(varparameters[i-1,,j]))
    vraiscand <- eval(funzionecand)
    valtest <- min((exp(vraiscand - vraistest)), 1)
    test <- runif(1)
-   if ((valtest > test) & (vraiscand > .thresML)) {
-    i <- i+1
+   #if ((valtest > test) & (vraiscand > .thresML)) {
+   if (valtest > test) {
     nbsaut <- nbsaut + 1
     parameters[i,,j] <- parameterscand
-    varparameters[i,,j] <- varparameters[i-1,,j]
     vraistest <- vraiscand
-    vraisdist[i,j] <- vraistest
-    qq[i,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[i,,j], dist=dist)
    }
-   propsaut <- nbsaut/cont
-   if (propsaut < 0.33) {
-    varparameters[i,,j] <- varparameters[i,,j]*(1+(propsaut-0.34)/0.34/1000)
+   else {
+    parameters[i,,j] <- parameters[i-1,,j]
    }
-   else if (propsaut > 0.35) {
-    varparameters[i,,j] <- varparameters[i,,j]*(1+(propsaut-0.34)/0.34/1000)
+   vraisdist[i,j] <- vraistest
+   qq[i,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[i,,j], dist=dist)
+   propsaut[i,j] <- nbsaut/i
+   if (propsaut[i,j] < 0.33) {
+    varparameters[i,,j] <- varparameters[i-1,,j]*(1+(propsaut[i,j]-0.34)/0.34/1000)
+   }
+   else if (propsaut[i,j] > 0.35) {
+    varparameters[i,,j] <- varparameters[i-1,,j]*(1+(propsaut[i,j]-0.34)/0.34/1000)
+   }
+   else {
+    varparameters[i,,j] <- varparameters[i-1,,j]
    }
   }
  }
@@ -110,6 +151,7 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  parameters <- parameters[-c(1:reject),,]
  varparameters <- varparameters[-c(1:reject),,]
  vraisdist <- vraisdist[-c(1:reject),]
+ propsaut <- propsaut[-c(1:reject),]
  nbpas <- nbpas - reject
 
  dummy1 <- which.max(apply(vraisdist, 2, max))
@@ -119,7 +161,8 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  qqML <- qq[dummy2,,dummy1]
  output <- list(xcont=xcont, xhist=xhist, infhist=infhist, suphist=suphist, nbans=nbans, seuil=seuil, 
                 nbpas=nbpas, nbchaines=nbchaines, dist=dist,
-                parameters=parameters, varparameters=varparameters, vraisdist=vraisdist, returnperiods=returnperiods, intervals=intervals,
+                parameters=parameters, varparameters=varparameters, vraisdist=vraisdist, propsaut=propsaut,
+                returnperiods=returnperiods, intervals=intervals,
                 parametersML=parametersML, quantilesML=qqML)
  class(output) <- "BayesianMCMC"
  return(output)
@@ -137,15 +180,16 @@ print.BayesianMCMC <- function (x, ...) {
 
 # ----------------------------- #
 
-plot.BayesianMCMC <- function (x, which=c(1:2), ask=TRUE, ...) {
+plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
  if (ask) {
   op <- par(ask = TRUE)
   on.exit(par(op))
  }
  show <- rep(FALSE, 100)
  show[which] <- TRUE
- if (show[1]) .plotdiagnMCMC01(x, ...)
- if (show[2]) .plotdiagnMCMC02(x, ...)
+ if (show[1]) .plotdiagnMCMC02(x, ...)
+ if (show[2]) .plotdiagnMCMC01(x, ...)
+ if (show[3]) .plotdiagnMCMC04(x, ...)
 }
 
 
@@ -163,10 +207,17 @@ plot.BayesianMCMC <- function (x, which=c(1:2), ask=TRUE, ...) {
     lines(x$parameters[,j,i], col=1+i)
    }
    abline(h=x$parametersML[j])
-   hist(x$parameters[,j,1], border=2, breaks=11, #seq(limiti[1], limiti[2], length=11), 
-        xlab=paste("par",j), main="", xlim=limiti, ylim=c(0,x$nbpas/3))
+   #hist(x$parameters[,j,1], border=2, breaks=11, #seq(limiti[1], limiti[2], length=11), 
+   #     xlab=paste("par",j), main="", xlim=limiti, ylim=c(0,x$nbpas/3))
+   #for (i in 2:x$nbchaines) {
+   # hist(x$parameters[,j,i], border=1+i, breaks=11, add=TRUE)
+   #}
+   #abline(v=x$parametersML[j])
+   ht <- hist(x$parameters[,j,], plot=FALSE)
+   br <- ht$breaks
+   hist(x$parameters[,j,1], border=2, breaks=br, xlab=paste("par",j), main="", xlim=limiti, ylim=c(0,x$nbpas/3))
    for (i in 2:x$nbchaines) {
-    hist(x$parameters[,j,i], border=1+i, breaks=11, add=TRUE)
+    hist(x$parameters[,j,i], border=1+i, breaks=br, add=TRUE)
    }
    abline(v=x$parametersML[j])
    plot(x$varparameters[,j,1], type="l", col=2, ylim=range(x$varparameters[,j,]), ylab=paste("var par",j), xlab="")
@@ -209,6 +260,35 @@ plot.BayesianMCMC <- function (x, which=c(1:2), ask=TRUE, ...) {
  #}
 
 }
+
+.plotdiagnMCMC04 <- function(x, ...) {
+ op <- par(mfrow=c(2, 2))
+  limiti <- range(x$vraisdist)
+  plot(x$vraisdist[,1], type="l", col=2, ylim=limiti, ylab=paste("ln likelyhood"), xlab="")
+   for (i in 2:x$nbchaines) {
+    lines(x$vraisdist[,i], col=1+i)
+   }
+  ht <- hist(x$vraisdist, plot=FALSE)
+  br <- ht$breaks
+  hist(x$vraisdist[,1], border=2, breaks=br, xlab=paste("ln likelyhood"), main="", xlim=limiti, ylim=c(0,x$nbpas/3))
+   for (i in 2:x$nbchaines) {
+    hist(x$vraisdist[,i], border=1+i, breaks=br, add=TRUE)
+   }
+
+  limiti <- range(x$propsaut)
+  plot(x$propsaut[,1], type="l", col=2, ylim=limiti, ylab=paste("acceptance rate"), xlab="")
+   for (i in 2:x$nbchaines) {
+    lines(x$propsaut[,i], col=1+i)
+   }
+  ht <- hist(x$propsaut, plot=FALSE)
+  br <- ht$breaks
+  hist(x$propsaut[,1], border=2, breaks=br, xlab=paste("acceptance rate"), main="", xlim=limiti, ylim=c(0,x$nbpas/3))
+   for (i in 2:x$nbchaines) {
+    hist(x$propsaut[,i], border=1+i, breaks=br, add=TRUE)
+   }
+ par(op)
+}
+
 # --------------------------------------------------------------- #
 
 .pointspos3 <- function (xcont, xhist, infhist, suphist, nbans, seuil, ...)
