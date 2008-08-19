@@ -1,0 +1,175 @@
+
+\documentclass[a4paper, 11pt]{article}
+\usepackage{graphics}                 % Packages to allow inclusion of graphics
+\usepackage[pdftex]{graphicx}
+\usepackage{fancyhdr}
+\usepackage[figuresright]{rotating}
+
+
+% Margini
+\setlength{\textwidth} {170mm}
+\setlength{\textheight}{240mm}      %Altezza testo 227 mm
+%\setlength{\topmargin} {0.1mm}
+
+\setlength{\evensidemargin}{-5mm} %Margini per l'opzione twoside
+\setlength{\oddsidemargin} {-5mm}
+\setlength{\topmargin}{-10mm}
+
+
+%\VignetteIndexEntry{Model selection techniques for the frequency analysis of hydrological extremes: the MSClaio2008 R function}
+
+
+\title{Model selection techniques for the frequency analysis of hydrological extremes: the \textsf{MSClaio2008} R function}
+\author{Alberto Viglione}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The frequency analysis of hydrological extremes requires fitting a probability distribution to the observed data to suitably represent the frequency of occurrence of rare events. 
+The choice of the model to be used for statistical inference is often based on subjective criteria, or it is considered a matter of probabilistic hypotheses testing. 
+In contrast, specific tools for model selection, like the well known Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC), are seldom used in hydrological applications. 
+The paper of Laio et al. (2008) verifies whether the AIC and BIC work correctly when they are applied for identifying the probability distribution of hydrological extremes, i.e. when the available samples are small and the parent distribution is highly asymmetric. 
+An additional model selection criterion, based on the Anderson-Darling goodness-of-fit test statistic, is proposed, and the performances of the three methods are compared trough an extensive numerical analysis. 
+In this brief document, an application of the R function \verb+MSClaio2008+, part of the package \verb+nsRFA+, is provided.
+\end{abstract}
+
+%\newpage
+
+
+\section*{Introduction}
+
+The problem of model selection can be formalized as follows: a sample of $n$ data, $D=(x_1, \dots, x_n)$, arranged in ascending order is available, sampled from an unknown parent distribution $f(x)$;
+$N_m$ operating models, $M_j$, $j=1,\dots, N_m$, are used to represent the data.
+The operating models are in the form of probability distributions, $M_j = g_j(x,\hat{\theta})$, with parameters $\hat{\theta}$ estimated from the available data sample $D$.
+The scope of model selection is to identify the model $M_{opt}$ which is better suited to represent the data, i.e. the model which is closer in some sense to the parent distribution $f(x)$.
+
+Three different model selection criteria are considered here, namely, the Akaike Information Criterion (AIC), the Bayesian Information Criterion (BIC), and the Anderson-Darling Criterion (ADC).
+Of the three methods, the first two belong to the category of classical literature approaches, while the third derives from a heuristic interpretation of the results of a standard goodness-of-fit test (see Laio, 2004).
+
+<<echo=FALSE, results=hide>>=
+library(nsRFA)
+@
+The R function \verb+MSClaio2008+, part of the package \verb+nsRFA+, is used on a data sample from the FEH database:
+<<>>=
+data(FEH1000)
+@
+The data of site number 69023 are used here:
+<<>>=
+sitedata <- am[am[,1]==69023, ]
+@
+whose series can be plotted with:
+<<fig=TRUE, width=6, height=4>>=
+serieplot(sitedata[,4], sitedata[,3], ylim=c(0,200), xlab="year", ylab="Max annual peak [m3/s]")
+@
+
+
+
+\section*{Akalike Information Criterion}
+
+The Akaike information Criterion (AIC) for the j-th operational model can be computed as
+$$AIC_j = -2 \ln (L_j(\hat{\theta})) + 2 p_j$$
+where
+$$L_j(\hat{\theta}) = \prod_{i=1}^n g_j(x_i, \hat{\theta})$$
+is the likelihood function, evaluated at the point $\theta=\hat{\theta}$ corresponding to the maximum likelihood estimator of the parameter vector $\theta$ and $p_j$ is the number of estimated parameter of the j-th operational model.
+In practice, after the computation of the $AIC_j$, for all of the operating models, one selects the model with the minimum AIC value, $AIC_{min}$.
+The application of the AIC method is performed by:
+<<>>=
+MSC <- MSClaio2008(sitedata[,4], crit="AIC")
+MSC
+@
+Summarizing the choice is:
+<<>>=
+summary(MSC)
+@
+More information on the function \verb+MSClaio2008+ can be obtained by:
+<<eval=FALSE>>=
+help(MSClaio2008)
+@
+
+When the sample size, $n$, is small, with respect to the number of estimated parameters, $p$, the AIC may perform inadequately. In those cases a second-order variant of AIC, called AICc, should be used:
+$$AICc_j = -2 \ln (L_j(\hat{\theta})) + 2 p_j \frac{n}{n - p_j - 1}$$
+Indicatively, AICc should be used when $n/p < 40$.
+The application of the AICc method is performed by:
+<<>>=
+MSC <- MSClaio2008(sitedata[,4], crit="AICc")
+MSC
+summary(MSC)
+@
+
+
+
+
+\section*{Bayesian Information Criterion}
+
+The Bayesian Information Criterion (BIC) for the $j$-th operational model reads
+$$BIC_j = -2 \ln (L_j(\hat{\theta})) + \ln(n) p_j$$
+In practical application, after the computation of the $BIC_j$, for all of the operating models, one selects the model with the minimum BIC value, $BIC_{min}$.
+The application of the BIC method is performed by:
+<<>>=
+MSC <- MSClaio2008(sitedata[,4], crit="BIC")
+MSC
+summary(MSC)
+@
+
+
+
+\section*{Anderson-Darling Criterion}
+
+The Anderson-Darling criterion has the form:
+$$ADC_j = 0.0403 + 0.116 \left(\frac{\Delta_{AD,j} - \epsilon_j}{\beta_j}\right)^\frac{\eta_j}{0.851}$$
+if $1.2 \epsilon_j < \Delta_{AD,j}$,
+$$ADC_j = \left[0.0403 + 0.116 \left(\frac{0.2 \epsilon_j}{\beta_j}\right)^\frac{\eta_j}{0.851} \right] \frac{\Delta_{AD,j} - 0.2 \epsilon_j}{\epsilon_j}$$
+if $1.2 \epsilon_j \ge \Delta_{AD,j}$,
+where $\Delta_{AD,j}$ is the discrepancy measure characterizing the criterion, the Anderson-Darling statistic:
+$$\Delta_{AD,j} = -n-\frac{1}{n}\sum_{i=1}^n\left[(2i-1) \ln \left[G_j(x_i,\theta)\right]+
+                  (2n+1-2i) \ln \left[1-G_j(x_i,\theta)\right]\right]$$
+and $\epsilon_j$, $\beta_j$ and $\eta_j$ are distribution-dependent coefficients that are tabled by Laio [2004, Tables 3 and 5] for a set of seven distributions commonly employed for the frequency analysis of extreme events.
+In practice, after the computation of the $ADC_j$, for all of the operating models, one selects the model with the minimum ADC value, $ADC_{min}$.
+The application of the ADC method is performed by:
+<<>>=
+MSC <- MSClaio2008(sitedata[,4], crit="ADC")
+MSC
+summary(MSC)
+@
+
+
+
+
+
+
+
+The function \verb+MSClaio2008+ can be applied for all the distributions and all the criteria:
+<<>>=
+MSC <- MSClaio2008(sitedata[,4])
+MSC
+@
+Summarizing the choices are:
+<<>>=
+summary(MSC)
+@
+The candidate distributions and the selected ones can be plotted in a log-normal probability plot:
+<<fig=TRUE, width=5, height=5>>=
+plot(MSC)
+@
+
+
+\begin{thebibliography}{9}
+\bibitem{Laio2004}
+  Francesco Laio,
+  Cramer-von Mises and Anderson-Darling goodness of fit tests for extreme value distributions with unknown parameters,
+  \emph{Water Resources Research},
+  \textbf{40},
+  W09308, doi:10.1029/2004WR003204,
+  2004.
+\bibitem{Laioetal2008}
+  Francesco Laio, Giuliano Di Baldassarre, Alberto Montanari,
+  Model selection techniques for the frequency analysis of hydrological extremes,
+  \emph{Water Resources Research},
+  \textbf{??},
+  ??,
+  2008.
+\end{thebibliography}
+
+\end{document}
+

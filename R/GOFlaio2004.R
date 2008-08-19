@@ -22,7 +22,9 @@ fw2 <- function (w) {
  if (w < 1.2) {
   ((exp(-(1/16)/w)*besselK((1/16)/w,1/4)+1.11803*exp(-(25/16)/w)*besselK((25/16)/w,1/4))/(w^0.5))/pi
  }
- else 1
+ else {
+  1-10^(-2.2*w - 0.4)
+ }
 }
 
 
@@ -33,7 +35,7 @@ A2_GOFlaio <- function (x, dist="NORM") {
  # dist = distribution ("NORM","LN","EV1","EV2","GEV","GAM","LP3")
  if (any(c("LN","EV2","LP3")==dist)) x <- log(x)
  b <- sort(x)
- n <-length(x)
+ n <- length(x)
  eta0=0.851; beta0=0.116; csi0=0.0403; eps1=1.2; eps2=0.2
  if ((dist=="NORM")||(dist=="LN")) {
   T <- ML_estimation(b,dist="NORM")
@@ -41,7 +43,7 @@ A2_GOFlaio <- function (x, dist="NORM") {
   eta1=1.147; beta1=0.229; csi1=0.167
   eta1corr <- eta1*(1+0.5/n); beta1corr <- beta1*(1-0.2/n); csi1corr <- csi1*(1+0.3/n)
  }
- else if ((dist=="EV1")||(dist=="EV2")) {
+ else if ((dist=="EV1")||(dist=="GUMBEL")||(dist=="EV2")) {
   T <- ML_estimation(b,dist="EV1")
   F <- Fx(b,T,dist="EV1")
   eta1=1.141; beta1=0.229; csi1=0.169
@@ -56,9 +58,9 @@ A2_GOFlaio <- function (x, dist="NORM") {
   csi1 <- 0.147*(1+0.13*T[3]+0.21*T[3]^2+0.09*T[3]^3)
   eta1corr <- eta1*(1-0.7/n+0.2/sqrt(n)) 
   beta1corr <- beta1*(1-1.8/n)
-  csi1corr <- csi1*(1+1.9/n-0.2/sqrt(n))
+  csi1corr <- csi1*(1+0.9/n-0.2/sqrt(n))
  }
- else if ((dist=="GAM")||(dist=="LP3")) {
+ else if ((dist=="GAM")||(dist=="P3")||(dist=="LP3")) {
   T <- ML_estimation(b,dist="GAM")
   F <- Fx(b,T,dist="GAM")
   F[F>0.99999999]=0.99999999
@@ -136,7 +138,7 @@ typeIerrorA2_GOFlaio <- function (n, T, alfa=0.05, dist="NORM", Nsim=1000) {
    A[i] <- A2_GOFlaio(x,dist="LN")[2]
   }
  }
- else if (dist=="EV1") {
+ else if ((dist=="EV1")||(dist=="GUMBEL")) {
   for (i in 1:Nsim) {
    x <- sample_generator(n,T,dist="EV1")
    A[i] <- A2_GOFlaio(x,dist="EV1")[2]
@@ -155,7 +157,7 @@ typeIerrorA2_GOFlaio <- function (n, T, alfa=0.05, dist="NORM", Nsim=1000) {
    A[i] <- A2_GOFlaio(x,dist="GEV")[2]
   }
  }
- else if (dist=="GAM") {
+ else if ((dist=="GAM")||(dist=="P3")) {
   for (i in 1:Nsim) {
    x <- sample_generator(n,T,dist="GAM")
    A[i] <- A2_GOFlaio(x,dist="GAM")[2]

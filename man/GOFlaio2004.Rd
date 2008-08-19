@@ -22,7 +22,7 @@
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{data sample}
- \item{dist}{distribution: normal \code{"NORM"}, log-normal \code{"LN"}, Gumbel \code{"EV1"}, Frechet \code{"EV2"}, Generalized Extreme Value \code{"GEV"}, Pearson type III \code{"GAM"}, log-Pearson type III \code{"LP3"}}
+ \item{dist}{distribution: normal \code{"NORM"}, log-normal \code{"LN"}, Gumbel \code{"GUMBEL"}, Frechet \code{"EV2"}, Generalized Extreme Value \code{"GEV"}, Pearson type III \code{"P3"}, log-Pearson type III \code{"LP3"}}
  \item{F}{cumulative distribution function}
  \item{T}{parameters (position, scale, shape, ...)}
  %\item{w}{Transformed test statistic (Laio, 2004)}
@@ -59,9 +59,9 @@ Fx (sm, ML_estimation (sm, dist="GEV"), dist="GEV")
 A2(sort(Fx(sm, ML_estimation (sm, dist="GEV"), dist="GEV")))
 A2_GOFlaio(sm, dist="GEV")
 
-ML_estimation (sm, dist="GAM")
-Fx(sm, ML_estimation (sm, dist="GAM"), dist="GAM")
-A2(sort(Fx(sm, ML_estimation (sm, dist="GAM"), dist="GAM")))
-A2_GOFlaio(sm, dist="GAM")
+ML_estimation (sm, dist="P3")
+Fx(sm, ML_estimation (sm, dist="P3"), dist="P3")
+A2(sort(Fx(sm, ML_estimation (sm, dist="P3"), dist="P3")))
+A2_GOFlaio(sm, dist="P3")
 }
 \keyword{htest}

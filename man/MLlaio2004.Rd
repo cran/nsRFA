@@ -24,7 +24,7 @@
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{data sample}
- \item{dist}{distribution: normal \code{"NORM"}, Gumbel \code{"EV1"}, Generalized Extreme Value \code{"GEV"}, Pearson type III \code{"GAM"} and, only for \code{sample_generator}, Exponential \code{EXP}}
+ \item{dist}{distribution: normal \code{"NORM"}, Gumbel \code{"GUMBEL"}, Generalized Extreme Value \code{"GEV"}, Pearson type III \code{"P3"} and, only for \code{sample_generator}, Exponential \code{"EXP"}}
  \item{T}{parameters (position, scale, shape, ...)}
  %\item{w}{Transformed test statistic (Laio, 2004)}
  \item{T1}{position parameter of the Gamma (Pearson type III) distribution}
@@ -61,9 +61,9 @@ ML_estimation (sm, dist="GEV")
 Fx (sm, c(-0.051,0.97,-0.024), dist="GEV")
 sample_generator (100, c(-0.051,0.97,-0.024), dist="GEV")
 
-moment_estimation (sm, dist="GAM")
-ML_estimation (sm, dist="GAM")
-Fx (sm, c(-1.6,0.78,2.8), dist="GAM")
+moment_estimation (sm, dist="P3")
+ML_estimation (sm, dist="P3")
+Fx (sm, c(-1.6,0.78,2.8), dist="P3")
 
 }
 \keyword{htest}

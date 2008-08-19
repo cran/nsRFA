@@ -397,13 +397,13 @@ test.GOFmontecarlo <- function (parameters, type="NORM", alfa=.05, n=30, N=100) 
     ps[i] <- gofGEVtest(x)["P"]
    }
   }
-  else if (type=="LOGNORM") {
+  else if ((type=="LOGNORM")||(type=="LN3")) {
    for (i in 1:N) {
     x <- rand.lognorm(n,parameters[1],parameters[2],parameters[3])
     ps[i] <- gofLOGNORMtest(x)["P"]
    }
   }
-  else if (type=="P3") {
+  else if ((type=="P3")||(type=="GAM")) {
    for (i in 1:N) {
     x <- rand.gamma(n,parameters[1],parameters[2],parameters[3])
     ps[i] <- gofP3test(x)["P"]

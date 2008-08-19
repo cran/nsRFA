@@ -11,7 +11,8 @@
 }
 \usage{
  BayesianMCMC (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA,
-                          nbpas=1000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
+               nbpas=1000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV",
+               parameters0=NA, varparameters0=NA)
  \method{plot}{BayesianMCMC} (x, which=1, ask=FALSE, ...)
  \method{print}{BayesianMCMC} (x, ...)
 }
@@ -28,6 +29,8 @@
  \item{nbchaines}{number of chains for the MCMC algorithm}
  \item{confint}{confidence limits for the flood quantiles}
  \item{dist}{distribution: normal \code{"NORM"}, log-normal with 2 parameters \code{"LN"}, Exponential \code{"EXP"}, Gumbel \code{"GUMBEL"}, Generalized Extreme Value \code{"GEV"}, Generalized Logistic \code{"GENLOGIS"}, Generalized Pareto \code{"GENPAR"}, log-normal with 3 parameters \code{"LOGNORM"}, Pearson type III \code{"P3"}, log-Pearson type III \code{"LP3"}}
+ \item{parameters0}{initial values of the parameters for the MCMC algorithm}
+ \item{varparameters0}{initial values of the parameter variances for the MCMC algorithm}
  \item{which}{a number of a vector of numbers that defines the graph to plot (see details)}
  \item{ask}{if TRUE, the interactive mode is run}
  \item{...}{other arguments}
@@ -61,6 +64,7 @@
 
    \code{3} diagnostic plot of the MCMC simulation (likelyhood and MCMC acceptance rate);
 
+   \code{3} posterior distribution of parameters obtained with the MCMC simulation (cloud plots);
 }
 %\references{}
 \author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
@@ -84,29 +88,37 @@ abline(h=0)
 points(serie100, col=2)
 
 # Using only sistematic data
-only_sist <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA,
-                           nbpas=5000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
+only_sist <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=NA, suphist=NA, 
+                           nbans=NA, seuil=NA,
+                           nbpas=5000, nbchaines=3, 
+                           confint=c(0.05, 0.95), dist="GEV")
 plot(only_sist, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 
 # Adding the information that the threshold 250 m3/s was exceeded 3 times in the past 100 years
-with_hist_thresh <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=rep(250,3), suphist=NA, nbans=100, seuil=250,
-                                  nbpas=5000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
+with_hist_thresh <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=rep(250,3), suphist=NA, 
+                                  nbans=100, seuil=250,
+                                  nbpas=5000, nbchaines=3, 
+                                  confint=c(0.05, 0.95), dist="GEV")
 plot(with_hist_thresh, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 
 # Assuming that the 3 historical events are known with high uncertainty
-with_hist_limits <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=c(320,320,250), suphist=c(360,400,270), nbans=100, seuil=250,
-                                  nbpas=5000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
+with_hist_limits <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=c(320,320,250), suphist=c(360,400,270), 
+                                  nbans=100, seuil=250,
+                                  nbpas=5000, nbchaines=3, 
+                                  confint=c(0.05, 0.95), dist="GEV")
 plot(with_hist_limits, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 
 # Assuming that the 3 historical events are perfectly known
-with_hist_known <- BayesianMCMC (xcont=serie20, xhist=serie100[!is.na(serie100)], infhist=NA, suphist=NA, nbans=100, seuil=250,
-                                 nbpas=5000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV")
+with_hist_known <- BayesianMCMC (xcont=serie20, xhist=serie100[!is.na(serie100)], infhist=NA, suphist=NA, 
+                                 nbans=100, seuil=250,
+                                 nbpas=5000, nbchaines=3, 
+                                 confint=c(0.05, 0.95), dist="GEV")
 plot(with_hist_known, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 

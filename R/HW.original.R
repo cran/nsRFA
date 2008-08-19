@@ -315,7 +315,8 @@ REGTST <- function(data, cod, A=0, B=0, Nsim=500) {
  # (J+A)/(N+B) FOR THE J'TH SMALLEST OF N OBSERVATIONS. FOR EXAMPLE,
  # A=-0.35D0 AND B=0.0D0 YIELDS THE ESTIMATORS RECOMMENDED BY
  # HOSKING ET AL. (1985, TECHNOMETRICS) FOR THE GEV DISTRIBUTION.
- SEED <- as.integer(ifelse(exists(".Random.seed"), .Random.seed[1], 56389))
+ #SEED <- as.integer(ifelse(exists(".Random.seed"), .Random.seed[1], 56389))
+ SEED <- 619145091
  NSIM <- as.integer(Nsim)
  PROB <- as.double(c(.01, .02, .05, .1, .2, .5, .9, .95, .99, .999))
  NPROB <- as.integer(length(PROB))

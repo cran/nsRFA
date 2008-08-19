@@ -5,13 +5,13 @@ Fx <- function (x, T, dist="NORM") {
  if (dist=="NORM") {
   pnorm(x,mean=T[1],sd=T[2])
  }
- else if (dist=="EV1") {
+ else if ((dist=="EV1")||(dist=="GUMBEL")) {
   exp(-exp(-(x-T[1])/T[2]))
  }
  else if (dist=="GEV") {
   exp(-(1-((T[3]*(x-T[1]))/T[2]))^(1/T[3]))
  }
- else if (dist=="GAM") {
+ else if ((dist=="GAM")||(dist=="P3")) {
   if (T[2]>0) {
    pgamma((x-T[1]), shape=T[3], scale=T[2])
    #pgamma((x-T[1])/T[2], shape=T[3])
@@ -36,7 +36,7 @@ moment_estimation <- function (x, dist="NORM") {
  if (dist=="NORM") {
   c(mux, sdx)
  }
- else if (dist=="EV1") {
+ else if ((dist=="EV1")||(dist=="GUMBEL")) {
   muy <- 0.577216
   sdy <- pi/6^0.5
   c(mux-sdx*muy/sdy, sdx/sdy)
@@ -50,7 +50,7 @@ moment_estimation <- function (x, dist="NORM") {
   T1 <- mux-T2/T3*(1-gamma(1+T3))
   c(T1,T2,T3)
  }
- else if (dist=="GAM") {
+ else if ((dist=="GAM")||(dist=="P3")) {
   T3 <- 4/(skx^2)
   T2 <- sign(T3)*sdx/T3^0.5
   T1 <- mux-T2*T3
@@ -112,13 +112,13 @@ ML_estimation <- function (x, dist="NORM") {
                             # to be normilized by n (not n-1) 
   c(T1,T2)
  }
- else if (dist=="EV1") {
+ else if ((dist=="EV1")||(dist=="GUMBEL")) {
   suppressWarnings(optim(par=Tm, fn=logLgumb, x=x)$par)
  }
  else if (dist=="GEV") {
   suppressWarnings(optim(par=Tm, fn=logLgev, x=x)$par)
  }
- else if (dist=="GAM") {
+ else if ((dist=="GAM")||(dist=="P3")) {
   skx <- sum((x - mean(x))^3)/(length(x) * sd(x)^3)
   if (skx>0) { # this is for detecting if the distribution is lower or upper bounded
    Tm1 <- min(x)-1; a1 <- 1; a2 <- min(x)*(1-sign(min(x))*10^(-4))
@@ -165,7 +165,7 @@ sample_generator <- function (n, T, dist="NORM") {
  if (dist=="NORM") {
   rnorm(n,mean=T[1],sd=T[2])
  }
- else if (dist=="EV1") {
+ else if ((dist=="EV1")||(dist=="GUMBEL")) {
   q <- runif(n, min=0.0000000001, max=0.9999999999)
   T[1] - T[2]*log(log(1/q))
  }
@@ -173,7 +173,7 @@ sample_generator <- function (n, T, dist="NORM") {
   q <- runif(n, min=0.0000000001, max=0.9999999999)
   (1-(log(1/q))^T[3])*T[2]/T[3]+T[1]
  }
- else if (dist=="GAM") {
+ else if ((dist=="GAM")||(dist=="P3")) {
   if (T[2]>0) {
    T[1] + rgamma(n, shape=T[3], scale=T[2])
   }
