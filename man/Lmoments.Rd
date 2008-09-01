@@ -56,11 +56,9 @@ Sample regional L-CV, L-skewness and L-kurtosis coefficients are defined as
 \value{
  \code{Lmoments} gives the L-moments (\eqn{l_1}, \eqn{l_2}, \eqn{t}, \eqn{t_3}, \eqn{t_4}), \code{regionalLmoments} gives the regional weighted L-moments (\eqn{l_1^R}, \eqn{l_2^R}, \eqn{t^R}, \eqn{t_3^R}, \eqn{t_4^R}), \code{LCV} gives the coefficient of L-variation, \code{LCA} gives the L-skewness and \code{Lkur} gives the L-kurtosis of \code{x}.
 }
-\references{Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.}
-
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{mean}}, \code{\link{var}}, \code{\link{sd}}, \code{\link{HOMTESTS}}.}
 

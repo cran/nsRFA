@@ -64,17 +64,10 @@ Under this assumption, the significance of the regression between distance matri
 
  \code{MAEjk.lm} returns the mean absolute error of the cross-validation (performed with \code{jackknife1.lm}).
 }
-\references{
- Smouse P.E., Long J.C. and Sokal R.R. (1986) Multiple regression and correlation extensions of the Mantel test of matrix correspondence. Systematic Zoology, 35(4), 627-632.
 
- Viglione A., Claps P., Laio F. (2006) Utilizzo di criteri di prossimit\`a nell'analisi regionale del deflusso annuo, XXX Convegno di Idraulica e Costruzioni Idrauliche - IDRA 2006, Roma, 10-15 Settembre 2006.
-
- Viglione A., Claps P., Laio F. (2006) Water resources assessment and management under water scarcity scenarios, chapter Meanannual runoff estimation in North-Western Italy. CDSU, Milan.
-
-}
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{lm}}, \code{\link{summary.lm}}, \code{\link{predict.lm}}}
 

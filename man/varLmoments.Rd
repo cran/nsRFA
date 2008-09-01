@@ -39,11 +39,10 @@ The estimation of the exact variance structure of sample L-moments is based on E
 
  \code{varLkur} gives the unbiased estimate of the variance of sample L-kurtosis of \code{x}.
 }
-\references{Elamir, E.A.H. and Seheult, A.H. (2004) Exact variance structure of sample L-moments, Journal of Statistical Planning and Inference 124, 337-359.}
 
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{var}}, \code{\link{Lmoments}}.}
 

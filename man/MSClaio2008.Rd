@@ -11,7 +11,8 @@
  Model selection criteria for the frequency analysis of hydrological extremes, from Laio et al (2008).
 }
 \usage{
- MSClaio2008 (sample, dist=c("NORM","LN","GUMBEL","EV2","GEV","P3","LP3"), crit=c("AIC", "AICc", "BIC", "ADC"))
+ MSClaio2008 (sample, dist=c("NORM","LN","GUMBEL","EV2","GEV","P3","LP3"), 
+              crit=c("AIC", "AICc", "BIC", "ADC"))
  \method{print}{MSClaio2008} (x, digits=max(3, getOption("digits") - 3), ...)
  \method{summary}{MSClaio2008} (object, ...)
  \method{plot}{MSClaio2008} (x, ...)
@@ -82,14 +83,10 @@ In practice, after the computation of the \eqn{ADC_j}{ADCj}, for all of the oper
 
  \code{plot.MSClaio2008} plots the empirical distribution function of \code{sample} (Weibull plotting position) on a log-normal probability plot, plots the candidate distributions \code{dist} (whose parameters are evaluated with the maximum likelihood technique, see \code{\link{MLlaio2004}}, and highlights the ones chosen by the criteria \code{crit}.)
 }
-\references{
-Laio, F., 2004, Cramer-von Mises and Anderson-Darling goodness of fit tests for extreme value distributions with unknown parameters, Water Resour. Res., 40, W09308, doi:10.1029/2004WR003204.
 
-Laio, F., Di Baldassarre G., Montanari A., 2008, Model selection techniques for the frequency analysis of hydrological extremes, Water Resour. Res., ...
-}
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{GOFlaio2004}}, \code{\link{MLlaio2004}}.}
 

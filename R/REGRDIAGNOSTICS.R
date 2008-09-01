@@ -95,13 +95,14 @@ jackknife1.lm <- function(x) {
  # x = output of 'lm'
 
  f <- x$term
+ #f <- x$call[[2]]
  m <- x$model
 
  n <- dim(m)[1]
 
  pred <- rep(NA,n)
  names(pred) <- row.names(m)
- for (i in 1:n) pred[i] <- predict(lm(f,m[-i,]),m[i,-1])
+ for (i in 1:n) pred[i] <- predict(lm(f,m[-i,]), newdata=m[i,-1, drop=FALSE])
 
  return(pred)
 }
@@ -175,7 +176,7 @@ mantel.lm <- function (x, Nperm = 1000) {
     m <- x$model
     betas <- x$coefficients[-1]
     mY <- m[, 1]
-    mX <- m[, -1]
+    mX <- m[, -1, drop=FALSE]
     if (class(mY) != "dist") stop("mantel.lm: distance matrices of class \"dist\" must be tested.")
     M <- as.matrix(mY)
     nsiti <- dim(M)[1]

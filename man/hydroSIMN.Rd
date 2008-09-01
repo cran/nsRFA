@@ -66,18 +66,10 @@ It has 13 columns because the first one, \code{cod}, is the code of the station.
 
 }
 %\source{}
-\references{
-Regione Piemonte (2004) Piano di tutela delle acque. Direzione Pianificazione Risorse Idriche.
 
-Viglione A., Claps P., Laio F. (2006) Utilizzo di criteri di prossimit\`a nell'analisi regionale del deflusso annuo, XXX Conv
-egno di Idraulica e Costruzioni Idrauliche - IDRA 2006, Roma, 10-15 Settembre 2006.
-
-Viglione A., Claps P., Laio F. (2006) Water resources assessment and management under water scarcity scenarios, chapter Mean
-annual runoff estimation in North-Western Italy. CDSU, Milan.
-
-Viglione A. (2007) Metodi statistici non-supervised per la stima di grandezze idrologiche in siti non strumentati, PhD thesis
-, In press.
-}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \examples{
 data(hydroSIMN)

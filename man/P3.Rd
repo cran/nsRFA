@@ -105,6 +105,11 @@ Given \eqn{\alpha}, then
 \eqn{\gamma=2 \alpha^{-1/2} sign(\tau_3)},
 \eqn{\sigma=\lambda_2 \pi^{1/2} \alpha^{1/2} \Gamma(\alpha)/\Gamma(\alpha+1/2)},
 \eqn{\mu=\lambda_1}.
+
+
+
+\code{Lmom.gamma} and \code{par.gamma} accept input as vectors of equal length. 
+In \code{f.gamma}, \code{F.gamma}, \code{invF.gamma} and \code{rand.gamma} parameters (\code{mu}, \code{sigma}, \code{gamm}) must be atomic.
 }
 \value{
  \code{f.gamma} gives the density \eqn{f}, \code{F.gamma} gives the distribution function \eqn{F}, \code{invFgamma} gives
@@ -112,11 +117,10 @@ the quantile function \eqn{x}, \code{Lmom.gamma} gives the L-moments (\eqn{\lamb
 
  \code{mom2par.gamma} returns the parameters \eqn{\alpha}, \eqn{\beta} and \eqn{\xi}, given the parameters (moments) \eqn{\mu}, \eqn{\sigma}, \eqn{\gamma}.
 }
-\references{Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.}
 
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-\note{\code{Lmom.gamma} and \code{par.gamma} accept input as vectors of equal length. In \code{f.gamma}, \code{F.gamma}, \code{invF.gamma} and \code{rand.gamma} parameters (\code{mu}, \code{sigma}, \code{gamm}) must be atomic.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 

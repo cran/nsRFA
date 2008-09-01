@@ -27,11 +27,10 @@
 \value{
  \code{consistencyplot} displays time-series consistency.
 }
+
 %\references{}
-
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{plot}}, \code{\link{DISTPLOTS}}}
 

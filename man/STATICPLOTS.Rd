@@ -36,17 +36,10 @@
 
  \code{Lspace.limits} displays limits for regional L-moments in the 'L-CA - L-CV'.
 }
-\references{
-Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.
 
-
-Viglione A., Laio F., Claps P. (2006) A comparison of homogeneity tests in Regional Frequency Analysis. Water Resourches Rese
-arch, In press.
-}
-
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{LOGNORM}}, \code{\link{GUMBEL}}, \code{\link{GEV}}, \code{\link{P3}}}
 

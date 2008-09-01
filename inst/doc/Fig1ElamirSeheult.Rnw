@@ -21,6 +21,10 @@
 
 \title{Figure 1 in Elamir and Seheult (2004)}
 \author{Alberto Viglione}
+\date{}
+
+
+
 
 \begin{document}
 \maketitle
@@ -119,5 +123,7 @@ dev.off()
 \end{center}
 \caption{Normal quantile plots and added line for $N=1000$ simulated values of $l_3/SE(l_3)$ from Gaussian, Student(5), Cauchy and Uniform samples of size $n=60$.}
 \end{figure}
+
+
 \end{document}
 

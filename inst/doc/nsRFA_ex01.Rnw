@@ -1,0 +1,746 @@
+
+\documentclass[a4paper, 11pt]{article}
+\usepackage{graphics}                 % Packages to allow inclusion of graphics
+\usepackage[pdftex]{graphicx}
+\usepackage{fancyhdr}
+\usepackage[figuresright]{rotating}
+\usepackage{natbib}
+
+
+% Margini
+\setlength{\textwidth} {170mm}
+\setlength{\textheight}{240mm}      %Altezza testo 227 mm
+%\setlength{\topmargin} {0.1mm}
+
+\setlength{\evensidemargin}{-5mm} %Margini per l'opzione twoside
+\setlength{\oddsidemargin} {-5mm}
+\setlength{\topmargin}{-10mm}
+
+
+%\VignetteIndexEntry{How to use the package nsRFA: example 1}
+
+
+\title{Regional frequency analysis of the annual flows in Piemonte and Valle d'Aosta}
+\author{Alberto Viglione}
+\date{}
+
+
+
+
+
+\begin{document}
+\maketitle
+
+
+\begin{abstract}
+TO BE WRITTEN
+\end{abstract}
+
+%\newpage
+
+
+\section*{Introduction}
+
+Many practical hydrological problems require reliable models for estimation of mean annual runoff in a region. 
+Runoff cannot be interpolated like purely distributed variables, as precipitation or temperature, because runoff in a cross section is representative of the whole contributing basin. 
+Therefore, usual spatial interpolation methods cannot be used for estimation in ungauged basins. 
+As regards the statistical approach, one of the firsts and more popular methods in regional frequency analysis is the ``index-flood'' technique \citep{Dalrymple1960}. 
+Many Regional Flood estimation projects \citep[see e.g.][]{RossiVillani1995, RobsonReed1999} are based on Dalrymple's methodology, but also flow duration curves can be referred to the index flow method \citep{ClapsFiorentino1997, Castellarinetal2004a, Castellarinetal2004b}.
+
+In this work we are interested in the annual flow, that is the amount of water crossing a river section in one year. 
+If compared with hydrological extremes, applications of regional analysis to average variables, like the annual flow, are much less frequent in literature.
+\citet{VogelWilson1996} present some applications related to the US, while in Italy some previous works can be traced back to \citet{Ferraresietal1988}, \citet{ClapsMancino2002} and \citet{Brathetal2004}. 
+The purpose of the Regional frequency analysis of the annual flow is the estimation of its probability distribution in basins with few or no data. 
+
+The fundamental hypothesis of Dalrymple's method is that the distribution of a variable in different sites belonging to a ``homogeneous region'' is identical, with the exception of the scale parameter, the index-flow.
+In this document we show how the \verb+nsRFA+ package can be used to:
+\begin{enumerate}
+ \item regionalize the index-flow;
+ \item regionalize the growth curve, i.e. the rescaled distribution function.
+\end{enumerate}
+The methodology has been applied to Piemonte and Valle d’Aosta, two contiguous regions in the North-West of Italy. 
+This territory is characterized by a marked heterogeneity. 
+In this relatively small region, very different orographic and climatic conditions coexist: in few hundreds kilometres the climate changes from the appenninic-mediterranean one in the south-eastern hills to the alpine-continental one in the mountainous Valle d'Aosta, passing from all the intermediate conditions. 
+For this reason, a regional frequency analysis in this territory is both complex and interesting.
+
+The following results are documented in \citet{Viglioneetal2006} and \citet{Viglione2007}.
+
+<<echo=FALSE, results=hide>>=
+library(nsRFA)
+@
+
+TO BE WRITTEN
+
+
+\section*{Data}
+
+
+In \verb+nsRFA+ data referred to 47 basins in Piemonte and Valle d'Aosta are in:
+<<>>=
+data(hydroSIMN)
+@
+To have some information on these data
+<<eval=FALSE>>=
+ls()
+help(hydroSIMN)
+@
+The object used in this work are \verb+annualflows+, a data.frame containing the annual flows of 47 hydrometric stations in Piemonte and Valle d'Aosta, measured by the SIMN (Servizio Idrografico e Mareografico Nazionale), and \verb+parameters+, a data.frame containing morphometric and climatic descriptors that have been derived for all these river basins.
+
+
+
+
+
+
+
+\section*{Regionalization of the index-flow}
+
+The ``index-flow'' parameter can be either the sample mean \citep[e.g.][]{HoskingWallis1997} or the sample median \citep[e.g.][]{RobsonReed1999}. 
+\citet{Viglioneetal2007} show that, for variables characterized by low skewness coefficients, the estimation of the mean is less biased than that of the median. 
+For this reason in this work the sample mean is used as the index-flow. 
+Due to its simplicity, the most frequently used method to estimate the index-flow is the multiregressive approach \citep[see e.g.][]{KottegodaRosso1997}, that relates the index-flow to catchment characteristics, such as climatic indices, geologic and morphologic parameters, land cover type, etc., through linear (used here) or non-linear equations. 
+
+The choice of the best linear regressions between the mean annual flow and the catchment attributes is performed using the function \verb+bestlm()+.
+Different types of linear models are investigated.
+The candidate dependent variable is selected between 4 possibilities:
+<<>>=
+Dm <- parameters[,"Dm"]
+logDm <- log(Dm)
+sqrtDm <- sqrt(Dm)
+sqrt3Dm <- Dm^(1/3)
+@
+The candidate regressors are:
+<<>>=
+attributes <- parameters[,-c(1,2)]
+logattributes <- log(attributes[,-c(7:9)])
+mixedattributes <- cbind(attributes, logattributes[,1])
+ names(mixedattributes) <- c(names(attributes), "lnAm")
+@
+
+The best regressions with the non transformed mean annual flows are:
+<<label=nontrasfregr>>=
+nontrasfregr <- bestlm(Dm, mixedattributes, kmax=3, nbest=4); nontrasfregr
+@
+Other diagnostics of these regressions can be obtained using the functions in \verb+REGRDIAGNOSTICS+.
+Here we calculate the Root Mean Squared Error (RMSE), and the Root Mean Squared Error of the cross validation (RMSEjk)
+<<>>=
+nregr <- dim(nontrasfregr$subselect)[1]
+diagn <- data.frame(matrix(NA, nrow=nregr, ncol=2)); names(diagn) <- c("RMSE","RMSEjk")
+for (i in 1:nregr){
+ f <- paste("Dm ~", paste(colnames(nontrasfregr$subselect)[nontrasfregr$subselect[i,]], collapse=" + "))
+ regr <- lm(f, mixedattributes)
+ diagn[i,1] <- RMSE.lm(regr)
+ diagn[i,2] <- RMSEjk.lm(regr)
+}
+diagn
+@
+
+The best multiplicative regressions (linearized with the logarithms) are:
+<<label=multregr>>=
+multregr <- bestlm(logDm, logattributes, kmax=3, nbest=4); multregr
+@
+whose RMSE and RMSEjk are:
+<<>>=
+nregr <- dim(multregr$subselect)[1]
+diagn <- data.frame(matrix(NA, nrow=nregr, ncol=2)); names(diagn) <- c("RMSE","RMSEjk")
+for (i in 1:nregr){
+ f <- paste("logDm ~", paste(colnames(multregr$subselect)[multregr$subselect[i,]], collapse=" + "))
+ regr <- lm(f, logattributes)
+ fitt <- regr$fitted.values
+ crossval <- jackknife1.lm(regr)
+ diagn[i,1] <- RMSE(Dm, exp(fitt))
+ diagn[i,2] <- RMSE(Dm, exp(crossval))
+}
+diagn
+@
+ 
+The best regressions with the transformed mean annual flows are:
+<<label=trasfregr_log>>=
+trasfregr_log <- bestlm(logDm, mixedattributes, kmax=3, nbest=4); trasfregr_log
+@
+<<>>=
+nregr <- dim(trasfregr_log$subselect)[1]
+diagn <- data.frame(matrix(NA, nrow=nregr, ncol=2)); names(diagn) <- c("RMSE","RMSEjk")
+for (i in 1:nregr){
+ f <- paste("logDm ~", paste(colnames(trasfregr_log$subselect)[trasfregr_log$subselect[i,]], collapse=" + "))
+ regr <- lm(f, mixedattributes)
+ fitt <- regr$fitted.values
+ crossval <- jackknife1.lm(regr)
+ diagn[i,1] <- RMSE(Dm, exp(fitt))
+ diagn[i,2] <- RMSE(Dm, exp(crossval))
+}
+diagn
+@
+
+<<label=trasfregr_sqrt>>=
+trasfregr_sqrt <- bestlm(sqrtDm, mixedattributes, kmax=3, nbest=4); trasfregr_sqrt
+@
+<<>>=
+nregr <- dim(trasfregr_sqrt$subselect)[1]
+diagn <- data.frame(matrix(NA, nrow=nregr, ncol=2)); names(diagn) <- c("RMSE","RMSEjk")
+for (i in 1:nregr){
+ f <- paste("sqrtDm ~", paste(colnames(trasfregr_sqrt$subselect)[trasfregr_sqrt$subselect[i,]], collapse=" + "))
+ regr <- lm(f, mixedattributes)
+ fitt <- regr$fitted.values
+ crossval <- jackknife1.lm(regr)
+ diagn[i,1] <- RMSE(Dm, fitt^2)
+ diagn[i,2] <- RMSE(Dm, crossval^2)
+}
+diagn
+@
+
+<<label=trasfregr_sqrt3>>=
+trasfregr_sqrt3 <- bestlm(sqrt3Dm, mixedattributes, kmax=3, nbest=4); trasfregr_sqrt3
+@
+<<>>=
+nregr <- dim(trasfregr_sqrt3$subselect)[1]
+diagn <- data.frame(matrix(NA, nrow=nregr, ncol=2)); names(diagn) <- c("RMSE","RMSEjk")
+for (i in 1:nregr){
+ f <- paste("sqrt3Dm ~", paste(colnames(trasfregr_sqrt3$subselect)[trasfregr_sqrt3$subselect[i,]], collapse=" + "))
+ regr <- lm(f, mixedattributes)
+ fitt <- regr$fitted.values
+ crossval <- jackknife1.lm(regr)
+ diagn[i,1] <- RMSE(Dm, fitt^3)
+ diagn[i,2] <- RMSE(Dm, crossval^3)
+}
+diagn
+@
+
+
+The choice of the best regression is based on the RMSE of the cross-validation (function \verb+RMSEjk.lm+ or \verb+jackknife1.lm+ plus \verb+RMSE+).
+So the best regression is:
+<<>>=
+bestregr <- lm(sqrt3Dm ~ S2000 + IT + lnAm, mixedattributes); bestregr
+@
+<<>>=
+summary(bestregr)
+@
+that we check with the following tests:
+the Variance inflation factors (if VIF > 5 there is a problem of multicollinearity) and correlation between the regressors:
+<<>>=
+vif.lm(bestregr)
+cor(bestregr$model[-1])
+@
+the Student t test of significance of the coefficients (probability $Pr(>|t|)$ of the significance test, the smallest-the best):
+<<>>=
+prt.lm(bestregr)
+@
+So there is a correlation problem between IT and lnAm, that can cause collinearity, and that causes the non-significance of the coefficient of IT in the model.
+
+Therefore we choose:
+<<bestregression>>=
+bestregr <- lm(logDm ~ Hm + NORD + IB, mixedattributes)
+bestregr
+summary(bestregr)
+@
+<<>>=
+prt.lm(bestregr)
+@
+<<>>=
+vif.lm(bestregr)
+cor(bestregr$model[-1])
+@
+We also check the normality of the residuals (using a goodness-of-fit test):
+<<>>=
+p_norm <- A2_GOFlaio(bestregr$residuals, dist="NORM"); p_norm
+@
+and calculate the root mean square errors:
+<<>>=
+rmse <- RMSE(Dm, exp(bestregr$fitted.values))
+
+predicted <- jackknife1.lm(bestregr)
+rmse_jk <- RMSE(Dm, exp(predicted))
+@
+
+Some diagnostics can be plotted as (Figure \ref{fig:bestregression}):
+<<echo=FALSE, eval=TRUE>>=
+bitmap(file="bestregression.png", type="png256", height=8, width=8, res=144, pointsize=12)
+@
+<<fig=FALSE>>=
+op <- par(mfrow=c(2,2))
+ plot(bestregr$fitted.values, bestregr$residuals, xlab="Fitted", ylab="Residuals")
+  abline(0,0,lty=3)
+
+ normplot(bestregr$residuals, xlab="Residuals")
+ 
+ plot(parameters[,c("Dm")], exp(bestregr$fitted.values), xlab="Originals", ylab="Fitted")
+  abline(0,1,lty=3)
+  intervals <- predinterval.lm(bestregr)
+  intervals <- intervals[order(intervals[,1]),]
+ 
+ plot(parameters[,c("Dm")], exp(predicted), xlab="Originals", ylab="Predicted")
+  abline(0,1,lty=3)
+  lines(exp(intervals[,c(1,2)]),lty=2)
+  lines(exp(intervals[,c(1,3)]),lty=2)
+par(op)
+@
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.8\textwidth]{bestregression}
+\end{center}
+\caption{Diagnostic plots of the best regression model. 
+Counterclockwise from upper left: 
+residuals as a function of the estimated values; 
+originals against the fitted values;
+result of cross-validation and normal plot of residuals.}
+\label{fig:bestregression}
+\end{figure}
+
+
+\clearpage
+% -------------------------------------------------------------------------------------- %
+
+
+\section*{Regionalization of the growth-curve}
+
+TO BE COMPLETED...
+<<>>=
+D <- annualflows["dato"][,]
+y <- annualflows["anno"][,]
+cod <- annualflows["cod"][,]
+@
+
+Plot consistency of data series (Figure \ref{fig:consistencyplot}):
+<<label=consistencyplot.png, echo=FALSE, eval=TRUE>>=
+bitmap(file="consistencyplot.png", type="png256", height=8, width=8, res=144, pointsize=12)
+@
+<<fig=FALSE>>=
+consistencyplot(y,cod)
+@
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.7\textwidth]{consistencyplot}
+\end{center}
+\caption{Data consistency.}
+\label{fig:consistencyplot}
+\end{figure}
+
+Choice of sites with more than 15 records:
+<<>>=
+ni <- tapply(D, cod, length)
+annualflows15 <- annualflows[unsplit(ni, cod)>=15,]
+parameters15 <- parameters[ni>=15,]
+D15 <- annualflows15["dato"][,]
+cod15 <- annualflows15["cod"][,]
+@
+
+L-moments of the series:
+<<>>=
+LM15 <- data.frame(t(sapply(split(D15, cod15), Lmoments)))
+@
+L-moment ratios plot (Figure \ref{fig:Lmomentsratio}):
+<<label=Lmomentsratio.png, echo=FALSE, eval=TRUE>>=
+bitmap(file="Lmomentsratio.png", type="png256", height=8, width=8, res=144, pointsize=16)
+@
+<<fig=FALSE>>=
+plot(LM15[3:5])
+@
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.8\textwidth]{Lmomentsratio}
+\end{center}
+\caption{L-moment ratios plot.}
+\label{fig:Lmomentsratio}
+\end{figure}
+
+Which homogeneity test do I use:
+<<label=LspaceHWvsAD01.png, echo=FALSE, eval=TRUE>>=
+bitmap(file="LspaceHWvsAD01.png", type="png256", height=6, width=6, res=144, pointsize=12)
+@
+<<fig=FALSE>>=
+Lspace.HWvsAD()
+points(LM15[,4:3])
+@
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.6\textwidth]{LspaceHWvsAD01}
+\end{center}
+\caption{L-moment ratios plot.}
+\label{fig:LspaceHWvsAD01}
+\end{figure}
+
+Homogeneity test on the entire region:
+<<echo=FALSE>>=
+set.seed(10)
+@
+<<>>=
+D15adim <- D15/unsplit(tapply(D15, cod15, mean), cod15)
+HWs <- HW.tests(D15adim, cod15)[1]; HWs
+@
+
+Choice of the classification variables through multi-regression approach:
+<<>>=
+bestlm(LM15[,"lcv"], parameters15[,3:16], kmax=3)
+@
+or reasoning with distance matrices:
+<<>>=
+bestlm(as.numeric(AD.dist(D15,cod15)), data.frame(apply(parameters15[,3:16], 2, dist)), kmax=3)
+@
+
+We choose Hm and Ybar as classification variables.
+Mantel test:
+<<label=mantel.test>>=
+Y <- AD.dist(D15,cod15)
+X <- data.frame(apply(parameters15[,c("Hm","Ybar")],2,dist))
+datamantel <- cbind(as.numeric(Y),X)
+regrmantel <- lm(Y ~ Hm + Ybar, datamantel)
+#summary(regrmantel)
+mantel.lm(regrmantel, Nperm=100)
+@
+
+Cluster formation:
+<<label=clusteranalysis>>=
+param <- parameters15[c("Hm","Ybar")]
+n <- dim(param)[1]; k <- dim(param)[2]
+param.norm <- (param - matrix(mean(param), nrow=n, ncol=k, byrow=TRUE))/matrix(sd(param), nrow=n, ncol=k, byrow=TRUE)
+@
+<<echo=FALSE>>=
+set.seed(10)
+@
+<<>>=
+nclusters=1
+while (max(HWs) > 2.1) {
+ nclusters <- nclusters+1
+ clusters <- traceWminim(param.norm, nclusters)
+ indclusters <- unsplit(clusters, cod15)
+ HWs <- rep(NA, nclusters)
+ for (i in unique(clusters)) {
+  HWs[i] <- HW.tests(D15adim[indclusters==i], cod15[indclusters==i])[1]
+ }
+ print(HWs)
+} 
+@
+
+So the number of regions is 4.
+
+Regional L-moments:
+My regional L-moment ratios are not calculated as in Hosking and Wallis, but using the pooled growth-curves.
+<<>>=
+regLM15 <- t(sapply(split(D15adim, indclusters), Lmoments))[,3:5]
+regLM15
+@
+
+If I calculate them with the method of Hosking and Wallis:
+<<>>=
+for (i in 1:nclusters) {
+ print(regionalLmoments(D15adim[indclusters==i], cod15[indclusters==i])[3:5])
+}
+@
+
+
+Plot of clusters (Figure \ref{fig:4clusters}):
+<<label=4clusters.png, echo=FALSE, eval=TRUE>>=
+bitmap(file="4clusters.png", type="png256", height=8, width=8, res=144, pointsize=12)
+@
+<<fig=FALSE>>=
+op <- par(mfrow=c(2,2))
+ plot(parameters15[c("Hm","Ybar")], col=clusters, pch=clusters, cex=0.6,
+      main="Clusters in the space of classification variables", cex.main=1, font.main=1)
+  grid()
+  points(tapply(parameters15["Hm"][,], clusters, mean), tapply(parameters15["Ybar"][,], clusters, mean),
+         col=c(1:nclusters), pch=c(1:nclusters))
+ legend("topleft",paste("clust ",c(1:nclusters)), col=c(1:nclusters), pch=c(1:nclusters), bty="n")
+
+ plot(parameters15[c("Xbar","Ybar")], col=clusters, pch=clusters, cex=0.6,
+      main="Clusters in geographical space", cex.main=1, font.main=1)
+  grid()
+
+ plot(LM15[,4:3], pch=clusters, col=clusters, cex=0.6,
+      main="Clusters in L-moments space", cex.main=1, font.main=1)
+  points(regLM15[,2:1], col=c(1:nclusters), pch=c(1:nclusters))
+  grid()
+
+ plot(LM15[,4:5], pch=clusters, col=clusters, cex=0.6,
+      main="Clusters in L-moments space", cex.main=1, font.main=1)
+  points(regLM15[,2:3], col=c(1:nclusters), pch=c(1:nclusters))
+  grid()
+par(op)
+@
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.99\textwidth]{4clusters}
+\end{center}
+\caption{Clusters.}
+\label{fig:4clusters}
+\end{figure}
+
+
+
+Model selection (L-moments ratio diagram):
+<<label=Lmomentsratiodiagram.png, echo=FALSE, eval=TRUE>>=
+bitmap(file="Lmomentsratiodiagram.png", type="png256", height=6, width=6, res=144, pointsize=12)
+@
+<<fig=FALSE>>=
+Lmoment.ratio.diagram()
+ points(regLM15[,2:3], col=c(1:nclusters), pch=c(1:nclusters))
+ legend("bottomleft",paste("clust ", c(1:nclusters)), col=c(1:nclusters), pch=c(1:nclusters), bty="n")
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.6\textwidth]{Lmomentsratiodiagram}
+\end{center}
+\caption{L-moments ratio diagram.}
+\label{fig:Lmomentsratiodiagram}
+\end{figure}
+
+
+%   Model selection criteria:
+%   <<label=MSClaio2008>>=
+%   for (i in 1:nclusters) {
+%    MSC <- MSClaio2008(D15adim[indclusters==i], dist=c("GEV","P3","LP3"), crit=c("AIC", "BIC", "ADC"))
+%    print(MSC)
+%    summary(MSC)
+%   }
+%   @
+%   
+%   Since I want to use only one type of distribution for all the regions, the choice should be between the GEV and the P3 distributions.
+%   I check if the goodness of fit test...
+%   <<label=GOFlaio2004>>=
+%   for (i in 1:nclusters) {
+%    GOFA2_GEV <- A2_GOFlaio(D15adim[indclusters==i], dist="GEV")
+%    GOFA2_P3 <- A2_GOFlaio(D15adim[indclusters==i], dist="P3")
+%    cat(paste("\np(A2) for Cluster ", i, ":\n", sep=""))
+%    pGOF <- c(GOFA2_GEV[2], GOFA2_P3[2]); names(pGOF) <- c("GEV", "P3")
+%    print(pGOF)
+%   }
+%   @
+
+The points are around the Pearson type III distribution.
+If we apply the Anderson-Darling goodness-of-fit test, we obtain:
+<<label=GOFlaio2004>>=
+for (i in 1:nclusters) {
+  GOFA2_P3 <- A2_GOFlaio(D15adim[indclusters==i], dist="P3")
+  cat(paste("\np(A2) for Cluster ", i, ":\n", sep=""))
+  print(GOFA2_P3)
+}
+@
+For the 4-th cluster, the goodness of fit test is not passed with a 5\% significance level.
+
+Parameters of the Pearson type III distributions using the method of L-moments:
+<<>>=
+paramgamma=NULL
+for (i in 1:nclusters) {
+ paramgamma[[i]] <- par.gamma(1, regLM15[i,1], regLM15[i,2])
+ cat(paste("\nCluster",i,":\n"))
+ print(format(paramgamma[[i]][1:3]))
+}
+@
+Expressed in the other way:
+<<>>=
+for (i in 1:nclusters) {
+ cat(paste("\nCluster",i,":\n"))
+ print(format(par2mom.gamma(paramgamma[[i]]$xi, paramgamma[[i]]$beta, paramgamma[[i]]$alfa)))
+}
+@
+
+
+Regional growth-curves:
+<<label=GrowthCurves1.png, echo=FALSE, eval=TRUE>>=
+bitmap(file="GrowthCurves1.png", type="png256", height=10, width=10, res=144, pointsize=12)
+@
+<<fig=FALSE>>=
+op <- par(mfrow=c(2,2))
+ for (i in 1:nclusters) {
+  FF <- F.gamma(D15adim[indclusters==i], paramgamma[[i]]$xi, paramgamma[[i]]$beta, paramgamma[[i]]$alfa)
+  regionalplotpos(D15adim[indclusters==i], cod15[indclusters==i], xlab=paste("cluster", i),
+                  main="Empirical distributions", cex.main=1, font.main=1)
+  lines(sort(D15adim[indclusters==i]), sort(FF))
+  nomi <- names(clusters)[clusters==i]
+  legend("bottomright", legend=nomi, pch=c(1:length(nomi)), col=c(1:length(nomi)), bty="n", cex=.9)
+ }
+par(op)
+@
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.9\textwidth]{GrowthCurves1}
+\end{center}
+\caption{GrowthCurves1.png.}
+\label{fig:GrowthCurves1}
+\end{figure}
+
+
+Regional growth-curves:
+<<label=GrowthCurves2.png, echo=FALSE, eval=TRUE>>=
+bitmap(file="GrowthCurves2.png", type="png256", height=10, width=10, res=144, pointsize=12)
+@
+<<fig=FALSE>>=
+op <- par(mfrow=c(2,2))
+ for (i in 1:nclusters) {
+  Fs <- seq(0.001,0.999,by=.001)
+  regionalnormplot(D15adim[indclusters==i], cod15[indclusters==i], xlab=paste("cluster", i),
+                  main="Empirical distributions", cex.main=1, font.main=1)
+  normpoints(invF.gamma(Fs, paramgamma[[i]]$xi, paramgamma[[i]]$beta, paramgamma[[i]]$alfa), type="l")
+  nomi <- names(clusters)[clusters==i]
+  legend("bottomright", legend=nomi, pch=c(1:length(nomi)), col=c(1:length(nomi)), bty="n", cex=.9)
+ }
+par(op)
+@
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.9\textwidth]{GrowthCurves2}
+\end{center}
+\caption{GrowthCurves2.png.}
+\label{fig:GrowthCurves2}
+\end{figure}
+
+
+Comparison between regional growth-curves:
+<<label=comparGrowthCurves.png, echo=FALSE, eval=TRUE>>=
+bitmap(file="comparGrowthCurves.png", type="png256", height=6, width=6, res=144, pointsize=12)
+@
+<<fig=FALSE>>=
+spess=c(1, 1.5, 2, 1.3)
+Fs <- seq(0.001,0.999,by=.001)
+lognormplot(D15adim, line=FALSE, type="n", )
+for (i in 1:nclusters) {
+ qq <- invF.gamma(Fs, paramgamma[[i]]$xi, paramgamma[[i]]$beta, paramgamma[[i]]$alfa)
+ normpoints(qq, type="l", lty=i, col=i, lwd=spess[i])
+}
+legend("bottomright", paste("cluster ", c(1:nclusters)), col=c(1:nclusters), lty=c(1:nclusters), lwd=spess, bty="n")
+@
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.6\textwidth]{comparGrowthCurves}
+\end{center}
+\caption{comparGrowthCurves.png.}
+\label{fig:comparGrowthCurves}
+\end{figure}
+
+
+
+
+
+\clearpage
+% -------------------------------------------------------------------------------------- %
+
+
+%\bibliographystyle{apalike}
+%\bibliography{BiblioAlberto}
+
+
+\begin{thebibliography}{}
+
+\bibitem[Brath et~al., 2004]{Brathetal2004}
+Brath, A., Camorani, G., and Castellarin, A. (2004).
+\newblock Una tecnica di stima regionale della curva di durata delle portate in
+  bacini non strumentati.
+\newblock In {\em {XXIX} Convegno di Idraulica e Costruzioni Idrauliche},
+  volume~2, pages 391--398, Trento. Universit{\`a} di Trento.
+
+\bibitem[Castellarin et~al., 2004a]{Castellarinetal2004a}
+Castellarin, A., Galeati, G., Brandimarte, L., Brath, A., and Montanari, A.
+  (2004a).
+\newblock Regional flow-duration curve: realiability for ungauged basins.
+\newblock {\em Advances in Water Resources}, 27(10):953--965.
+
+\bibitem[Castellarin et~al., 2004b]{Castellarinetal2004b}
+Castellarin, A., Vogel, R., and Brath, A. (2004b).
+\newblock A stochastic index flow model of flow duration curves.
+\newblock {\em Water Resources Research}, 40(3):W03104.
+
+\bibitem[Claps and Fiorentino, 1997]{ClapsFiorentino1997}
+Claps, P. and Fiorentino, M. (1997).
+\newblock {\em Probabilistic Flow Duration Curvers for use in Environmental
+  Planning and Management}, volume 2 (31) of {\em NATO-ASI series}, pages
+  255--266.
+\newblock Harmancioglu et al., Kluwer, Dordrecht, The Netherlands.
+
+\bibitem[Claps and Mancino, 2002]{ClapsMancino2002}
+Claps, P. and Mancino, L. (2002).
+\newblock Impiego di classificazioni climatiche quantitative nell'analisi
+  regionale del deflusso annuo.
+\newblock In {\em {XXVIII} Convegno di Idraulica e Costruzioni Idrauliche},
+  pages 169--178, Potenza.
+\newblock 16-19 settembre 2002.
+
+\bibitem[Dalrymple, 1960]{Dalrymple1960}
+Dalrymple, T. (1960).
+\newblock {\em Flood frequency analyses}, volume 1543-A of {\em Water Supply
+  Paper}.
+\newblock U.S. Geological Survey, Reston, Va.
+
+\bibitem[Ferraresi et~al., 1988]{Ferraresietal1988}
+Ferraresi, M., Todini, E., and Franchini, M. (1988).
+\newblock Un metodo per la regionalizzazione dei deflussi medi.
+\newblock In {\em {XXI} Convegno di Idraulica}, L'Aquila.
+
+\bibitem[Hosking and Wallis, 1997]{HoskingWallis1997}
+Hosking, J. and Wallis, J. (1997).
+\newblock {\em Regional Frequency Analysis: An Approach Based on L-Moments}.
+\newblock Cambridge University Press.
+
+\bibitem[Kottegoda and Rosso, 1997]{KottegodaRosso1997}
+Kottegoda, N.~T. and Rosso, R. (1997).
+\newblock {\em Statistics, Probability, and Reliability for Civil and
+  Environmental Engineers}.
+\newblock McGraw-Hill Companies, international edition.
+
+\bibitem[Robson and Reed, 1999]{RobsonReed1999}
+Robson, A. and Reed, D. (1999).
+\newblock Statistical procedures for flood frequency estimation.
+\newblock In {\em Flood Estimation HandBook}, volume~3. Institute of Hydrology
+  Crowmarsh Gifford, Wallingford, Oxfordshire.
+
+\bibitem[Rossi and Villani, 1995]{RossiVillani1995}
+Rossi, F. and Villani, P. (1995).
+\newblock Valutazione delle piene in campania.
+\newblock Technical report, CNR-GNDCI e Dipartimento di Ingegneria Civile
+  dell'Universit{\`a} di Salerno, Salerno.
+
+\bibitem[Viglione, 2007]{Viglione2007}
+Viglione, A. (2007).
+\newblock {\em Metodi statistici non-supervised per la stima di grandezze
+  idrologiche in siti non strumentati}.
+\newblock PhD thesis, Politecnico di Torino.
+
+\bibitem[Viglione et~al., 2006]{Viglioneetal2006}
+Viglione, A., Claps, P., and Laio, F. (2006).
+\newblock Utilizzo di criteri di prossimit{\`a} nell'analisi regionale del
+  deflusso annuo.
+\newblock In {\em XXX Convegno di Idraulica e Costruzioni Idrauliche - IDRA
+  2006}.
+
+\bibitem[Viglione et~al., 2007]{Viglioneetal2007}
+Viglione, A., Laio, F., and Claps, P. (2007).
+\newblock A comparison of homogeneity tests for regional frequency analysis.
+\newblock {\em Water Resources Research}, 43(3).
+
+\bibitem[Vogel and Wilson, 1996]{VogelWilson1996}
+Vogel, R. and Wilson, I. (1996).
+\newblock Probability distribution of annual maximum, mean, and minimum
+  streamflows in the united states.
+\newblock {\em Journal of Hydrologic Engineering}, 1(2):69--76.
+
+\end{thebibliography}
+
+
+
+
+\end{document}
+

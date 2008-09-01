@@ -83,16 +83,17 @@ The other parameters are then given by
 \deqn{\alpha = \frac{\lambda_2 k}{(1-2^{-k})\Gamma(1+k)}}
 \deqn{\xi = \lambda_1 - \alpha[1 - \Gamma(1+k)]/k}
 
+
+
+\code{Lmom.GEV} and \code{par.GEV} accept input as vectors of equal length. In \code{f.GEV}, \code{F.GEV}, \code{invF.GEV} and \code{rand.GEV} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.
 }
 \value{
  \code{f.GEV} gives the density \eqn{f}, \code{F.GEV} gives the distribution function \eqn{F}, \code{invF.GEV} gives
 the quantile function \eqn{x}, \code{Lmom.GEV} gives the L-moments (\eqn{\lambda_1}, \eqn{\lambda_2}, \eqn{\tau_3}, \eqn{\tau_4}), \code{par.GEV} gives the parameters (\code{xi}, \code{alfa}, \code{k}), and \code{rand.GEV} generates random deviates.
 }
-\references{Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.}
-
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-\note{ \code{Lmom.GEV} and \code{par.GEV} accept input as vectors of equal length. In \code{f.GEV}, \code{F.GEV}, \code{invF.GEV} and \code{rand.GEV} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 

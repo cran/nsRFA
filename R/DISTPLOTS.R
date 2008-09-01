@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------- #
 
-plotpos <- function(x,...) {
+plotpos <- function(x, a=0, orient="xF", ...) {
 
   # INPUT
   # x = colonna
@@ -10,20 +10,22 @@ plotpos <- function(x,...) {
 
   ordinato <- sort(x)
   n <- length(ordinato)
-  plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
+  i <- 1:n
+  plotpos <- (i - a)/(n + 1 - 2*a)
 
   #x11(width = 7, height = 7, pointsize = 12)
   x=ordinato
   F=plotpos
-  plot(x,F,...)
+  if (orient=="xF") plot(x,F,...)
+  else if (orient=="Fx") plot(F,x,...)
+  else stop("plotpos(x, a, orient): orient unknown") 
   grid()
-
 }
 
 
 # ---------------------------------------------------------------- #
 
-pointspos <- function(x,...) {
+pointspos <- function(x, a=0, orient="xF", ...) {
 
   # INPUT
   # x = colonna
@@ -33,17 +35,20 @@ pointspos <- function(x,...) {
 
   ordinato <- sort(x)
   n <- length(ordinato)
-  plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
+  i <- 1:n
+  plotpos <- (i - a)/(n + 1 - 2*a)
 
   x=ordinato
   F=plotpos
-  points(x,F,...)
+  if (orient=="xF") points(x,F,...)
+  else if (orient=="Fx") points(F,x,...)
+  else stop("pointspos(x, a, orient): orient unknown")
 }
 
 
 # ---------------------------------------------------------------- #
 
-normplot <- function(x,line=TRUE,...) {
+normplot <- function(x, a=0, orient="xF", line=TRUE,...) {
 
   # INPUT
   # x = colonna
@@ -57,7 +62,8 @@ normplot <- function(x,line=TRUE,...) {
   s <- sd(ordinato)
   u <- (ordinato-m)/s
   n <- length(ordinato)
-  plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
+  i <- 1:n
+  plotpos <- (i - a)/(n + 1 - 2*a)
   uteorica <- qnorm(plotpos)
   pp <- c(.001, .01, .05, .1, .25, .50, .75, .9, .95, .99, .999)
   qq <- qnorm(pp)
@@ -65,20 +71,30 @@ normplot <- function(x,line=TRUE,...) {
   #x11(width = 7, height = 7, pointsize = 12)
   x=ordinato
   F=uteorica
-  plot(x,F,axes=FALSE,...)
-  axis(1)
-  axis(2,at=qq,labels=pp)
-  abline(h=qq, col="gray", lty="dotted")
-  grid(nx=NULL, ny=NA)
+  if (orient=="xF") {
+   plot(x,F,axes=FALSE,...)
+   axis(1)
+   axis(2,at=qq,labels=pp)
+   grid(nx=NULL, ny=NA)
+   abline(h=qq, col="gray", lty="dotted")
+   if(line==TRUE) lines(ordinato,u,lty=2)
+  }
+  else if (orient=="Fx") {
+   plot(F,x,axes=FALSE,...)
+   axis(2)
+   axis(1,at=qq,labels=pp)
+   grid(ny=NULL, nx=NA)
+   abline(v=qq, col="gray", lty="dotted")
+   if(line==TRUE) lines(u,ordinato,lty=2)
+  }
+  else stop("normplot(x, a, orient, line): orient unknown")
   box()
-  if(line==TRUE) lines(ordinato,u,lty=2)
-
 }
 
 
 # ---------------------------------------------------------------- #
 
-normpoints <- function(x,...) {
+normpoints <- function(x, a=0, orient="xF", ...) {
 
   # INPUT
   # x = colonna
@@ -92,20 +108,23 @@ normpoints <- function(x,...) {
   s <- sd(ordinato)
   u <- (ordinato-m)/s
   n <- length(ordinato)
-  plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
+  i <- 1:n
+  plotpos <- (i - a)/(n + 1 - 2*a)
   uteorica <- qnorm(plotpos)
   pp <- c(.001, .01, .05, .1, .25, .50, .75, .9, .95, .99, .999)
   qq <- qnorm(pp)
 
   x=ordinato
   F=uteorica
-  points(x,F,...)
+  if (orient=="xF") points(x,F,...)
+  else if (orient=="Fx") points(F,x,...)
+  else stop("normpoints(x, a, orient): orient unknown")
 }
 
 
 # ---------------------------------------------------------------- #
 
-lognormplot <- function(x,line=TRUE,...) {
+lognormplot <- function(x, a=0, orient="xF", line=TRUE,...) {
 
   # INPUT
   # x = colonna
@@ -120,7 +139,8 @@ lognormplot <- function(x,line=TRUE,...) {
   s <- sd(logordinato)
   u <- (logordinato-m)/s
   n <- length(ordinato)
-  plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
+  i <- 1:n
+  plotpos <- (i - a)/(n + 1 - 2*a)
   uteorica <- qnorm(plotpos)
   pp <- c(.001, .01, .05, .1, .25, .50, .75, .9, .95, .99, .999)
   qq <- qnorm(pp)
@@ -128,20 +148,30 @@ lognormplot <- function(x,line=TRUE,...) {
   #x11(width = 7, height = 7, pointsize = 12)
   x=ordinato
   F=uteorica
-  plot(x,F,log="x",axes=FALSE,...)
-  axis(1)
-  axis(2,at=qq,labels=pp)
-  abline(h=qq, col="gray", lty="dotted")
-  grid(nx=NULL, ny=NA)
+  if (orient=="xF") {
+   plot(x,F,log="x",axes=FALSE,...)
+   axis(1)
+   axis(2,at=qq,labels=pp)
+   abline(h=qq, col="gray", lty="dotted")
+   grid(nx=NULL, ny=NA)
+   if (line==TRUE) lines(ordinato,u,lty=2)
+  }
+  else if (orient=="Fx") {
+   plot(F,x,log="y",axes=FALSE,...)
+   axis(2)
+   axis(1,at=qq,labels=pp)
+   abline(v=qq, col="gray", lty="dotted")
+   grid(ny=NULL, nx=NA)
+   if (line==TRUE) lines(u, ordinato, lty=2)
+  }
+  else stop("lognormplot(x, a, orient, line): orient unknown")
   box()
-  if (line==TRUE) lines(ordinato,u,lty=2)
-
 }
 
 
 # ---------------------------------------------------------------- #
 
-gumbelplot <- function(x,line=TRUE,...) {
+gumbelplot <- function(x, a=0, orient="xF", line=TRUE,...) {
 
   # INPUT
   # x = colonna
@@ -157,7 +187,8 @@ gumbelplot <- function(x,line=TRUE,...) {
   mu <- m - 0.5772*beta
   adim <- (ordinato-mu)/beta
   n <- length(ordinato)
-  plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
+  i <- 1:n
+  plotpos <- (i - a)/(n + 1 - 2*a)
   uteorica <- -log(-log(plotpos))
   ordinatoteorico <- s*uteorica + m
   pp <- c(.001, .01, .05, .1, .25, .50, .75, .9, .95, .99, .999)
@@ -166,22 +197,30 @@ gumbelplot <- function(x,line=TRUE,...) {
   #x11(width = 7, height = 7, pointsize = 12)
   x=ordinato
   F=uteorica
-  plot(x,F,axes=FALSE,...)
-  axis(1)
-  axis(2,at=qq,labels=pp)
-  abline(h=qq, col="gray", lty="dotted")
-  #verticalgrid <- invF.gumb (c(.001,.01,.05,.1,.25,.50,.75,.9,.95,.99,.999),mu,beta)
-  #abline(v=verticalgrid, col="gray", lty="dotted")
-  grid(nx=NULL, ny=NA)
+  if (orient=="xF") {
+   plot(x,F,axes=FALSE,...)
+   axis(1)
+   axis(2,at=qq,labels=pp)
+   abline(h=qq, col="gray", lty="dotted")
+   grid(nx=NULL, ny=NA)
+   if (line==TRUE) lines(ordinato,adim,lty=2)
+  }
+  else if (orient=="Fx") {
+   plot(F,x,axes=FALSE,...)
+   axis(2)
+   axis(1,at=qq,labels=pp)
+   abline(v=qq, col="gray", lty="dotted")
+   grid(ny=NULL, nx=NA)
+   if (line==TRUE) lines(adim, ordinato, lty=2)
+  }
+  else stop("gumbelplot(x, a, orient, line): orient unknown")
   box()
-  if (line==TRUE) lines(ordinato,adim,lty=2)
-
 }
 
 
 # ---------------------------------------------------------------- #
 
-gumbelpoints <- function(x,...) {
+gumbelpoints <- function(x, a=0, orient="xF", ...) {
 
   # INPUT
   # x = colonna
@@ -197,7 +236,8 @@ gumbelpoints <- function(x,...) {
   mu <- m - 0.5772*beta
   adim <- (ordinato-mu)/beta
   n <- length(ordinato)
-  plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
+  i <- 1:n
+  plotpos <- (i - a)/(n + 1 - 2*a)
   uteorica <- -log(-log(plotpos))
   ordinatoteorico <- s*uteorica + m
   pp <- c(.001, .01, .05, .1, .25, .50, .75, .9, .95, .99, .999)
@@ -205,48 +245,56 @@ gumbelpoints <- function(x,...) {
 
   x=ordinato
   F=uteorica
-  points(x,F,...)
+  if (orient=="xF") points(x,F,...)
+  else if (orient=="Fx") points(F,x,...)
+  else stop("gumbelpoints(x, a, orient): orient unknown")
 }
 
 
 # ---------------------------------------------------------------- #
 
-unifplot <- function (x, line=TRUE, ...) {
+unifplot <- function (x, a=0, orient="xF", line=TRUE, ...) {
     ordinato <- sort(x)
+    u = (ordinato - min(ordinato))/(max(ordinato) - min(ordinato))
     n <- length(ordinato)
-    plotpos <- seq(1,n)/n
+    i <- 1:n
+    plotpos <- (i - a)/(n + 1 - 2*a)
     uteorica <- qunif(plotpos)
     pp <- c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99)
     qq <- qunif(pp)
     x = ordinato
     F = uteorica
-    plot(x, F, axes = FALSE, ...)
-    axis(1)
-    axis(2, at = qq, labels = pp)
-    abline(h = qq, col = "gray", lty = "dotted")
-    #grid(nx = NULL, ny = NA)
+    if (orient=="xF") {
+     plot(x, F, axes = FALSE, ...)
+     axis(1)
+     axis(2, at = qq, labels = pp)
+     abline(h = qq, col = "gray", lty = "dotted")
+     grid(nx = NULL, ny = NA)
+     if (line == TRUE) lines(ordinato, u, lty = 2)
+    }
+    else if (orient=="Fx") {
+     plot(F, x, axes = FALSE, ...)
+     axis(2)
+     axis(1, at = qq, labels = pp)
+     abline(v = qq, col = "gray", lty = "dotted")
+     grid(ny = NULL, nx = NA)
+     if (line == TRUE) lines(u, ordinato, lty = 2)
+    }
+    else stop("unifplot(x, a, orient, line): orient unknown")
     box()
-    if (line == TRUE)
-        lines(ordinato, qunif(ordinato), lty = 2)
 }
 
 
 # ---------------------------------------------------------------- #
 
-unifpoints <- function (x, ...) {
-    ordinato <- sort(x)
-    n <- length(ordinato)
-    plotpos <- seq(1,n)/n
-    uteorica <- qunif(plotpos)
-    x = ordinato
-    F = uteorica
-    points(x, F, ...)
+unifpoints <- function (x, a=0, orient="xF", ...) {
+ pointspos(x, a=0, orient="xF", ...)
 }
 
 
 # ---------------------------------------------------------------- #
 
-regionalplotpos <- function(x,cod,...) {
+regionalplotpos <- function(x, cod, a=0, orient="xF", ...) {
 
   # INPUT
   # x = colonna
@@ -262,22 +310,71 @@ regionalplotpos <- function(x,cod,...) {
 
   x=c(min(x),max(x))
   F=c(0,1)
-  plot(x,F,type="n",...)
-  for(i in 1:k) {
-   ordinato <- sort(X[cod==liv[i]])
+  if (orient=="xF") plot(x,F,type="n",...)
+  else if (orient=="Fx") plot(F,x,type="n",...)
+  else stop("regionalplotpos(x, cod, a, orient): orient unknown")
+  for(j in 1:k) {
+   ordinato <- sort(X[cod==liv[j]])
    n <- length(ordinato)
-   plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
-   points(ordinato,plotpos,pch=i,col=i)
+   i <- 1:n
+   plotpos <- (i - a)/(n + 1 - 2*a)
+   if (orient=="xF") points(ordinato, plotpos, pch=j, col=j)
+   else if (orient=="Fx") points(plotpos, ordinato, pch=j, col=j)
   }
   grid()
-
 }
 
 
 # --------------------------------------------------------------------------- #
 
-regionalnormplot <- function(x,cod,...) {
+regionalnormplot <- function(x, cod, a=0, orient="xF", ...) {
+  X=x
+  cod <- factor(cod)
+  k <- nlevels(cod)
+  liv <- levels(cod)
+  ni <- tapply(X,cod,length)
+  x=c(min(X),max(X))
+  F=c(qnorm((1-a)/(max(ni)+1-2*a)), qnorm((max(ni)-a)/(max(ni)+1-2*a)))
+  pp <- c(.001, .01, .05, .1, .25, .50, .75, .9, .95, .99, .999)
+  qq <- qnorm(pp)
+  if (orient=="xF") {
+   plot(x,F,type="n",axes=FALSE,...)
+   axis(1)
+   axis(2,at=qq,labels=pp)
+   for(j in 1:k) {
+    ordinato <- sort(X[cod==liv[j]])
+    n <- length(ordinato)
+    i <- 1:n
+    plotpos <- (i - a)/(n + 1 - 2*a)
+    uteorica <- qnorm(plotpos)
+    points(ordinato,uteorica,pch=j,col=j)
+   }
+   abline(h=qq, col="gray", lty="dotted")
+   grid(nx=NULL, ny=NA)
+  }
+  else if (orient=="Fx") {
+   plot(F,x,type="n",axes=FALSE,...)
+   axis(2)
+   axis(1,at=qq,labels=pp)
+   for(j in 1:k) {
+    ordinato <- sort(X[cod==liv[j]])
+    n <- length(ordinato)
+    i <- 1:n
+    plotpos <- (i - a)/(n + 1 - 2*a)
+    uteorica <- qnorm(plotpos)
+    points(uteorica,ordinato,pch=j,col=j)
+   }
+   abline(v=qq, col="gray", lty="dotted")
+   grid(ny=NULL, nx=NA)
+  }
+  else stop("regionalnormplot(x, cod, a, orient): orient unknown")
+  box()
+}
 
+
+# --------------------------------------------------------------------------- #
+
+regionallognormplot <- function(x, cod, a=0, orient="xF", ...) {
   X=x
   cod <- factor(cod)
   k <- nlevels(cod)
@@ -285,59 +382,47 @@ regionalnormplot <- function(x,cod,...) {
   ni <- tapply(X,cod,length)
 
   x=c(min(X),max(X))
-  F=c(qnorm(0.5/(max(ni))),qnorm((max(ni)-0.5)/max(ni)))
+  F=c(qnorm((1-a)/(max(ni)+1-2*a)), qnorm((max(ni)-a)/(max(ni)+1-2*a)))
   pp <- c(.001, .01, .05, .1, .25, .50, .75, .9, .95, .99, .999)
   qq <- qnorm(pp)
-  plot(x,F,type="n",axes=FALSE,...)
-  axis(1)
-  axis(2,at=qq,labels=pp)
-  for(i in 1:k) {
-   ordinato <- sort(X[cod==liv[i]])
-   n <- length(ordinato)
-   plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
-   uteorica <- qnorm(plotpos)
-   points(ordinato,uteorica,pch=i,col=i)
+  if (orient=="xF") {
+   plot(x,F,log="x",type="n",axes=FALSE,...)
+   axis(1)
+   axis(2,at=qq,labels=pp)
+   for(j in 1:k) {
+    ordinato <- sort(X[cod==liv[j]])
+    n <- length(ordinato)
+    i <- 1:n
+    plotpos <- (i - a)/(n + 1 - 2*a)
+    uteorica <- qnorm(plotpos)
+    points(ordinato,uteorica,pch=j,col=j)
+   }
+   abline(h=qq, col="gray", lty="dotted")
+   grid(nx=NULL, ny=NA)
   }
-  box()
-  abline(h=qq, col="gray", lty="dotted")
-  grid(nx=NULL, ny=NA)
-}
-
-
-# --------------------------------------------------------------------------- #
-
-regionallognormplot <- function(x,cod,...) {
-
-  X=x
-  cod <- factor(cod)
-  k <- nlevels(cod)
-  liv <- levels(cod)
-  ni <- tapply(X,cod,length)
-
-  x=c(min(X),max(X))
-  F=c(qnorm(0.5/(max(ni))),qnorm((max(ni)-0.5)/max(ni)))
-  pp <- c(.001, .01, .05, .1, .25, .50, .75, .9, .95, .99, .999)
-  qq <- qnorm(pp)
-  plot(x,F,log="x",type="n",axes=FALSE,...)
-  axis(1)
-  axis(2,at=qq,labels=pp)
-  for(i in 1:k) {
-   ordinato <- sort(X[cod==liv[i]])
-   n <- length(ordinato)
-   plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
-   uteorica <- qnorm(plotpos)
-   points(ordinato,uteorica,pch=i,col=i)
+  else if (orient=="Fx") {
+   plot(F,x,log="y",type="n",axes=FALSE,...)
+   axis(2)
+   axis(1,at=qq,labels=pp)
+   for(j in 1:k) {
+    ordinato <- sort(X[cod==liv[j]])
+    n <- length(ordinato)
+    i <- 1:n
+    plotpos <- (i - a)/(n + 1 - 2*a)
+    uteorica <- qnorm(plotpos)
+    points(uteorica,ordinato, pch=j,col=j)
+   }
+   abline(v=qq, col="gray", lty="dotted")
+   grid(ny=NULL, nx=NA)
   }
+  else stop("regionallognormplot(x, cod, a, orient): orient unknown")
   box()
-  abline(h=qq, col="gray", lty="dotted")
-  grid(nx=NULL, ny=NA)
 }
 
 
 # ---------------------------------------------------------------------- #
 
-regionalgumbelplot <- function(x,cod,...) {
-
+regionalgumbelplot <- function(x, cod, a=0, orient="xF", ...) {
   X=x
   cod <- factor(cod)
   k <- nlevels(cod)
@@ -345,21 +430,73 @@ regionalgumbelplot <- function(x,cod,...) {
   ni <- tapply(X,cod,length)
 
   x=c(min(X),max(X))
-  F=c(-log(-log(0.5/(max(ni)))),-log(-log((max(ni)-0.5)/max(ni))))
+  F=c(-log(-log((1-a)/(max(ni)+1-2*a))), -log(-log((max(ni)-a)/(max(ni)+1-2*a))))
   pp <- c(.001, .01, .05, .1, .25, .50, .75, .9, .95, .99, .999)
   qq <- -log(-log(pp))
-  plot(x,F,type="n",axes=FALSE,...)
-  axis(1)
-  axis(2,at=qq,labels=pp)
-  for(i in 1:k) {
-   ordinato <- sort(X[cod==liv[i]])
-   n <- length(ordinato)
-   plotpos <- seq(0.5/n, (n-0.5)/n, by=1/n)
-   uteorica <- -log(-log(plotpos))
-   points(ordinato,uteorica,pch=i,col=i)
+  if (orient=="xF") {
+   plot(x,F,type="n",axes=FALSE,...)
+   axis(1)
+   axis(2,at=qq,labels=pp)
+   for(j in 1:k) {
+    ordinato <- sort(X[cod==liv[j]])
+    n <- length(ordinato)
+    i <- 1:n
+    plotpos <- (i - a)/(n + 1 - 2*a)
+    uteorica <- -log(-log(plotpos))
+    points(ordinato,uteorica,pch=j,col=j)
+   }
+   abline(h=qq, col="gray", lty="dotted")
+   grid(nx=NULL, ny=NA)
   }
+  else if (orient=="Fx") {
+   plot(F,x,type="n",axes=FALSE,...)
+   axis(2)
+   axis(1,at=qq,labels=pp)
+   for(j in 1:k) {
+    ordinato <- sort(X[cod==liv[j]])
+    n <- length(ordinato)
+    i <- 1:n
+    plotpos <- (i - a)/(n + 1 - 2*a)
+    uteorica <- -log(-log(plotpos))
+    points(uteorica,ordinato,pch=j,col=j)
+   }
+   abline(v=qq, col="gray", lty="dotted")
+   grid(ny=NULL, nx=NA)
+  }
+  else stop("regionalgumbelplot(x, cod, a, orient): orient unknown")
   box()
-  abline(h=qq, col="gray", lty="dotted")
-  grid(nx=NULL, ny=NA)
 }
+
+# ---------------------------------------------------------------- #
+
+plotposRP <- function(x, a=0, orient="xF", ...) {
+  ordinato <- sort(x)
+  n <- length(ordinato)
+  i <- 1:n
+  plotpos <- (i - a)/(n + 1 - 2*a)
+
+  x=ordinato
+  T=1/(1 - plotpos)
+  if (orient=="xF") plot(x,T, log="y", ...)
+  else if (orient=="Fx") plot(T,x, log="x", ...)
+  else stop("plotposRP(x, a, orient): orient unknown") 
+  grid(equilogs=FALSE)
+}
+
+
+# ---------------------------------------------------------------- #
+
+pointsposRP <- function(x, a=0, orient="xF", ...) {
+  ordinato <- sort(x)
+  n <- length(ordinato)
+  i <- 1:n
+  plotpos <- (i - a)/(n + 1 - 2*a)
+
+  x=ordinato
+  T=1/(1 - plotpos)
+  if (orient=="xF") points(x,T,...)
+  else if (orient=="Fx") points(T,x,...)
+  else stop("pointsposRP(x, a, orient): orient unknown")
+}
+
 

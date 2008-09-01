@@ -40,21 +40,10 @@ The algorithm consist in moving a site from one cluster to another if this makes
 
  \code{nearest} gives the nearest site to the centers of mass of clusters (it is used by \code{traceWminim}).
 }
-\references{
-Everitt, B. (1974) Cluster Analysis. Social Science Research Council. Halsted Press, New York.
 
-Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Pre
-ss, Cambridge, UK.
-
-Viglione A., Claps P., Laio F. (2006) Utilizzo di criteri di prossimit\`a nell'analisi regionale del deflusso annuo, XXX Convegno di Idraulica e Costruzioni Idrauliche - IDRA 2006, Roma, 10-15 Settembre 2006.
-
-Viglione A. (2007) Metodi statistici non-supervised per la stima di grandezze idrologiche in siti non strumentati, PhD thesis, In press.
-
-Ward J. (1963) Hierarchical grouping to optimize an objective function, Journal of the American Statistical Association, 58, pp. 236-244.
-}
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{roi}}, \code{\link{AD.dist}}.}
 

@@ -77,17 +77,19 @@ If \eqn{\xi} is known, \eqn{k=(\lambda_1 - \xi)/\lambda_2 - 2} and \eqn{\alpha=(
 if \eqn{\xi} is unknown, \eqn{k=(1 - 3 \tau_3)/(1 + \tau_3)}, \eqn{\alpha=(1+k)(2+k)\lambda_2} and
 \eqn{\xi=\lambda_1 - (2+k)\lambda_2}.
 
+
+
+\code{Lmom.genpar} and \code{par.genpar} accept input as vectors of equal length. In \code{f.genpar}, \code{F.genpar}, \code{invF.genpar} and \code{rand.genpar} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.
 }
 \value{
  \code{f.genpar} gives the density \eqn{f}, \code{F.genpar} gives the distribution function \eqn{F}, \code{invF.genpar} gives
 the quantile function \eqn{x}, \code{Lmom.genpar} gives the L-moments (\eqn{\lambda_1}, \eqn{\lambda_2}, \eqn{\tau_3}, \eqn{\tau_4}), \code{par.genpar}
 gives the parameters (\code{xi}, \code{alfa}, \code{k}), and \code{rand.genpar} generates random deviates.
 }
-\references{Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.}
 
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-\note{ \code{Lmom.genpar} and \code{par.genpar} accept input as vectors of equal length. In \code{f.genpar}, \code{F.genpar}, \code{invF.genpar} and \code{rand.genpar} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 

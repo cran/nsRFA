@@ -81,15 +81,17 @@ Here we use the approximation given in Hosking and Wallis (1997, p. 199).
 Given \eqn{k}, the other parameters are given by
 \deqn{\alpha = \frac{\lambda_2 k e^{-k^2/2}}{1-2 \Phi(-k/\sqrt{2})}}
 \deqn{\xi = \lambda_1 - \frac{\alpha}{k} (1 - e^{k^2/2})}
+
+
+\code{Lmom.lognorm} and \code{par.lognorm} accept input as vectors of equal length. In \code{f.lognorm}, \code{F.lognorm}, \code{invF.lognorm} and \code{rand.lognorm} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.
 }
 \value{
  \code{f.lognorm} gives the density \eqn{f}, \code{F.lognorm} gives the distribution function \eqn{F}, \code{invFlognorm} gives the quantile function \eqn{x}, \code{Lmom.lognorm} gives the L-moments (\eqn{\lambda_1}, \eqn{\lambda_2}, \eqn{\tau_3}, \eqn{\tau_4}), \code{par.lognorm} gives the parameters (\code{xi}, \code{alfa}, \code{k}), and \code{rand.lognorm} generates random deviates.
 }
-\references{Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.}
 
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-\note{\code{Lmom.lognorm} and \code{par.lognorm} accept input as vectors of equal length. In \code{f.lognorm}, \code{F.lognorm}, \code{invF.lognorm} and \code{rand.lognorm} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 

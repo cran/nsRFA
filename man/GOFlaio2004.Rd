@@ -43,12 +43,10 @@
  \code{Fx} gives the empirical distribution function \code{F} of a sample \code{x}, extracted from the distribution \code{dist} with parameters \code{T}.
 
 }
-\references{
-Laio, F., Cramer-von Mises and Anderson-Darling goodness of fit tests for extreme value distributions with unknown parameters, Water Resour. Res., 40, W09308, doi:10.1029/2004WR003204.
-}
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
 
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{GOFmontecarlo}}, \code{\link{MLlaio2004}}.}
 

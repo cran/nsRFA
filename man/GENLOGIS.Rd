@@ -74,15 +74,16 @@ L-moments are defined for \eqn{-1<k<1}.
 
 \eqn{k=-\tau_3}, \eqn{\alpha = \frac{\lambda_2 \sin (k \pi)}{k \pi}}, 
 \eqn{\xi = \lambda_1 - \alpha (\frac{1}{k} - \frac{\pi}{\sin (k \pi)})}.
+
+
+\code{Lmom.genlogis} and \code{par.genlogis} accept input as vectors of equal length. In \code{f.genlogis}, \code{F.genlogis}, \code{invF.genlogis} and \code{rand.genlogis} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.
 }
 \value{
  \code{f.genlogis} gives the density \eqn{f}, \code{F.genlogis} gives the distribution function \eqn{F}, \code{invF.genlogis} gives the quantile function \eqn{x}, \code{Lmom.genlogis} gives the L-moments (\eqn{\lambda_1}, \eqn{\lambda_2}, \eqn{\tau_3}, \eqn{\tau_4}), \code{par.genlogis} gives the parameters (\code{xi}, \code{alfa}, \code{k}), and \code{rand.genlogis} generates random deviates.
 }
-\references{Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.}
-
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-\note{\code{Lmom.genlogis} and \code{par.genlogis} accept input as vectors of equal length. In \code{f.genlogis}, \code{F.genlogis}, \code{invF.genlogis} and \code{rand.genlogis} parameters (\code{xi}, \code{alfa}, \code{k}) must be atomic.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 

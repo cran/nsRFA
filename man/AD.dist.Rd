@@ -21,16 +21,9 @@
 \value{
  \code{AD.dist} returns the distance matrix between growth-curves built with the Anderson-Darling statistic.
 }
-\references{
-Viglione A., Laio F., Claps P. (2006) A comparison of homogeneity tests for regional frequency analysis, Water Resourches Research, In press.
-
-Viglione A., Claps P., Laio F. (2006) Utilizzo di criteri di prossimit\`a nell'analisi regionale del deflusso annuo, XXX Convegno di Idraulica e Costruzioni Idrauliche - IDRA 2006, Roma, 10-15 Settembre 2006.
-
-Viglione A. (2007) Metodi statistici non-supervised per la stima di grandezze idrologiche in siti non strumentati, PhD thesis, In press.
-}
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{traceWminim}}, \code{\link{roi}}.}
 

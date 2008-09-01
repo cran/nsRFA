@@ -35,7 +35,8 @@
  \item{ask}{if TRUE, the interactive mode is run}
  \item{...}{other arguments}
 }
-%\details{}
+\details{The algorithm is based on a code developed by Eric Gaume on Scilab.
+         It is still unstable and not all the distributions have been tested.}
 \value{
   \code{BayesianMCMC} returns the following values:
 
@@ -66,11 +67,12 @@
 
    \code{3} posterior distribution of parameters obtained with the MCMC simulation (cloud plots);
 }
-%\references{}
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
 
-\note{The algorithm is based on a code developed by Eric Gaume on Scilab.
-It is still unstable and not all the distributions have been tested.}
+
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
+
 
 \seealso{.}
 

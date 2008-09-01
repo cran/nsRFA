@@ -44,15 +44,12 @@
  \item{Nsim}{number of iterations, as \code{N}}
  \item{w}{transformed test statistic (Laio, 2004)}
 }
-%\details{
-% \code{ksampleA2} provides the Anderson-Darling test statistic;
-% \code{nonparboot} provides a non-parametric bootstrap.
-%}
-%\value{}
-
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
+%\details{}
 
 %\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 %\seealso{\code{\link{factor}}, \code{\link{HOMTESTS}}, \code{\link{traceWminim}}, \code{\link{roi}}.}
 

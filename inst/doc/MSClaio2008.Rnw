@@ -4,6 +4,8 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{fancyhdr}
 \usepackage[figuresright]{rotating}
+\usepackage{natbib}
+
 
 
 % Margini
@@ -21,15 +23,21 @@
 
 \title{Model selection techniques for the frequency analysis of hydrological extremes: the \textsf{MSClaio2008} R function}
 \author{Alberto Viglione}
+\date{}
+
+
+
+
 
 \begin{document}
 \maketitle
+
 
 \begin{abstract}
 The frequency analysis of hydrological extremes requires fitting a probability distribution to the observed data to suitably represent the frequency of occurrence of rare events. 
 The choice of the model to be used for statistical inference is often based on subjective criteria, or it is considered a matter of probabilistic hypotheses testing. 
 In contrast, specific tools for model selection, like the well known Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC), are seldom used in hydrological applications. 
-The paper of Laio et al. (2008) verifies whether the AIC and BIC work correctly when they are applied for identifying the probability distribution of hydrological extremes, i.e. when the available samples are small and the parent distribution is highly asymmetric. 
+The paper of \citet{Laioetal2008} verifies whether the AIC and BIC work correctly when they are applied for identifying the probability distribution of hydrological extremes, i.e. when the available samples are small and the parent distribution is highly asymmetric. 
 An additional model selection criterion, based on the Anderson-Darling goodness-of-fit test statistic, is proposed, and the performances of the three methods are compared trough an extensive numerical analysis. 
 In this brief document, an application of the R function \verb+MSClaio2008+, part of the package \verb+nsRFA+, is provided.
 \end{abstract}
@@ -45,7 +53,7 @@ The operating models are in the form of probability distributions, $M_j = g_j(x,
 The scope of model selection is to identify the model $M_{opt}$ which is better suited to represent the data, i.e. the model which is closer in some sense to the parent distribution $f(x)$.
 
 Three different model selection criteria are considered here, namely, the Akaike Information Criterion (AIC), the Bayesian Information Criterion (BIC), and the Anderson-Darling Criterion (ADC).
-Of the three methods, the first two belong to the category of classical literature approaches, while the third derives from a heuristic interpretation of the results of a standard goodness-of-fit test (see Laio, 2004).
+Of the three methods, the first two belong to the category of classical literature approaches, while the third derives from a heuristic interpretation of the results of a standard goodness-of-fit test \citep[see][]{Laio2004}.
 
 <<echo=FALSE, results=hide>>=
 library(nsRFA)
@@ -59,9 +67,23 @@ The data of site number 69023 are used here:
 sitedata <- am[am[,1]==69023, ]
 @
 whose series can be plotted with:
-<<fig=TRUE, width=6, height=4>>=
+<<echo=FALSE, eval=TRUE>>=
+bitmap(file="serie.png", type="png256", height=6, width=8, res=144, pointsize=16)
+@
+<<fig=FALSE, width=5, height=5>>=
 serieplot(sitedata[,4], sitedata[,3], ylim=c(0,200), xlab="year", ylab="Max annual peak [m3/s]")
 @
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.7\textwidth]{serie}
+\end{center}
+\caption{Series of maximum annual flood peaks in station 69023.}
+\label{fig:serie}
+\end{figure}
 
 
 
@@ -116,7 +138,7 @@ summary(MSC)
 
 \section*{Anderson-Darling Criterion}
 
-The Anderson-Darling criterion has the form:
+The Anderson-Darling criterion has the form \citep[see][]{Laioetal2008, DiBaldassarreetal2008}:
 $$ADC_j = 0.0403 + 0.116 \left(\frac{\Delta_{AD,j} - \epsilon_j}{\beta_j}\right)^\frac{\eta_j}{0.851}$$
 if $1.2 \epsilon_j < \Delta_{AD,j}$,
 $$ADC_j = \left[0.0403 + 0.116 \left(\frac{0.2 \epsilon_j}{\beta_j}\right)^\frac{\eta_j}{0.851} \right] \frac{\Delta_{AD,j} - 0.2 \epsilon_j}{\epsilon_j}$$
@@ -124,7 +146,7 @@ if $1.2 \epsilon_j \ge \Delta_{AD,j}$,
 where $\Delta_{AD,j}$ is the discrepancy measure characterizing the criterion, the Anderson-Darling statistic:
 $$\Delta_{AD,j} = -n-\frac{1}{n}\sum_{i=1}^n\left[(2i-1) \ln \left[G_j(x_i,\theta)\right]+
                   (2n+1-2i) \ln \left[1-G_j(x_i,\theta)\right]\right]$$
-and $\epsilon_j$, $\beta_j$ and $\eta_j$ are distribution-dependent coefficients that are tabled by Laio [2004, Tables 3 and 5] for a set of seven distributions commonly employed for the frequency analysis of extreme events.
+and $\epsilon_j$, $\beta_j$ and $\eta_j$ are distribution-dependent coefficients that are tabled by \citet[][Tables 3 and 5]{Laio2004} for a set of seven distributions commonly employed for the frequency analysis of extreme events.
 In practice, after the computation of the $ADC_j$, for all of the operating models, one selects the model with the minimum ADC value, $ADC_{min}$.
 The application of the ADC method is performed by:
 <<>>=
@@ -148,27 +170,52 @@ Summarizing the choices are:
 <<>>=
 summary(MSC)
 @
-The candidate distributions and the selected ones can be plotted in a log-normal probability plot:
-<<fig=TRUE, width=5, height=5>>=
+The candidate distributions and the selected ones can be plotted in a log-normal probability plot (Figure \ref{fig:plotMSC}):
+<<echo=FALSE, eval=TRUE>>=
+bitmap(file="plotMSC.png", type="png256", height=8, width=8, res=144, pointsize=16)
+@
+<<fig=FALSE, width=5, height=5>>=
 plot(MSC)
 @
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+
+\begin{figure}
+\begin{center}
+ \includegraphics[width=.7\textwidth]{plotMSC}
+\end{center}
+\caption{Data (Weibull plotting position) and candidate distributions in lognormal probability plot.
+The distributions selected by one criterion, at least, are plotted in black, the others in gray.}
+\label{fig:plotMSC}
+\end{figure}
 
 
-\begin{thebibliography}{9}
-\bibitem{Laio2004}
-  Francesco Laio,
-  Cramer-von Mises and Anderson-Darling goodness of fit tests for extreme value distributions with unknown parameters,
-  \emph{Water Resources Research},
-  \textbf{40},
-  W09308, doi:10.1029/2004WR003204,
-  2004.
-\bibitem{Laioetal2008}
-  Francesco Laio, Giuliano Di Baldassarre, Alberto Montanari,
-  Model selection techniques for the frequency analysis of hydrological extremes,
-  \emph{Water Resources Research},
-  \textbf{??},
-  ??,
-  2008.
+% --------------------------------------------------------------------- %
+
+%\bibliographystyle{apalike}
+%\bibliography{BiblioAlberto}
+
+
+\begin{thebibliography}{}
+
+\bibitem[{Di Baldassarre} et~al., 2008]{DiBaldassarreetal2008}
+{Di Baldassarre}, G., Laio, F., and Montanari, A. (2008).
+\newblock Design flood estimation using model selection criteria.
+\newblock Under review.
+
+\bibitem[Laio, 2004]{Laio2004}
+Laio, F. (2004).
+\newblock Cramer-von mises and anderson-darling goodness of fit tests for
+  extreme value distributions with unknown parameters.
+\newblock {\em Water Resources Research}, 40:W09308, doi:10.1029/2004WR003204.
+
+\bibitem[Laio et~al., 2008]{Laioetal2008}
+Laio, F., {Di Baldassarre}, G., and Montanari, A. (2008).
+\newblock Model selection techniques for the frequency analysis of hydrological
+  extremes.
+\newblock Under review.
+
 \end{thebibliography}
 
 \end{document}

@@ -66,16 +66,18 @@ Here \eqn{\gamma} is Euler's constant, 0.5772...
 \deqn{\alpha=\lambda_2 / \log 2}
 \deqn{\xi = \lambda_1 - \gamma \alpha}
 
+
+
+\code{Lmom.gumb} and \code{par.gumb} accept input as vectors of equal length. In \code{f.gumb}, \code{F.gumb}, \code{invF.gumb} and \code{rand.gumb} parameters (\code{xi}, \code{alfa}) must be atomic.
 }
 \value{
  \code{f.gumb} gives the density \eqn{f}, \code{F.gumb} gives the distribution function \eqn{F}, \code{invF.gumb} gives
 the quantile function \eqn{x}, \code{Lmom.gumb} gives the L-moments (\eqn{\lambda_1}, \eqn{\lambda_2}, \eqn{\tau_3}, \eqn{\tau_4})), \code{par.gumb} gives the parameters (\code{xi}, \code{alfa}), and \code{rand.gumb} generates random deviates.
 }
-\references{Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.}
 
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-\note{ \code{Lmom.gumb} and \code{par.gumb} accept input as vectors of equal length. In \code{f.gumb}, \code{F.gumb}, \code{invF.gumb} and \code{rand.gumb} parameters (\code{xi}, \code{alfa}) must be atomic.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 

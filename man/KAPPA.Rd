@@ -86,16 +86,19 @@ Here \eqn{\Gamma} denote the gamma function
 There are no simple expressions for the parameters in terms of the L-moments.
 However they can be obtained with a numerical algorithm considering the formulations of \eqn{\tau_3}{\tau3} and \eqn{\tau_4}{\tau4} in terms of \eqn{k} and \eqn{h}.
 Here we use the function \code{optim} to minimize \eqn{(t_3-\tau_3)^2 + (t_4-\tau_4)^2}{(t3-\tau3)^2 + (t4-\tau4)^2} where \eqn{t_3}{t3} and \eqn{t_4}{t4} are the sample L-moment ratios.
+
+
+\code{Lmom.kappa} and \code{par.kappa} accept input as vectors of equal length. In \code{f.kappa}, \code{F.kappa}, 
+\code{invF.kappa} and \code{rand.kappa} parameters (\code{xi}, \code{alfa}, \code{k}, \code{h}) must be atomic.
 }
 \value{
  \code{f.kappa} gives the density \eqn{f}, \code{F.kappa} gives the distribution function \eqn{F}, \code{invFkappa} gives
 the quantile function \eqn{x}, \code{Lmom.kappa} gives the L-moments (\eqn{\lambda_1}, \eqn{\lambda_2}, \eqn{\tau_3}, \eqn{\tau_4}), \code{par.kappa} gives the parameters (\code{xi}, \code{alfa}, \code{k}, \code{h}), and \code{rand.kappa} generates random deviates.
 }
-\references{Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.}
 
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-\note{\code{Lmom.kappa} and \code{par.kappa} accept input as vectors of equal length. In \code{f.kappa}, \code{F.kappa}, \code{invF.kappa} and \code{rand.kappa} parameters (\code{xi}, \code{alfa}, \code{k}, \code{h}) must be atomic.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{EXP}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{optim}}, \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 

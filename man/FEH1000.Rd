@@ -49,14 +49,9 @@ Flood Estimation Handbook flood peak data CD-ROM.
 
 }
 \source{http://www.environment-agency.gov.uk/hiflowsuk/}
-\references{
-Institute of Hydrology (1999) Flood Estimation Handbook, Institute of Hydrology, Oxford.
-
-http://www.environment-agency.gov.uk/hiflowsuk/
-
-Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge Un
-iversity Press, Cambridge, UK.
-}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \examples{
 data(FEH1000)

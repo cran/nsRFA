@@ -67,17 +67,15 @@ If \eqn{\xi} is unknown, the parameters are given by
 \deqn{\xi = \lambda_1 - \alpha}
 For estimation based on a single sample these estimates are inefficient, but in regional frequency analysis they can give reasonable estimates of upper-tail quantiles.
 
-
+\code{Lmom.exp} and \code{par.exp} accept input as vectors of equal length. In \code{f.exp}, \code{F.exp}, \code{invF.exp} and \code{rand.exp} parameters (\code{xi}, \code{alfa}) must be atomic.
 }
 \value{
  \code{f.exp} gives the density \eqn{f}, \code{F.exp} gives the distribution function \eqn{F}, \code{invFexp} gives
 the quantile function \eqn{x}, \code{Lmom.exp} gives the L-moments (\eqn{\lambda_1}, \eqn{\lambda_2}, \eqn{\tau_3}, \eqn{\tau_4}), \code{par.exp} gives the parameters (\code{xi}, \code{alfa}), and \code{rand.exp} generates random deviates.
 }
-\references{Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.}
-
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-\note{\code{Lmom.exp} and \code{par.exp} accept input as vectors of equal length. In \code{f.exp}, \code{F.exp}, \code{invF.exp} and \code{rand.exp} parameters (\code{xi}, \code{alfa}) must be atomic.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{rnorm}}, \code{\link{runif}}, \code{\link{GENLOGIS}}, \code{\link{GENPAR}}, \code{\link{GEV}}, \code{\link{GUMBEL}}, \code{\link{KAPPA}}, \code{\link{LOGNORM}}, \code{\link{P3}}; \code{\link{DISTPLOTS}}, \code{\link{GOFmontecarlo}}, \code{\link{Lmoments}}.}
 

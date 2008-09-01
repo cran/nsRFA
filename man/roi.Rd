@@ -50,19 +50,10 @@ where \eqn{x_{h i}}{x_hi} is the value of the \eqn{h}-th variable of the \eqn{i}
  It also return the similarity ranking factor \eqn{S_i}, the weights \eqn{w_i} and the regional L-moments as evaluated in the Flood Estimation Handbook (Robson and Reed, 1999).
  The region is formed using distances in the space defined by parameters \code{p.ungauged} and \code{p.gauged}.
 }
-\references{
-Burn D. (1990) Evaluation of regional flood frequency analysis with a region of influence approach. Water Resources Research, 26, pp. 2257-2265.
 
-Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Pre
-ss, Cambridge, UK.
-
-Viglione A. (2007) Metodi statistici non-supervised per la stima di grandezze idrologiche in siti non strumentati, PhD thesis, In press.
-
-Robson, A. and Reed, D. (1999) Statistical procedures for flood frequency estimation. In Flood Estimation Handbook, volume 3. Institute of Hydrology Crowmarsh Gifford, Wallingford, Oxfordshire. 
-}
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{traceWminim}}, \code{\link{AD.dist}}, \code{\link{HOMTESTS}} for the definition of the Hosking and Wallis \code{"HW"} or Anderson-Darling \code{"AD"} tests.}
 

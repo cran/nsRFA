@@ -239,28 +239,9 @@ if \eqn{t_3^R > 0.23}{t3^R > 0.23}, the bootstrap Anderson-Darling test is prefe
   \code{discordancy} returns the discordancy measure \eqn{D} of Hosking and Wallis for all sites. 
   Hosking and Wallis suggest to consider a site discordant if \eqn{D \geq 3} if \eqn{N \geq 15} (where \eqn{N} is the number of sites considered in the region). For \eqn{N<15} the critical values of \eqn{D} can be listed with \code{criticalD}.
 }
-\references{
-D'Agostino R., Stephens M. (1986) Goodness-of-Fit Techniques, chapter Tests based on EDF statistics. Marcel Dekker, New York.
-
-Durbin J., Knott M. (1971) Components of Cramer-von Mises statistics. London School of Economics and Political Science, pp. 290-307.
-
-Hosking J., Wallis J. (1993) Some statistics useful in regional frequency analysis. Water Resources Research, 29 (2), pp. 271-281.
-
-Hosking, J.R.M. and Wallis, J.R. (1997) Regional Frequency Analysis: an approach based on L-moments, Cambridge University Press, Cambridge, UK.
-
-Laio, F., Cramer-von Mises and Anderson-Darling goodness of fit tests for extreme value distributions with unknown parameters
-, Water Resour. Res., 40, W09308, doi:10.1029/2004WR003204.
-
-Scholz F., Stephens M. (1987) K-sample Anderson-Darling tests. Journal of American Statistical Association, 82 (399), pp. 918
--924.
-
-Viglione A., Laio F., Claps P. (2007) ``A comparison of homogeneity tests for regional frequency analysis'', Water Resources Research, 43, W03428, doi:10.1029/2006WR005095.
-
-Viglione A. (2007) Metodi statistici non-supervised per la stima di grandezze idrologiche in siti non strumentati, PhD thesis, Politecnico di Torino.
-}
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{traceWminim}}, \code{\link{roi}}, \code{\link{KAPPA}}, \code{HW.original}.}
 

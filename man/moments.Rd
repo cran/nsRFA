@@ -28,10 +28,8 @@ where \eqn{n} is the size of \code{x}.
 See \url{http://en.wikipedia.org/wiki/Skewness} and \url{http://en.wikipedia.org/wiki/Kurtosis} for additional informations.
 }
 %\references{}
-
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{.}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{\code{\link{mean}}, \code{\link{var}}, \code{\link{sd}}, \code{\link{Lmoments}}.}
 

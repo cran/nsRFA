@@ -20,6 +20,9 @@ Functions for inversion calculation.
 }
 %\source{}
 %\references{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
+
 
 %\examples{}
 \keyword{datasets}

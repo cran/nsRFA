@@ -3,11 +3,13 @@
 \name{DISTPLOTS}
 \alias{DISTPLOTS}
 \alias{plotpos}
+\alias{plotposRP}
 \alias{unifplot}
 \alias{normplot}
 \alias{lognormplot}
 \alias{gumbelplot}
 \alias{pointspos}
+\alias{pointsposRP}
 \alias{unifpoints}
 \alias{normpoints}
 \alias{gumbelpoints}
@@ -16,40 +18,59 @@
 \alias{regionallognormplot}
 \alias{regionalgumbelplot}
 %- Also NEED an `\alias' for EACH other topic documented here.
-\title{Distribution plots}
+\title{Empirical distribution plots}
 \description{
  Sample values are plotted against their empirical distribution in graphs where points belonging to a particular distribution should lie on a straight line.
 }
 \usage{
- plotpos (x, ...)
- unifplot (x, line=TRUE, ...)
- normplot (x, line=TRUE, ...)
- lognormplot (x, line=TRUE, ...)
- gumbelplot (x, line=TRUE, ...)
- pointspos (x, ...)
- unifpoints (x, ...)
- normpoints (x, ...)
- gumbelpoints (x, ...)
- regionalplotpos (x, cod, ...)
- regionalnormplot (x, cod, ...)
- regionallognormplot (x, cod, ...)
- regionalgumbelplot (x, cod, ...)
+ plotpos (x, a=0, orient="xF", ...)
+ plotposRP (x, a=0, orient="xF", ...)
+ unifplot (x, a=0, orient="xF", line=TRUE, ...)
+ normplot (x, a=0, orient="xF", line=TRUE, ...)
+ lognormplot (x, a=0, orient="xF", line=TRUE, ...)
+ gumbelplot (x, a=0, orient="xF", line=TRUE, ...)
+ pointspos (x, a=0, orient="xF", ...)
+ pointsposRP (x, a=0, orient="xF", ...)
+ unifpoints (x, a=0, orient="xF", ...)
+ normpoints (x, a=0, orient="xF", ...)
+ gumbelpoints (x, a=0, orient="xF", ...)
+ regionalplotpos (x, cod, a=0, orient="xF", ...)
+ regionalnormplot (x, cod, a=0, orient="xF", ...)
+ regionallognormplot (x, cod, a=0, orient="xF", ...)
+ regionalgumbelplot (x, cod, a=0, orient="xF", ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{vector representing a data-sample}
- \item{line}{if TRUE (default) a straigth line indicating the normal, lognormal or Gumbel distribution with parameters estimated from \code{x} is plotted}
+ \item{a}{plotting position parameter, normally between 0 and 0.5 (the default value here, corresponding to the Hazen plotting position, see details)}
+ \item{orient}{if \code{orient="xF"} the abscissa will be x and the ordinate F}
+ \item{line}{if TRUE (default) a straight line indicating the normal, lognormal or Gumbel distribution with parameters estimated from \code{x} is plotted}
  \item{cod}{array that defines the data subdivision among sites}
  \item{...}{graphical parameters as \code{xlab}, \code{ylab}, \code{main}, ...}
 }
 \details{
  A brief introduction on Probability Plots (or Quantile-Quantile plots) is available on \url{http://en.wikipedia.org/wiki/Q-Q_plot}.
+ For plotting positions see \url{http://en.wikipedia.org/wiki/Plotting_position}.
+
+For the quantiles of the comparison distribution typically the Weibull formula \eqn{k/(n + 1)} is used (default here). 
+Several different formulas have been used or proposed as symmetrical plotting positions. 
+Such formulas have the form 
+\deqn{(k - a)/(n + 1 - 2a)} 
+for some value of \eqn{a} in the range from 0 to 1/2. 
+The above expression \eqn{k/(n+1)} is one example of these, for \eqn{a=0}. 
+The Filliben plotting position has \eqn{a = 0.3175} and the Cunanne plotting position has \eqn{a = 0.4} should be nearly quantile-unbiased for a range of distributions.
+The Hazen plotting position, widely used by engineers, has \eqn{a = 0.5}.
+The Blom's plotting position, \eqn{a = 3/8}, gives nearly unbiased quantiles for the normal distribution, while the Gringeton plotting position, \eqn{a = 0.44}, is optimized for the largest observations from a Gumbel distribution.
+For the generalized Pareto, the GEV and related distributions of the Type I (Gumbel) and Weibull, \eqn{a = 0.35} is suggested.
+
+For large sample size, \eqn{n}, there is little difference between these various expressions.
 }
 \value{
  Representation of the values of \code{x} vs their empirical probability function \eqn{F} in a cartesian, uniform, normal, lognormal or Gumbel plot. 
  \code{plotpos} and \code{unifplot} are analogous except for the axis notation, \code{unifplot} has the same notation as \code{normplot}, \code{lognormplot}, ...
- \eqn{F} is defined with the plotting position \eqn{F=(n-0.5)/n}.
- The straigth line (if \code{line}=TRUE) indicate the uniform, normal, lognormal or Gumbel distribution with parameters estimated from \code{x}.
+ \code{plotposRP} is analogous to \code{plotpos} but the frequencies \eqn{F} are expressed as Return Periods \eqn{T=1/(1-F)}.
+ With the default settings, \eqn{F} is defined with the Weibull plotting position \eqn{F=k/(n+1)}.
+ The straight line (if \code{line}=TRUE) indicate the uniform, normal, lognormal or Gumbel distribution with parameters estimated from \code{x}.
  The regional plots draw samples of a region on the same plot. 
 
  \code{pointspos}, \code{normpoints}, ... are the analogous of \code{points}, they can be used to add points or lines to \code{plotpos}, \code{normplot}, ...
@@ -57,10 +78,8 @@
 
 }
 %\references{}
-
-\author{Alberto Viglione, e-mail: \email{alviglio@tiscali.it}.}
-
-%\note{}
+%\author{Alberto Viglione}
+\note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 \seealso{These functons are analogous to \code{\link{qqnorm}}; for the distributions, see \code{\link{Normal}}, \code{\link{Lognormal}}, \code{\link{LOGNORM}}, \code{\link{GUMBEL}}.}
 
