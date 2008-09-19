@@ -327,7 +327,7 @@ plot.MSClaio2008 <- function(x, ...) {
   }
   else if ((dist=="EV1")||(dist=="GUMBEL")) {
    T <- ML_estimation(b, dist="EV1")
-   #lnML <- -logLgumb(T, b)
+   #lnML <- -.logLgumb(T, b)
    lnML <- sum(log(f.gumb(b, T[1], T[2])))
   }
   else if (dist=="EV2") {
@@ -336,7 +336,7 @@ plot.MSClaio2008 <- function(x, ...) {
   }
   else if (dist=="GEV") {
    T <- ML_estimation(b, dist="GEV")
-   #lnML <- -logLgev(T, b)
+   #lnML <- -.logLgev(T, b)
    if (abs(T[1] + T[2]/T[3] - b[n]) < 0.0001) {
     b <- b[-n]   # delete the maximum
     n2 <- n-1
@@ -348,7 +348,7 @@ plot.MSClaio2008 <- function(x, ...) {
   }
   else if ((dist=="GAM")||(dist=="P3")) {
    T <- ML_estimation(b, dist="GAM")
-   #lnML <- -logLgam(T[1], b)
+   #lnML <- -.logLgam(T[1], b)
    if (abs(T[1] - b[1]) < 0.000001) {
     b <- b[-1]   # delete the minimum
     n2 <- n-1
@@ -450,19 +450,19 @@ plot.MSClaio2008 <- function(x, ...) {
  eta0=0.851; beta0=0.116; csi0=0.0403; eps1=1.2; eps2=0.2
  if ((dist=="NORM")||(dist=="LN")) {
   T <- ML_estimation(b,dist="NORM")
-  F <- Fx(b,T,dist="NORM")
+  F <- .Fx(b,T,dist="NORM")
   eta1=1.147; beta1=0.229; csi1=0.167
   eta1corr <- eta1*(1+0.5/n); beta1corr <- beta1*(1-0.2/n); csi1corr <- csi1*(1+0.3/n)
  }
  else if ((dist=="EV1")||(dist=="GUMBEL")||(dist=="EV2")) {
   T <- ML_estimation(b,dist="EV1")
-  F <- Fx(b,T,dist="EV1")
+  F <- .Fx(b,T,dist="EV1")
   eta1=1.141; beta1=0.229; csi1=0.169
   eta1corr <- eta1*(1+0.5/n); beta1corr <- beta1*(1-0.2/n); csi1corr <- csi1*(1+0.1/n)
  }
  else if (dist=="GEV") {
   T <- ML_estimation(b,dist="GEV")
-  F <- Fx(b,T,dist="GEV")
+  F <- .Fx(b,T,dist="GEV")
   if (T[3]>0.5) T[3]=0.5
   eta1 <- 1.186*(1-0.04*T[3]-0.04*T[3]^2-0.01*T[3]^3)
   beta1 <- 0.189*(1+0.20*T[3]+0.37*T[3]^2+0.17*T[3]^3)
@@ -481,7 +481,7 @@ plot.MSClaio2008 <- function(x, ...) {
    b <- b[-n]   # delete the maximum
    n <- n-1
   }
-  F <- Fx(b,T,dist="GAM")
+  F <- .Fx(b,T,dist="GAM")
   F[F>0.99999999]=0.99999999
   F[F<0.00000001]=0.00000001
   if (T[3]<2) T[3]=2

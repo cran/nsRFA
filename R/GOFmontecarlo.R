@@ -364,7 +364,7 @@ gofLOGNORMtest <- function (x,Nsim=1000) {
 
 # ---------------------------------------------------------------------------------- #
 
-test.GOFmontecarlo <- function (parameters, type="NORM", alfa=.05, n=30, N=100) {
+.test.GOFmontecarlo <- function (parameters, type="NORM", alfa=.05, n=30, N=100) {
 
   # testa se i test di goodness of fit funzionano correttamente
   # type = "NORM", "GENLOGIS", "GENPAR", "GEV", "LOGNORM", "P3"
@@ -416,19 +416,19 @@ test.GOFmontecarlo <- function (parameters, type="NORM", alfa=.05, n=30, N=100) 
   return(typeIer)
 }
 
-# test.GOFmontecarlo(c(0,1),type="NORM",alfa=.1,N=10000) = 0.0976
-# test.GOFmontecarlo(c(10,1),type="NORM",alfa=.1,N=10000) = 0.0963
-# test.GOFmontecarlo(c(10,100),type="NORM",alfa=.1,N=10000) = 0.0953
+# .test.GOFmontecarlo(c(0,1),type="NORM",alfa=.1,N=10000) = 0.0976
+# .test.GOFmontecarlo(c(10,1),type="NORM",alfa=.1,N=10000) = 0.0963
+# .test.GOFmontecarlo(c(10,100),type="NORM",alfa=.1,N=10000) = 0.0953
 # x <- annualflows[annualflows[1]==30,3]
 # lmom <- Lmoments(x)
 # param <- par.genlogis(lmom["l1"],lmom["l2"],lmom["lca"])
-# test.GOFmontecarlo(c(param$xi,param$alfa,param$k),type="GENLOGIS",n=100,alfa=.1,N=1000)  # = 0.137 
+# .test.GOFmontecarlo(c(param$xi,param$alfa,param$k),type="GENLOGIS",n=100,alfa=.1,N=1000)  # = 0.137 
 # param <- par.genpar(lmom["l1"],lmom["l2"],lmom["lca"])
-# test.GOFmontecarlo(c(param$xi,param$alfa,param$k),type="GENPAR",n=100,alfa=.1,N=1000)  # = 0.091 
+# .test.GOFmontecarlo(c(param$xi,param$alfa,param$k),type="GENPAR",n=100,alfa=.1,N=1000)  # = 0.091 
 # param <- par.GEV(lmom["l1"],lmom["l2"],lmom["lca"])
-# test.GOFmontecarlo(c(param$xi,param$alfa,param$k),type="GEV",n=100,alfa=.1,N=1000)  # = 0.099 
+# .test.GOFmontecarlo(c(param$xi,param$alfa,param$k),type="GEV",n=100,alfa=.1,N=1000)  # = 0.099 
 # param <- par.lognorm(lmom["l1"],lmom["l2"],lmom["lca"])
-# test.GOFmontecarlo(c(param$xi,param$alfa,param$k),type="LOGNORM",n=100,alfa=.1,N=1000)  # = 0.122
+# .test.GOFmontecarlo(c(param$xi,param$alfa,param$k),type="LOGNORM",n=100,alfa=.1,N=1000)  # = 0.122
 # param <- par.gamma(lmom["l1"],lmom["l2"],lmom["lca"])
-# test.GOFmontecarlo(c(param$xi,param$beta,param$alfa),type="P3",n=100,alfa=.1,N=1000)   # = 0.043
+# .test.GOFmontecarlo(c(param$xi,param$beta,param$alfa),type="P3",n=100,alfa=.1,N=1000)   # = 0.043
  

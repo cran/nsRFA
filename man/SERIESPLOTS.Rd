@@ -10,7 +10,8 @@
  Plots for time-series investigation.
 }
 \usage{
- serieplot (x, t, lim.x=c(min(x),max(x)), lim.t=c(min(t),max(t)), ...)
+ serieplot (x, t, lim.x=c(min(x),max(x)), lim.t=c(min(t),max(t)), 
+            ...)
  consistencyplot (t, cod, cex.axis=.8, mark.code=TRUE, ...)
 }
 %- maybe also `usage' for other objects documented here.
@@ -45,7 +46,8 @@ consistencyplot(y,cod)
 
 
 for (i in unique(cod)) {
- serieplot(x[cod==i],y[cod==i],c(0,max(x)),c(min(y),max(y)),xlab="",ylab="D [mm]",main=i)
+ serieplot(x[cod==i], y[cod==i], c(0,max(x)), c(min(y),max(y)),
+           xlab="", ylab="D [mm]", main=i)
  readline()
 }
 }

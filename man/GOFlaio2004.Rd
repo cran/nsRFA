@@ -5,8 +5,8 @@
 \alias{A2_GOFlaio}
 \alias{A2}
 \alias{W2}
-\alias{Fx}
-%\alias{fw2}
+%\alias{Fx}
+\alias{fw2}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Goodness of fit tests}
 \description{
@@ -16,16 +16,16 @@
  A2_GOFlaio (x, dist="NORM")
  A2 (F)
  W2 (F)
- Fx (x, T, dist="NORM")
- %fw2 (w)
+% Fx (x, T, dist="NORM")
+ fw2 (w)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{data sample}
  \item{dist}{distribution: normal \code{"NORM"}, log-normal \code{"LN"}, Gumbel \code{"GUMBEL"}, Frechet \code{"EV2"}, Generalized Extreme Value \code{"GEV"}, Pearson type III \code{"P3"}, log-Pearson type III \code{"LP3"}}
  \item{F}{cumulative distribution function}
- \item{T}{parameters (position, scale, shape, ...)}
- %\item{w}{Transformed test statistic (Laio, 2004)}
+% \item{T}{parameters (position, scale, shape, ...)}
+ \item{w}{Transformed test statistic (Laio, 2004)}
 }
 \details{An introduction on the Anderson-Darling test is available on \url{http://en.wikipedia.org/wiki/Anderson-Darling_test} and in the \code{GOFmontecarlo} help page.
  The oroginal paper of Laio (2004) is available on his web site.
@@ -38,9 +38,9 @@
 
   \code{W2} is the Cramer-von Mises test statistic.
 
-  %\code{fw2} is the approximation of the probability distribution of \code{w} (first 2 terms) when \eqn{H_0} is true (Anderson-Darling, 1952); it is used by \code{A2_GOFlaio}.
+  \code{fw2} is the approximation of the probability distribution of \code{w} (first 2 terms) when \eqn{H_0} is true (Anderson-Darling, 1952); it is used by \code{A2_GOFlaio}.
 
- \code{Fx} gives the empirical distribution function \code{F} of a sample \code{x}, extracted from the distribution \code{dist} with parameters \code{T}.
+% \code{Fx} gives the empirical distribution function \code{F} of a sample \code{x}, extracted from the distribution \code{dist} with parameters \code{T}.
 
 }
 
@@ -51,15 +51,14 @@
 \seealso{\code{\link{GOFmontecarlo}}, \code{\link{MLlaio2004}}.}
 
 \examples{
-sm <- sample_generator(100, c(0,1), dist="EV1")
-ML_estimation (sm, dist="GEV")
-Fx (sm, ML_estimation (sm, dist="GEV"), dist="GEV")
-A2(sort(Fx(sm, ML_estimation (sm, dist="GEV"), dist="GEV")))
+sm <- rand.gumb(100, 0, 1)
+ml <- ML_estimation (sm, dist="GEV"); ml
+F.GEV(sm, ml[1], ml[2], ml[3])
+A2(sort(F.GEV(sm, ml[1], ml[2], ml[3])))
 A2_GOFlaio(sm, dist="GEV")
 
-ML_estimation (sm, dist="P3")
-Fx(sm, ML_estimation (sm, dist="P3"), dist="P3")
-A2(sort(Fx(sm, ML_estimation (sm, dist="P3"), dist="P3")))
+ml <- ML_estimation (sm, dist="P3"); ml
+A2(sort(sort(F.gamma(sm, ml[1], ml[2], ml[3]))))
 A2_GOFlaio(sm, dist="P3")
 }
 \keyword{htest}

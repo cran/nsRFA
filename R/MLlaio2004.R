@@ -1,4 +1,4 @@
-Fx <- function (x, T, dist="NORM") {
+.Fx <- function (x, T, dist="NORM") {
  # x = sample
  # T = parameters (position, scale, shape, ...)
  # dist = distribution ("NORM","EV1","GEV","GAM")
@@ -20,7 +20,7 @@ Fx <- function (x, T, dist="NORM") {
    1 - pgamma((T[1]-x), shape=T[3], scale=-T[2])
   }
  }
- else stop("Fx(x, T, dist): distribution unknown")
+ else stop(".Fx(x, T, dist): distribution unknown")
 }
 
 # ------------------------------------------------------------------- #
@@ -62,8 +62,8 @@ moment_estimation <- function (x, dist="NORM") {
 
 # ------------------------------------------------------------------- #
 
-logLgumb <- function (T, x) {
- # logLgumb is the negative log-likelihood function for the ev1 distribution
+.logLgumb <- function (T, x) {
+ # .logLgumb is the negative log-likelihood function for the ev1 distribution
  # (T is the parameter vector and x is the sample)
  -sum(-(x-T[1])/T[2]-exp(-(x-T[1])/T[2])-log(T[2]))
 }
@@ -71,11 +71,11 @@ logLgumb <- function (T, x) {
 
 # ------------------------------------------------------------------- #
 
-logLgev <- function (T, x) {
- # logLgev is the negative log-likelihood function for the GEV distribution,
+.logLgev <- function (T, x) {
+ # .logLgev is the negative log-likelihood function for the GEV distribution,
  # (T is the vector of parameters and x is the sample)
  n <- length(x)
- if (T[3]>1) warning("logLgev(T,x): maximum likelihood estimator may not exist for shape parameter >1")
+ if (T[3]>1) warning(".logLgev(T,x): maximum likelihood estimator may not exist for shape parameter >1")
  if ((-0.0000001<T[3])&&(T[3]<0.0000001)) { # gumbel distribution for T[3]=0
   y <- (x-T[1])/T[2]
  }
@@ -88,8 +88,8 @@ logLgev <- function (T, x) {
 
 # ------------------------------------------------------------------- #
 
-logLgam <- function (T1,x) {
- # logLgam is the negative log-likelihood function for the gamma distribution,
+.logLgam <- function (T1,x) {
+ # .logLgam is the negative log-likelihood function for the gamma distribution,
  # (T1 is the position parameter and x is the sample)
  n <- length(x)
  T2 <- 1/n*sum(x-T1)-n*(sum((x-T1)^(-1)))^(-1)  # scale parameter, Johnson et al. [1994], eq. 17.45
@@ -113,10 +113,10 @@ ML_estimation <- function (x, dist="NORM") {
   c(T1,T2)
  }
  else if ((dist=="EV1")||(dist=="GUMBEL")) {
-  suppressWarnings(optim(par=Tm, fn=logLgumb, x=x)$par)
+  suppressWarnings(optim(par=Tm, fn=.logLgumb, x=x)$par)
  }
  else if (dist=="GEV") {
-  suppressWarnings(optim(par=Tm, fn=logLgev, x=x)$par)
+  suppressWarnings(optim(par=Tm, fn=.logLgev, x=x)$par)
  }
  else if ((dist=="GAM")||(dist=="P3")) {
   skx <- sum((x - mean(x))^3)/(length(x) * sd(x)^3)
@@ -126,7 +126,7 @@ ML_estimation <- function (x, dist="NORM") {
   else if (skx<0) {
    Tm1 <- max(x)+1; a1 <- -1; a2 <- -max(x)*(1+sign(max(x))*10^(-4))
   }
-  T1 <- suppressWarnings(optim(par=Tm1, fn=logLgam, x=x)$par)
+  T1 <- suppressWarnings(optim(par=Tm1, fn=.logLgam, x=x)$par)
   T2 <- 1/n*sum(x-T1)-n*(sum((x-T1)^(-1)))^(-1)    # scale parameter, Johnson et al. [1994], eq. 17.45
   T3 <- 1/n/T2*sum(x-T1)   # shape parameter, Johnson et al. [1994], eq. 17.45
   T4 <- 0
@@ -158,7 +158,7 @@ ML_estimation <- function (x, dist="NORM") {
 
 # ----------------------------------------------------------------------------------- #
 
-sample_generator <- function (n, T, dist="NORM") {
+.sample_generator <- function (n, T, dist="NORM") {
  # n = sample length
  # T = parameters (position, scale, shape, ...)
  # dist = distribution ("NORM","EV1","GEV","GAM","EXP")
@@ -185,7 +185,7 @@ sample_generator <- function (n, T, dist="NORM") {
   q <- runif(n, min=0.0000000001, max=0.9999999999)
   T[1] - T[2]*log(1-q)
  }
- else stop("sample_generator(n, T, dist): distribution unknown")
+ else stop(".sample_generator(n, T, dist): distribution unknown")
 }
 
 

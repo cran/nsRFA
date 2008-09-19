@@ -51,7 +51,9 @@ The functions in \code{\link{DIAGNOSTICS}} provide more general diagnostics of m
 
 More details are provided in vignettes:
 \tabular{ll}{
-\code{nsRFA_ex01} \tab How to use the package nsRFA: example 1\cr
+\code{nsRFA_ex01} \tab How to use the package nsRFA (example 1):\cr
+                  \tab Regional frequency analysis of the annual flows in Piemonte\cr
+                  \tab and Valle d'Aosta\cr
 }
 
 
@@ -82,7 +84,11 @@ In both cases, the homogeneity of the regions can be assessed with the functions
 
 More details are provided in vignettes:
 \tabular{ll}{
-\code{nsRFA_ex01} \tab How to use the package nsRFA: example 1\cr
+\code{nsRFA_ex01} \tab How to use the package nsRFA (example 1):\cr
+                  \tab Regional frequency analysis of the annual flows in Piemonte\cr
+                  \tab and Valle d'Aosta\cr
+\code{nsRFA_ex02} \tab How to use the package nsRFA (example 2):\cr
+                  \tab Region-Of-Influence approach, some FEH examples\cr
 }
 
 
@@ -100,9 +106,11 @@ Confidence intervals for the fitted distribution can be calculated with a Markov
 
 More details are provided in vignettes:
 \tabular{ll}{
-\code{nsRFA_ex01} \tab How to use the package nsRFA: example 1\cr
-\code{MSClaio2008} \tab Model selection techniques for the frequency analysis 
-                        of hydrological extremes: the MSClaio2008 R function\cr
+\code{nsRFA_ex01} \tab How to use the package nsRFA (example 1):\cr
+                  \tab Regional frequency analysis of the annual flows in Piemonte\cr
+                  \tab and Valle d'Aosta\cr
+\code{MSClaio2008} \tab Model selection techniques for the frequency analysis\cr 
+                   \tab of hydrological extremes: the MSClaio2008 R function\cr
 }
 
 
@@ -134,10 +142,11 @@ For a complete list of the functions, use \code{library(help="nsRFA").}
 
 \bold{Main changes in version 0.6}
 \tabular{ll}{
+0.6-2: \tab new vignette \code{nsRFA_ex02};\cr
+0.6-2: \tab refinement of function \code{\link{BayesianMCMC}};\cr
 0.6-0: \tab new vignette \code{nsRFA_ex01};\cr
 0.6-0: \tab new function \code{\link{bestlm}};\cr
-0.6-0: \tab the plotting position/probability plots in \code{\link{DISTPLOTS}} 
-            have been reshaped;\cr
+0.6-0: \tab the plotting position/probability plots in \code{\link{DISTPLOTS}} have been reshaped;\cr
 0.6-0: \tab this list of changes has been added;\cr
 }
 }

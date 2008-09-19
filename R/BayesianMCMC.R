@@ -2,7 +2,7 @@
 
 BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA,
                           nbpas=1000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV",
-                          parameters0=NA, varparameters0=NA) {
+                          apriori=function(...){1}, parameters0=NA, varparameters0=NA) {
  reject <- round(nbpas/10)
  nbpas <- nbpas + reject
  returnperiods <- 10^(seq(0.1, 4, by=.1))
@@ -97,13 +97,13 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
   parameters[1,,j] <- rnorm(rep(1, lpar), mean=parameters0, sd=sqrt(varparameters0))
   varparameters[1,,j] <- varparameters0
   #vraistest[j] <- .lnvrais5(parameters[1,,j], xcont, dist)
-  vraistest <- eval(funzionetest)
+  vraistest <- eval(funzionetest) + log(apriori(parameters[1,,j]))   # it is a log-likelihhod
   vraisdist[1,j] <- vraistest
   qq[1,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[1,,j], dist=dist)
   nbsaut <- 0
   for (i in 2:nbpas) {
    parameterscand <- rnorm(rep(1, lpar), mean=parameters[i-1,,j], sd=sqrt(varparameters[i-1,,j]))
-   vraiscand <- eval(funzionecand)
+   vraiscand <- eval(funzionecand) + log(apriori(parameterscand))   # it is a log-likelihhod
    valtest <- min((exp(vraiscand - vraistest)), 1)
    test <- runif(1)
    #if ((valtest > test) & (vraiscand > .thresML)) {
@@ -146,8 +146,10 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  intervals <- apply(qq, 2, quantile, probs=confint, na.rm=TRUE)
  qqML <- qq[dummy2,,dummy1]
  output <- list(xcont=xcont, xhist=xhist, infhist=infhist, suphist=suphist, nbans=nbans, seuil=seuil, 
-                nbpas=nbpas, nbchaines=nbchaines, dist=dist,
-                parameters=parameters, varparameters=varparameters, vraisdist=vraisdist, propsaut=propsaut,
+                nbpas=nbpas, nbchaines=nbchaines, dist=dist, apriori=apriori,
+                parameters=parameters, varparameters=varparameters, 
+                parameters0=parameters0, varparameters0=varparameters0,
+                vraisdist=vraisdist, propsaut=propsaut,
                 returnperiods=returnperiods, intervals=intervals,
                 parametersML=parametersML, quantilesML=qqML)
  class(output) <- "BayesianMCMC"
@@ -177,6 +179,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
  if (show[2]) .plotdiagnMCMC01(x, ...)
  if (show[3]) .plotdiagnMCMC04(x, ...)
  if (show[4]) .plotdiagnMCMC05(x, ...)
+ if (show[5]) .plotdiagnMCMC06(x, ...)   # a-priori distribution
 }
 
 
@@ -332,6 +335,54 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   par(def.par)
  }
 }
+
+
+
+.plotdiagnMCMC06 <- function(x, ...) {
+ # plot the a-priori
+ if (length(x$parametersML) == 2) {
+  plot(x$parameters[,1:2,1], type="n", ...)
+  xr <- range(x$parameters[,1,1])
+  yr <- range(x$parameters[,2,1])
+  xx <- seq(xr[1], xr[2], length=50)
+  yy <- seq(yr[1], yr[2], length=50)
+  xy <- expand.grid(xx, yy)
+  zz <- rep(NA, length=dim(xy)[1])
+  for (i in 1:dim(xy)[1]) {
+   zz[i] <- x$apriori(as.numeric(xy[i,]))
+  }
+  contour(xx, yy, zz, add=TRUE, col="darkgray")
+ } 
+ else if (length(x$parametersML) == 3) {
+  def.par <- par(no.readonly = TRUE) # save default, for resetting...
+  x1r <- range(x$parameters[,1,1])
+  x2r <- range(x$parameters[,2,1])
+  x3r <- range(x$parameters[,3,1])
+  xx1 <- seq(x1r[1], x1r[2], length=20)
+  xx2 <- seq(x2r[1], x2r[2], length=20)
+  xx3 <- seq(x3r[1], x3r[2], length=20)
+  xx123 <- expand.grid(xx1, xx2, xx3)
+  N <- dim(xx123)[1]
+  zz <- rep(NA, length=N)
+  for (i in 1:N) {
+   zz[i] <- x$apriori(as.numeric(xx123[i,]))
+  }
+  layout(matrix(c(1,2,3,0), 2, 2, byrow=FALSE))
+  plot(x$parameters[,c(1,2),1], type="n")
+  contour(xx1, xx2, tapply(zz, xx123[,c(1,2)], sum), add=TRUE, col="darkgray")
+
+  plot(x$parameters[,c(1,3),1], type="n")
+  contour(xx1, xx3, tapply(zz, xx123[,c(1,3)], sum), add=TRUE, col="darkgray")
+  
+  plot(x$parameters[,c(3,2),1], type="n")
+  contour(xx3, xx2, tapply(zz, xx123[,c(3,2)], sum), add=TRUE, col="darkgray")
+  par(def.par)
+ }
+}
+
+
+
+
 
 # --------------------------------------------------------------- #
 # --------------------------------------------------------------- #

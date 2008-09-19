@@ -39,19 +39,19 @@ A2_GOFlaio <- function (x, dist="NORM") {
  eta0=0.851; beta0=0.116; csi0=0.0403; eps1=1.2; eps2=0.2
  if ((dist=="NORM")||(dist=="LN")) {
   T <- ML_estimation(b,dist="NORM")
-  F <- Fx(b,T,dist="NORM")
+  F <- .Fx(b,T,dist="NORM")
   eta1=1.147; beta1=0.229; csi1=0.167
   eta1corr <- eta1*(1+0.5/n); beta1corr <- beta1*(1-0.2/n); csi1corr <- csi1*(1+0.3/n)
  }
  else if ((dist=="EV1")||(dist=="GUMBEL")||(dist=="EV2")) {
   T <- ML_estimation(b,dist="EV1")
-  F <- Fx(b,T,dist="EV1")
+  F <- .Fx(b,T,dist="EV1")
   eta1=1.141; beta1=0.229; csi1=0.169
   eta1corr <- eta1*(1+0.5/n); beta1corr <- beta1*(1-0.2/n); csi1corr <- csi1*(1+0.1/n)
  }
  else if (dist=="GEV") {
   T <- ML_estimation(b,dist="GEV")
-  F <- Fx(b,T,dist="GEV")
+  F <- .Fx(b,T,dist="GEV")
   if (T[3]>0.5) T[3]=0.5
   eta1 <- 1.186*(1-0.04*T[3]-0.04*T[3]^2-0.01*T[3]^3)
   beta1 <- 0.189*(1+0.20*T[3]+0.37*T[3]^2+0.17*T[3]^3)
@@ -62,7 +62,7 @@ A2_GOFlaio <- function (x, dist="NORM") {
  }
  else if ((dist=="GAM")||(dist=="P3")||(dist=="LP3")) {
   T <- ML_estimation(b,dist="GAM")
-  F <- Fx(b,T,dist="GAM")
+  F <- .Fx(b,T,dist="GAM")
   F[F>0.99999999]=0.99999999
   F[F<0.00000001]=0.00000001
   if (T[3]<2) T[3]=2
@@ -90,7 +90,7 @@ A2_GOFlaio <- function (x, dist="NORM") {
 
 # ------------------------------------------------------------------------------------ #
 
-typeIerrorA2_GOFlaio <- function (n, T, alfa=0.05, dist="NORM", Nsim=1000) {
+.typeIerrorA2_GOFlaio <- function (n, T, alfa=0.05, dist="NORM", Nsim=1000) {
  # n = samples length
  # T = parameters (position, scale, shape, ...) only for case=0
  # alfa = significance level of the test
@@ -104,7 +104,7 @@ typeIerrorA2_GOFlaio <- function (n, T, alfa=0.05, dist="NORM", Nsim=1000) {
  #  > typeIerror(100,c(10,3,0.1),0.1,dist="GEV",Nsim=1000)
  #  [1] 0.092
  # spesso con la GEV mi da l'errore:
- #  Error in optim(par = Tm, fn = logLgev, x = x) :
+ #  Error in optim(par = Tm, fn = .logLgev, x = x) :
  #        function cannot be evaluated at initial parameters
  #  > typeIerror(100,c(-10,0.3,70),0.1,dist="GAM",Nsim=10000)
  #  [1] 0.0913
@@ -127,45 +127,45 @@ typeIerrorA2_GOFlaio <- function (n, T, alfa=0.05, dist="NORM", Nsim=1000) {
  A <- rep(NA,Nsim)
  if (dist=="NORM") {
   for (i in 1:Nsim) {
-   x <- sample_generator(n,T,dist="NORM")
+   x <- .sample_generator(n,T,dist="NORM")
    A[i] <- A2_GOFlaio(x,dist="NORM")[2] 
   }
  }
  else if (dist=="LN") {
   for (i in 1:Nsim) {
-   x <- sample_generator(n,T,dist="NORM")
+   x <- .sample_generator(n,T,dist="NORM")
    x <- log(x)
    A[i] <- A2_GOFlaio(x,dist="LN")[2]
   }
  }
  else if ((dist=="EV1")||(dist=="GUMBEL")) {
   for (i in 1:Nsim) {
-   x <- sample_generator(n,T,dist="EV1")
+   x <- .sample_generator(n,T,dist="EV1")
    A[i] <- A2_GOFlaio(x,dist="EV1")[2]
   }
  }
  else if (dist=="EV2") {
   for (i in 1:Nsim) {
-   x <- sample_generator(n,T,dist="EV1")
+   x <- .sample_generator(n,T,dist="EV1")
    x <- log(x)
    A[i] <- A2_GOFlaio(x,dist="EV2")[2]
   }
  }
  else if (dist=="GEV") {
   for (i in 1:Nsim) {
-   x <- sample_generator(n,T,dist="GEV")
+   x <- .sample_generator(n,T,dist="GEV")
    A[i] <- A2_GOFlaio(x,dist="GEV")[2]
   }
  }
  else if ((dist=="GAM")||(dist=="P3")) {
   for (i in 1:Nsim) {
-   x <- sample_generator(n,T,dist="GAM")
+   x <- .sample_generator(n,T,dist="GAM")
    A[i] <- A2_GOFlaio(x,dist="GAM")[2]
   }
  }
  else if (dist=="LP3") {
   for (i in 1:Nsim) {
-   x <- sample_generator(n,T,dist="GAM")
+   x <- .sample_generator(n,T,dist="GAM")
    x <- log(x)
    A[i] <- A2_GOFlaio(x,dist="LP3")[2]
   }
