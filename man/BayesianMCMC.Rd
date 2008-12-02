@@ -30,7 +30,7 @@
  \item{nbpas}{number of iterations for the MCMC algorithm}
  \item{nbchaines}{number of chains for the MCMC algorithm}
  \item{confint}{confidence limits for the flood quantiles}
- \item{dist}{distribution: normal \code{"NORM"}, log-normal with 2 parameters \code{"LN"}, Exponential \code{"EXP"}, Gumbel \code{"GUMBEL"}, Generalized Extreme Value \code{"GEV"}, Generalized Logistic \code{"GENLOGIS"}, Generalized Pareto \code{"GENPAR"}, log-normal with 3 parameters \code{"LOGNORM"}, Pearson type III \code{"P3"}, log-Pearson type III \code{"LP3"}}
+ \item{dist}{distribution: normal \code{"NORM"}, log-normal with 2 parameters \code{"LN"}, Exponential \code{"EXP"}, Gumbel \code{"GUMBEL"}, Generalized Extreme Value \code{"GEV"}, Generalized Logistic \code{"GENLOGIS"}, Generalized Pareto \code{"GENPAR"}, log-normal with 3 parameters \code{"LN3"}, Pearson type III \code{"P3"}, log-Pearson type III \code{"LP3"}}
  \item{apriori}{function of the parameters of the model `proportional to' their a-priori guessed distribution.
                 The default fuction returns always 1, i.e. there is no a-priori information}
  \item{parameters0}{initial values of the parameters for the MCMC algorithm}
@@ -77,7 +77,7 @@ If the proposal is not accepted, then the current value of \eqn{x} is retained (
 The Markov chain is started from a random initial value \eqn{x_0}{x0} and the algorithm is run for many iterations until this initial state is forgotten. 
 These samples, which are discarded, are known as burn-in. 
 The remaining set of accepted values of \eqn{x} represent a sample from the distribution \eqn{P(x)}.
-As a Gaussian proposal density is used, the variance parameter \eqn{\sigma_x^2}{Sx^2} has to be tuned during the burn-in period.
+As a Gaussian proposal density (or a lognormal one for definite-positive parameters) is used, the variance parameter \eqn{\sigma_x^2}{Sx^2} has to be tuned during the burn-in period.
 This is done by calculating the acceptance rate, which is the fraction of proposed samples that is accepted in a window of the last \eqn{N} samples. 
 The desired acceptance rate depends on the target distribution, however it has been shown theoretically that the ideal acceptance rate for a one dimensional Gaussian distribution is approx 50\%, decreasing to approx 23\% for an N-dimensional Gaussian target distribution.
 If \eqn{\sigma_x^2}{Sx^2} is too small the chain will mix slowly (i.e., the acceptance rate will be too high, so the sampling will move around the space slowly and converge slowly to \eqn{P(x)}).

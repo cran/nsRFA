@@ -94,7 +94,7 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  # initialisation
  propsaut <- array(data=NA, dim=c(nbpas, nbchaines))
  for (j in 1:nbchaines) {
-  parameters[1,,j] <- rnorm(rep(1, lpar), mean=parameters0, sd=sqrt(varparameters0))
+  parameters[1,,j] <- .parameterscandMOD(parameters0, varparameters0, dist)
   varparameters[1,,j] <- varparameters0
   #vraistest[j] <- .lnvrais5(parameters[1,,j], xcont, dist)
   vraistest <- eval(funzionetest) + log(apriori(parameters[1,,j]))   # it is a log-likelihhod
@@ -102,7 +102,7 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
   qq[1,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[1,,j], dist=dist)
   nbsaut <- 0
   for (i in 2:nbpas) {
-   parameterscand <- rnorm(rep(1, lpar), mean=parameters[i-1,,j], sd=sqrt(varparameters[i-1,,j]))
+   parameterscand <- .parameterscandMOD(parameters[i-1,,j], varparameters[i-1,,j], dist)
    vraiscand <- eval(funzionecand) + log(apriori(parameterscand))   # it is a log-likelihhod
    valtest <- min((exp(vraiscand - vraistest)), 1)
    test <- runif(1)
@@ -146,8 +146,8 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  intervals <- apply(qq, 2, quantile, probs=confint, na.rm=TRUE)
  qqML <- qq[dummy2,,dummy1]
  output <- list(xcont=xcont, xhist=xhist, infhist=infhist, suphist=suphist, nbans=nbans, seuil=seuil, 
-                nbpas=nbpas, nbchaines=nbchaines, dist=dist, apriori=apriori,
-                parameters=parameters, varparameters=varparameters, 
+                nbpas=nbpas, nbchaines=nbchaines, dist=dist, confint=confint, apriori=apriori,
+                parameters=parameters, quantiles=qq, varparameters=varparameters, 
                 parameters0=parameters0, varparameters0=varparameters0,
                 vraisdist=vraisdist, propsaut=propsaut,
                 returnperiods=returnperiods, intervals=intervals,
@@ -160,7 +160,7 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
 # ----------------------------- #
 
 print.BayesianMCMC <- function (x, ...) {
- dummy <- data.frame(cbind(x$quantilesML, t(x$intervals)), row.names=signif(x$returnperiods, 3))
+ dummy <- data.frame(cbind(x$quantilesML, t(x$intervals)), row.names=signif(x$returnperiods, 4))
  names(dummy)[1] <- "ML"
  print(dummy)
 }
@@ -504,9 +504,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 # ------------------------------------------------------------------------------------------ #
 
 .chooseparameters0 <- function (xcont, xhist, infhist, suphist, dist) {
-  ll <- as.numeric(Lmoments(c(xcont, xhist, infhist, suphist))) # valore sballato ma non cannatissimo
+  campionissimo <- sort(c(xcont, xhist, infhist, suphist))   # valore sballato ma non cannatissimo
+  ll <- as.numeric(Lmoments(campionissimo))
   if (dist=="GEV") {
    parameters0 <- unlist(par.GEV(ll[1], ll[2], ll[4]))
+  }
+  else if (dist=="NORM") {
+   parameters0 <- c(mean(campionissimo), sd(campionissimo))
   }
   else if (dist=="EXP") {
    parameters0 <- unlist(par.exp(ll[1], ll[2]))
@@ -528,6 +532,9 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   else if ((dist=="LOGNORM")||(dist=="LN3")) {
    parameters0 <- unlist(par.lognorm(ll[1], ll[2], ll[4]))
   }
+  else if ((dist=="LN")||(dist=="LN2")) {
+   parameters0 <- c(mean(log(campionissimo)), sd(log(campionissimo))) 
+  }
   else if ((dist=="P3")||(dist=="GAM")) {
    parameters0 <- unlist(par.gamma(ll[1], ll[2], ll[4])[1:3])
    if(min(xcont) < parameters0[1]) parameters0[1] <- min(xcont) # asimmetria positiva!!!
@@ -535,6 +542,93 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   else stop("BayesianMCMC(xcont, xhist, infhist, suphist, nbpas, nbchaines, dist): distribution unknown")
   return(parameters0)
 }
+
+
+# ---------------------------- #
+
+.parameterscandMOD <- function (parameters, varparameters, dist) {
+  if (dist=="GEV") {
+   #parameterscand <- rnorm(rep(1, 3), mean=parameters, sd=sqrt(varparameters))
+   # I know that the scale parameter is positive
+   LNvarparameters <- log(1 + varparameters[2]/parameters[2]^2)
+   LNparameters <- log(parameters[2]) - LNvarparameters/2
+   parameter13 <- rnorm(rep(1,2), mean=parameters[c(1,3)], sd=sqrt(varparameters[c(1,3)]))
+   parameter2 <- rlnorm(1, meanlog=LNparameters, sdlog=sqrt(LNvarparameters))
+   parameterscand <- c(parameter13[1], parameter2, parameter13[2])
+  }
+  else if (dist=="NORM") {
+   #parameterscand <- rnorm(rep(1, 2), mean=parameters, sd=sqrt(varparameters))
+   LNvarparameters <- log(1 + varparameters[2]/parameters[2]^2)
+   LNparameters <- log(parameters[2]) - LNvarparameters/2
+   parameter1 <- rnorm(1, mean=parameters, sd=sqrt(varparameters))
+   parameter2 <- rlnorm(1, meanlog=LNparameters, sdlog=sqrt(LNvarparameters))
+   parameterscand <- c(parameter1, parameter2)
+  }
+  else if (dist=="EXP") {
+   #parameterscand <- rnorm(rep(1, 2), mean=parameters, sd=sqrt(varparameters))
+   LNvarparameters <- log(1 + varparameters[2]/parameters[2]^2)
+   LNparameters <- log(parameters[2]) - LNvarparameters/2
+   parameter1 <- rnorm(1, mean=parameters, sd=sqrt(varparameters))
+   parameter2 <- rlnorm(1, meanlog=LNparameters, sdlog=sqrt(LNvarparameters))
+   parameterscand <- c(parameter1, parameter2)
+  }
+  else if (dist=="GENLOGIS") {
+   #parameterscand <- rnorm(rep(1, 3), mean=parameters, sd=sqrt(varparameters))
+   LNvarparameters <- log(1 + varparameters[2]/parameters[2]^2)
+   LNparameters <- log(parameters[2]) - LNvarparameters/2
+   parameter13 <- rnorm(rep(1,2), mean=parameters[c(1,3)], sd=sqrt(varparameters[c(1,3)]))
+   parameter2 <- rlnorm(1, meanlog=LNparameters, sdlog=sqrt(LNvarparameters))
+   parameterscand <- c(parameter13[1], parameter2, parameter13[2])
+  }
+  else if (dist=="GENPAR") {
+   #parameterscand <- rnorm(rep(1, 3), mean=parameters, sd=sqrt(varparameters))
+   LNvarparameters <- log(1 + varparameters[2]/parameters[2]^2)
+   LNparameters <- log(parameters[2]) - LNvarparameters/2
+   parameter13 <- rnorm(rep(1,2), mean=parameters[c(1,3)], sd=sqrt(varparameters[c(1,3)]))
+   parameter2 <- rlnorm(1, meanlog=LNparameters, sdlog=sqrt(LNvarparameters))
+   parameterscand <- c(parameter13[1], parameter2, parameter13[2])
+  }
+  else if ((dist=="GUMBEL")||(dist=="EV1")) {
+   #parameterscand <- rnorm(rep(1, 2), mean=parameters, sd=sqrt(varparameters))
+   LNvarparameters <- log(1 + varparameters[2]/parameters[2]^2)
+   LNparameters <- log(parameters[2]) - LNvarparameters/2
+   parameter1 <- rnorm(1, mean=parameters, sd=sqrt(varparameters))
+   parameter2 <- rlnorm(1, meanlog=LNparameters, sdlog=sqrt(LNvarparameters))
+   parameterscand <- c(parameter1, parameter2)
+  }
+  else if (dist=="KAPPA") {
+   parameterscand <- rnorm(rep(1, 4), mean=parameters, sd=sqrt(varparameters))
+  }
+  else if ((dist=="LOGNORM")||(dist=="LN3")) {
+   #parameterscand <- rnorm(rep(1, 3), mean=parameters, sd=sqrt(varparameters))
+   LNvarparameters <- log(1 + varparameters[2]/parameters[2]^2)
+   LNparameters <- log(parameters[2]) - LNvarparameters/2
+   parameter13 <- rnorm(rep(1,2), mean=parameters[c(1,3)], sd=sqrt(varparameters[c(1,3)]))
+   parameter2 <- rlnorm(1, meanlog=LNparameters, sdlog=sqrt(LNvarparameters))
+   parameterscand <- c(parameter13[1], parameter2, parameter13[2])
+  }
+  else if ((dist=="LN")||(dist=="LN2")) {
+   #parameterscand <- rnorm(rep(1, 2), mean=parameters, sd=sqrt(varparameters))
+   LNvarparameters <- log(1 + varparameters[2]/parameters[2]^2)
+   LNparameters <- log(parameters[2]) - LNvarparameters/2
+   parameter1 <- rnorm(1, mean=parameters, sd=sqrt(varparameters))
+   parameter2 <- rlnorm(1, meanlog=LNparameters, sdlog=sqrt(LNvarparameters))
+   parameterscand <- c(parameter1, parameter2)
+  }
+  else if ((dist=="P3")||(dist=="GAM")) {
+   #parameterscand <- rnorm(rep(1, 3), mean=parameters, sd=sqrt(varparameters))
+   LNvarparameters <- log(1 + varparameters[2]/parameters[2]^2)
+   LNparameters <- log(parameters[2]) - LNvarparameters/2
+   parameter13 <- rnorm(rep(1,2), mean=parameters[c(1,3)], sd=sqrt(varparameters[c(1,3)]))
+   parameter2 <- rlnorm(1, meanlog=LNparameters, sdlog=sqrt(LNvarparameters))
+   parameterscand <- c(parameter13[1], parameter2, parameter13[2])
+  }
+  else stop("BayesianMCMC(xcont, xhist, infhist, suphist, nbpas, nbchaines, dist): distribution unknown")
+  return(parameterscand)
+}
+
+
+
 # ------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------------------------ #
@@ -545,6 +639,9 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   alfa <- parameters[2]
   k <- parameters[3]  
   qq <- invF.GEV(F, xi, alfa, k)
+ }
+ else if (dist=="NORM") {
+  qq <- qnorm(F, mean=parameters[1], sd=parameters[2])
  }
  else if (dist=="EXP") {
   xi <- parameters[1]
@@ -581,6 +678,12 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   k <- parameters[3]
   qq <- invF.lognorm(F, xi, alfa, k)
  }
+ else if ((dist=="LN")||(dist=="LN2")) {
+  #varlogLN <- log(1 + parameters[2]/parameters[1]^2)
+  #meanlogML <- log(parameters[1]) - varlogLN/2
+  #qq <- qlnorm(F, meanlog=meanlogML, sdlog=sqrt(varlogLN))
+  qq <- qlnorm(F, meanlog=parameters[1], sdlog=parameters[2])
+ }
  else if ((dist=="P3")||(dist=="GAM")) {
   xi <- parameters[1]
   beta <- parameters[2]
@@ -606,6 +709,9 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
    lnvrais <- sum(log(f.GEV(xcont, xi, alfa, k)))
   }
   else lnvrais <- .thresML
+ }
+ else if (dist=="NORM") {
+  lnvrais <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
  }
  else if (dist=="EXP") {
   xi <- parameters[1]
@@ -654,6 +760,9 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   }
   else lnvrais <- .thresML
  }
+ else if ((dist=="LN")||(dist=="LN2")) {
+  lnvrais <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+ }
  else if ((dist=="P3")||(dist=="GAM")) {
   xi <- parameters[1]
   beta <- parameters[2]
@@ -695,11 +804,18 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   }
   else lnvraishist <- .thresML
  }
+ else if (dist=="NORM") {
+  lnvraiscont <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
+  lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
+                     log(pnorm(seuil, mean=parameters[1], sd=parameters[2]))
+  lnvraishist <- lnvraishist + sum(log(dnorm(xhist, mean=parameters[1], sd=parameters[2])))
+ }
  else if (dist=="EXP") {
   xi <- parameters[1]
   alfa <- parameters[2]
   lnvraiscont <- sum(log(f.exp(xcont, xi, alfa)))
-  lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.exp(seuil, xi, alfa)) + sum(log(f.exp(xhist, xi, alfa)))
+  lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * 
+                     log(F.exp(seuil, xi, alfa)) + sum(log(f.exp(xhist, xi, alfa)))
  }
  else if (dist=="GENLOGIS") {
   xi <- parameters[1]
@@ -769,6 +885,12 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   }
   else lnvraishist <- .thresML
  }
+ else if ((dist=="LN")||(dist=="LN2")) {
+  lnvraiscont <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+  lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * 
+                     log(plnorm(seuil, meanlog=parameters[1], sdlog=parameters[2]))
+  lnvraishist <- lnvraishist + sum(log(dlnorm(xhist, meanlog=parameters[1], sdlog=parameters[2])))
+ }
  else if ((dist=="P3")||(dist=="GAM")) {
   xi <- parameters[1]
   beta <- parameters[2]
@@ -816,6 +938,12 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
    lnvraishist <- lnvraishist + sum(log(1 - F.GEV(infhist, xi, alfa, k)))
   }
   else lnvraishist <- .thresML
+ }
+ else if (dist=="NORM") {
+  lnvraiscont <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
+  lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
+                     log(pnorm(seuil, mean=parameters[1], sd=parameters[2]))
+  lnvraishist <- lnvraishist + sum(log(1 - pnorm(infhist, mean=parameters[1], sd=parameters[2])))
  }
  else if (dist=="EXP") {
   xi <- parameters[1]
@@ -880,6 +1008,12 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   }
   else lnvraishist <- .thresML
  }
+ else if ((dist=="LN")||(dist=="LN2")) {
+  lnvraiscont <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+  lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
+                     log(plnorm(seuil, meanlog=parameters[1], sdlog=parameters[2]))
+  lnvraishist <- lnvraishist + sum(log(1 - plnorm(infhist, meanlog=parameters[1], sdlog=parameters[2])))
+ }
  else if ((dist=="P3")||(dist=="GAM")) {
   xi <- parameters[1]
   beta <- parameters[2]
@@ -921,6 +1055,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
    lnvraishist <- lnvraishist + sum(log(F.GEV(suphist, xi, alfa, k) - F.GEV(infhist, xi, alfa, k)))
   }
   else lnvraishist <- .thresML
+ }
+ else if (dist=="NORM") {
+  lnvraiscont <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
+  lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
+                     log(pnorm(seuil, mean=parameters[1], sd=parameters[2]))
+  lnvraishist <- lnvraishist + sum(log(pnorm(suphist, mean=parameters[1], sd=parameters[2]) -
+                                       pnorm(infhist, mean=parameters[1], sd=parameters[2])))
  }
  else if (dist=="EXP") {
   xi <- parameters[1]
@@ -987,6 +1128,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   }
   else lnvraishist <- .thresML
  }
+ else if ((dist=="LN")||(dist=="LN2")) {
+  lnvraiscont <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+  lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
+                     log(plnorm(seuil, meanlog=parameters[1], sdlog=parameters[2]))
+  lnvraishist <- lnvraishist + sum(log(plnorm(suphist, meanlog=parameters[1], sdlog=parameters[2]) - 
+                                       plnorm(infhist, meanlog=parameters[1], sdlog=parameters[2])))
+ }
  else if ((dist=="P3")||(dist=="GAM")) {
   xi <- parameters[1]
   beta <- parameters[2]
@@ -1005,5 +1153,163 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 
 
 
-# ------------------------------------------------------------------------------------------------------ #
-
+#   # ------------------------------------------------------------------------------------------------------ #
+#   
+#   .regBayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA,
+#                                 index=2,
+#                                 nbpas=1000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV",
+#                                 apriori=function(...){1}, parameters0=NA, varparameters0=NA) {
+#    # index = 1=mean, 2=median
+#    reject <- round(nbpas/10)
+#    nbpas <- nbpas + reject
+#    returnperiods <- 10^(seq(0.1, 4, by=.1))
+#    #returnperiods[3] <- 2
+#    nonexceedF <- 1 - 1/returnperiods
+#    if (any(is.na(parameters0))) {
+#     parameters0_est <- parameters0
+#     parameters0 <- .chooseparameters0(xcont, xhist, infhist, suphist, dist)
+#     parameters0[!is.na(parameters0_est)] <- parameters0_est[!is.na(parameters0_est)]
+#    }
+#    if (any(is.na(varparameters0))) {
+#     varparameters0_est <- varparameters0
+#     varparameters0 <- (0.1*parameters0)^2
+#     varparameters0[!is.na(varparameters0_est)] <- varparameters0_est[!is.na(varparameters0_est)]
+#    }
+#    lpar <- length(parameters0)
+#    
+#   
+#    parameters <- array(data=NA, dim=c(nbpas, lpar, nbchaines))	# array 3D
+#    varparameters <- array(data=NA, dim=c(nbpas, lpar, nbchaines))    # array 3D
+#    vraisdist <- array(data=NA, dim=c(nbpas, nbchaines))
+#    qq <- array(data=NA, dim=c(nbpas, length(nonexceedF), nbchaines))    # array 3D 
+#   
+#    if(all(is.na(c(xhist, infhist, suphist, seuil)))) {
+#     # Calcul sur les seules données systèmatiques
+#     funzionetest <- call(".lnvrais5", quote(parameters[1,,j]), quote(xcont), quote(dist))
+#     funzionecand <- call(".lnvrais5", quote(parameterscand), quote(xcont), quote(dist))
+#    }
+#    else if (all(is.na(c(infhist, suphist))) & all(!is.na(c(xhist, seuil, nbans)))) {
+#     # Calcul avec info censurée mais débits historiques connus (Stedinger et Cohn, Naulet cas b)
+#     funzionetest <- call(".lnvrais1", quote(parameters[1,,j]), quote(xcont), quote(xhist), quote(nbans), quote(seuil), quote(dist))
+#     funzionecand <- call(".lnvrais1", quote(parameterscand), quote(xcont), quote(xhist), quote(nbans), quote(seuil), quote(dist)) 
+#    }
+#    else if (all(is.na(c(xhist, suphist))) & all(!is.na(c(infhist, seuil, nbans)))) {
+#     # Calcul avec info censurée mais débits historiques non connus (Stedinger et Cohn, Naulet cas a)
+#     funzionetest <- call(".lnvrais2", quote(parameters[1,,j]), quote(xcont), quote(infhist), quote(nbans), quote(seuil), quote(dist))
+#     funzionecand <- call(".lnvrais2", quote(parameterscand), quote(xcont), quote(infhist), quote(nbans), quote(seuil), quote(dist))
+#    }
+#    else if (all(is.na(c(xhist))) & all(!is.na(c(infhist, suphist, seuil, nbans)))) {
+#     # Calcul avec prise en compte des seuls intervalles d'estimation de débit 
+#     funzionetest <- call(".lnvrais4", quote(parameters[1,,j]), quote(xcont), quote(infhist), quote(suphist), 
+#                                       quote(nbans), quote(seuil), quote(dist))
+#     funzionecand <- call(".lnvrais4", quote(parameterscand), quote(xcont), quote(infhist), quote(suphist), 
+#                                       quote(nbans), quote(seuil), quote(dist))
+#    }
+#    else stop("regBayesianMCMC(xcont, xhist, infhist, suphist, index, nbpas, nbchaines, dist): inconsistency in input data")
+#   
+#    # Algorithm with repetitions
+#    # initialisation
+#    propsaut <- array(data=NA, dim=c(nbpas, nbchaines))
+#    for (j in 1:nbchaines) {
+#     parameters[1,,j] <- rnorm(rep(1, lpar), mean=parameters0, sd=sqrt(varparameters0))
+#     # constrain the scale parameter
+#     parameters[1,,j] <- .constrainscale(parameters[1,,j], index, dist)
+#     varparameters[1,,j] <- varparameters0
+#     #vraistest[j] <- .lnvrais5(parameters[1,,j], xcont, dist)
+#     vraistest <- eval(funzionetest) + log(apriori(parameters[1,,j]))   # it is a log-likelihhod
+#     vraisdist[1,j] <- vraistest
+#     qq[1,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[1,,j], dist=dist)
+#     nbsaut <- 0
+#     for (i in 2:nbpas) {
+#      parameterscand <- rnorm(rep(1, lpar), mean=parameters[i-1,,j], sd=sqrt(varparameters[i-1,,j]))
+#      # constrain the scale parameter
+#      parameterscand <- .constrainscale(parameterscand, index, dist)
+#      vraiscand <- eval(funzionecand) + log(apriori(parameterscand))   # it is a log-likelihhod
+#      valtest <- min((exp(vraiscand - vraistest)), 1)
+#      test <- runif(1)
+#      #if ((valtest > test) & (vraiscand > .thresML)) {
+#      if (valtest > test) {
+#       nbsaut <- nbsaut + 1
+#       parameters[i,,j] <- parameterscand
+#       vraistest <- vraiscand
+#      }
+#      else {
+#       parameters[i,,j] <- parameters[i-1,,j]
+#      }
+#      vraisdist[i,j] <- vraistest
+#      qq[i,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[i,,j], dist=dist)
+#      propsaut[i,j] <- nbsaut/i
+#      if (propsaut[i,j] < 0.33) {
+#       varparameters[i,,j] <- varparameters[i-1,,j]*(1+(propsaut[i,j]-0.34)/0.34/1000)
+#      }
+#      else if (propsaut[i,j] > 0.35) {
+#       varparameters[i,,j] <- varparameters[i-1,,j]*(1+(propsaut[i,j]-0.34)/0.34/1000)
+#      }
+#      else {
+#       varparameters[i,,j] <- varparameters[i-1,,j]
+#      }
+#     }
+#    }
+#    nbpas <- nbpas - reject
+#    qq <- qq[-c(1:reject),,]
+#    parameters <- parameters[-c(1:reject),,]
+#     dimnames(parameters) <- list(c(1:nbpas), paste("par", seq(1,lpar)), paste("chain", seq(1,nbchaines)))
+#    varparameters <- varparameters[-c(1:reject),,]
+#     dimnames(varparameters) <- list(c(1:nbpas), paste("varp", seq(1,lpar)), paste("chain", seq(1,nbchaines)))
+#    vraisdist <- vraisdist[-c(1:reject),]
+#     dimnames(vraisdist) <- list(c(1:nbpas), paste("chain", seq(1,nbchaines)))
+#    propsaut <- propsaut[-c(1:reject),]
+#     dimnames(propsaut) <- list(c(1:nbpas), paste("chain", seq(1,nbchaines)))
+#   
+#    dummy1 <- which.max(apply(vraisdist, 2, max))
+#    dummy2 <- apply(vraisdist, 2, which.max)[dummy1]
+#    parametersML <- parameters[dummy2,,dummy1]
+#    intervals <- apply(qq, 2, quantile, probs=confint, na.rm=TRUE)
+#    qqML <- qq[dummy2,,dummy1]
+#    output <- list(xcont=xcont, xhist=xhist, infhist=infhist, suphist=suphist, nbans=nbans, seuil=seuil, 
+#                   index=index, nbpas=nbpas, nbchaines=nbchaines, confint=confint, dist=dist, apriori=apriori,
+#                   parameters=parameters, quantiles=qq, varparameters=varparameters, 
+#                   parameters0=parameters0, varparameters0=varparameters0,
+#                   vraisdist=vraisdist, propsaut=propsaut,
+#                   returnperiods=returnperiods, intervals=intervals,
+#                   parametersML=parametersML, quantilesML=qqML)
+#    class(output) <- "BayesianMCMC"
+#    return(output)
+#   }
+#   
+#   
+#   # ------------------------------------------------ #
+#   .constrainscale <- function (parameters, index=2, dist="GEV") {
+#    # Calcul sur les seules données systèmatiques
+#    if (dist=="GEV") {
+#     xi <- parameters[1]
+#     alfa <- parameters[2]
+#     k <- parameters[3]  
+#     if (index==1) {
+#      xi <- 1 - alfa*(1 - gamma(1+k))/k
+#     }
+#     else if (index==2) {
+#      xi <- 1 - alfa*(1 - (log(2))^k)/k
+#     }
+#     parameters <- c(xi, alfa, k)
+#    }
+#    else if (dist=="EXP") {
+#    }
+#    else if (dist=="GENLOGIS") {
+#    }
+#    else if (dist=="GENPAR") {
+#    }
+#    else if ((dist=="GUMBEL")||(dist=="EV1")) {
+#    }
+#    #else if (dist=="KAPPA") {
+#    #}
+#    else if ((dist=="LOGNORM")||(dist=="LN3")) {
+#    }
+#    else if ((dist=="P3")||(dist=="GAM")) {
+#    }
+#    else stop(".constrainscale (parameters, index, dist): distribution unknown")
+#   
+#    return(parameters)
+#   }
+#   
+#   
