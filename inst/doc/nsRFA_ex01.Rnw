@@ -251,11 +251,11 @@ predicted <- jackknife1.lm(bestregr)
 rmse_jk <- RMSE(Dm, exp(predicted))
 @
 
-Some diagnostics can be plotted as (Figure \ref{fig:bestregression}):
-<<echo=FALSE, eval=TRUE>>=
-bitmap(file="bestregression.png", type="png256", height=8, width=8, res=144, pointsize=12)
-@
-<<fig=FALSE>>=
+Some diagnostics can be plotted as:
+%<<echo=FALSE, eval=TRUE>>=
+%bitmap(file="bestregression.png", type="png256", height=8, width=8, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=8, height=8>>=
 op <- par(mfrow=c(2,2))
  plot(bestregr$fitted.values, bestregr$residuals, xlab="Fitted", ylab="Residuals")
   abline(0,0,lty=3)
@@ -273,21 +273,18 @@ op <- par(mfrow=c(2,2))
   lines(exp(intervals[,c(1,3)]),lty=2)
 par(op)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
 
-\begin{figure}
-\begin{center}
- \includegraphics[width=.8\textwidth]{bestregression}
-\end{center}
-\caption{Diagnostic plots of the best regression model. 
+%\begin{center}
+% \includegraphics[width=.8\textwidth]{bestregression}
+%\end{center}
+\noindent Diagnostic plots of the best regression model. 
 Counterclockwise from upper left: 
 residuals as a function of the estimated values; 
 originals against the fitted values;
-result of cross-validation and normal plot of residuals.}
-\label{fig:bestregression}
-\end{figure}
+result of cross-validation and normal plot of residuals.
 
 
 \clearpage
@@ -303,23 +300,21 @@ y <- annualflows["anno"][,]
 cod <- annualflows["cod"][,]
 @
 
-Plot consistency of data series (Figure \ref{fig:consistencyplot}):
-<<label=consistencyplot.png, echo=FALSE, eval=TRUE>>=
-bitmap(file="consistencyplot.png", type="png256", height=8, width=8, res=144, pointsize=12)
-@
-<<fig=FALSE>>=
+Plot consistency of data series:
+%<<label=consistencyplot.png, echo=FALSE, eval=TRUE>>=
+%bitmap(file="consistencyplot.png", type="png256", height=8, width=8, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=8, height=8>>=
 consistencyplot(y,cod)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-\begin{figure}
-\begin{center}
- \includegraphics[width=.7\textwidth]{consistencyplot}
-\end{center}
-\caption{Data consistency.}
-\label{fig:consistencyplot}
-\end{figure}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+
+%\begin{center}
+% \includegraphics[width=.7\textwidth]{consistencyplot}
+%\end{center}
+\noindent Data consistency.
 
 Choice of sites with more than 15 records:
 <<>>=
@@ -334,42 +329,40 @@ L-moments of the series:
 <<>>=
 LM15 <- data.frame(t(sapply(split(D15, cod15), Lmoments)))
 @
-L-moment ratios plot (Figure \ref{fig:Lmomentsratio}):
-<<label=Lmomentsratio.png, echo=FALSE, eval=TRUE>>=
-bitmap(file="Lmomentsratio.png", type="png256", height=8, width=8, res=144, pointsize=16)
-@
-<<fig=FALSE>>=
+L-moment ratios plot:
+%<<label=Lmomentsratio.png, echo=FALSE, eval=TRUE>>=
+%bitmap(file="Lmomentsratio.png", type="png256", height=8, width=8, res=144, pointsize=16)
+%@
+<<fig=TRUE, width=7, height=7>>=
 plot(LM15[3:5])
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-\begin{figure}
-\begin{center}
- \includegraphics[width=.8\textwidth]{Lmomentsratio}
-\end{center}
-\caption{L-moment ratios plot.}
-\label{fig:Lmomentsratio}
-\end{figure}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+
+%\begin{center}
+% \includegraphics[width=.8\textwidth]{Lmomentsratio}
+%\end{center}
+\noindent L-moment ratios plot.
+
 
 Which homogeneity test do I use:
-<<label=LspaceHWvsAD01.png, echo=FALSE, eval=TRUE>>=
-bitmap(file="LspaceHWvsAD01.png", type="png256", height=6, width=6, res=144, pointsize=12)
-@
-<<fig=FALSE>>=
+%<<label=LspaceHWvsAD01.png, echo=FALSE, eval=TRUE>>=
+%bitmap(file="LspaceHWvsAD01.png", type="png256", height=6, width=6, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=7, height=7>>=
 Lspace.HWvsAD()
 points(LM15[,4:3])
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-\begin{figure}
-\begin{center}
- \includegraphics[width=.6\textwidth]{LspaceHWvsAD01}
-\end{center}
-\caption{L-moment ratios plot.}
-\label{fig:LspaceHWvsAD01}
-\end{figure}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+
+%\begin{center}
+% \includegraphics[width=.6\textwidth]{LspaceHWvsAD01}
+%\end{center}
+\noindent L-moment ratios plot.
+
 
 Homogeneity test on the entire region:
 <<echo=FALSE>>=
@@ -440,11 +433,11 @@ for (i in 1:nclusters) {
 @
 
 
-Plot of clusters (Figure \ref{fig:4clusters}):
-<<label=4clusters.png, echo=FALSE, eval=TRUE>>=
-bitmap(file="4clusters.png", type="png256", height=8, width=8, res=144, pointsize=12)
-@
-<<fig=FALSE>>=
+Plot of clusters:
+%<<label=4clusters.png, echo=FALSE, eval=TRUE>>=
+%bitmap(file="4clusters.png", type="png256", height=8, width=8, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=7, height=7>>=
 op <- par(mfrow=c(2,2))
  plot(parameters15[c("Hm","Ybar")], col=clusters, pch=clusters, cex=0.6,
       main="Clusters in the space of classification variables", cex.main=1, font.main=1)
@@ -468,37 +461,34 @@ op <- par(mfrow=c(2,2))
   grid()
 par(op)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-\begin{figure}
-\begin{center}
- \includegraphics[width=.99\textwidth]{4clusters}
-\end{center}
-\caption{Clusters.}
-\label{fig:4clusters}
-\end{figure}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+
+%\begin{center}
+% \includegraphics[width=.99\textwidth]{4clusters}
+%\end{center}
+\noindent Clusters.
 
 
 
 Model selection (L-moments ratio diagram):
-<<label=Lmomentsratiodiagram.png, echo=FALSE, eval=TRUE>>=
-bitmap(file="Lmomentsratiodiagram.png", type="png256", height=6, width=6, res=144, pointsize=12)
-@
-<<fig=FALSE>>=
+%<<label=Lmomentsratiodiagram.png, echo=FALSE, eval=TRUE>>=
+%bitmap(file="Lmomentsratiodiagram.png", type="png256", height=6, width=6, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=7, height=7>>=
 Lmoment.ratio.diagram()
  points(regLM15[,2:3], col=c(1:nclusters), pch=c(1:nclusters))
  legend("bottomleft",paste("clust ", c(1:nclusters)), col=c(1:nclusters), pch=c(1:nclusters), bty="n")
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
 @
-\begin{figure}
-\begin{center}
- \includegraphics[width=.6\textwidth]{Lmomentsratiodiagram}
-\end{center}
-\caption{L-moments ratio diagram.}
-\label{fig:Lmomentsratiodiagram}
-\end{figure}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+
+%\begin{center}
+% \includegraphics[width=.6\textwidth]{Lmomentsratiodiagram}
+%\end{center}
+\noindent L-moments ratio diagram.
 
 
 %   Model selection criteria:
@@ -553,7 +543,7 @@ for (i in 1:nclusters) {
 
 Regional growth-curves:
 <<label=GrowthCurves1.png, echo=FALSE, eval=TRUE>>=
-bitmap(file="GrowthCurves1.png", type="png256", height=10, width=10, res=144, pointsize=12)
+png(file="GrowthCurves1.png", height=960, width=960, res=144, pointsize=9)
 @
 <<fig=FALSE>>=
 op <- par(mfrow=c(2,2))
@@ -570,18 +560,15 @@ par(op)
 <<echo=FALSE, eval=TRUE, results=hide>>=
 dev.off()
 @
-\begin{figure}
+
 \begin{center}
  \includegraphics[width=.9\textwidth]{GrowthCurves1}
 \end{center}
-\caption{GrowthCurves1.png.}
-\label{fig:GrowthCurves1}
-\end{figure}
 
 
 Regional growth-curves:
 <<label=GrowthCurves2.png, echo=FALSE, eval=TRUE>>=
-bitmap(file="GrowthCurves2.png", type="png256", height=10, width=10, res=144, pointsize=12)
+png(file="GrowthCurves2.png", height=960, width=960, res=144, pointsize=9)
 @
 <<fig=FALSE>>=
 op <- par(mfrow=c(2,2))
@@ -598,20 +585,17 @@ par(op)
 <<echo=FALSE, eval=TRUE, results=hide>>=
 dev.off()
 @
-\begin{figure}
+
 \begin{center}
  \includegraphics[width=.9\textwidth]{GrowthCurves2}
 \end{center}
-\caption{GrowthCurves2.png.}
-\label{fig:GrowthCurves2}
-\end{figure}
 
 
 Comparison between regional growth-curves:
-<<label=comparGrowthCurves.png, echo=FALSE, eval=TRUE>>=
-bitmap(file="comparGrowthCurves.png", type="png256", height=6, width=6, res=144, pointsize=12)
-@
-<<fig=FALSE>>=
+%<<label=comparGrowthCurves.png, echo=FALSE, eval=TRUE>>=
+%bitmap(file="comparGrowthCurves.png", type="png256", height=6, width=6, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=6, height=6>>=
 spess=c(1, 1.5, 2, 1.3)
 Fs <- seq(0.001,0.999,by=.001)
 lognormplot(D15adim, line=FALSE, type="n", )
@@ -621,16 +605,13 @@ for (i in 1:nclusters) {
 }
 legend("bottomright", paste("cluster ", c(1:nclusters)), col=c(1:nclusters), lty=c(1:nclusters), lwd=spess, bty="n")
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-\begin{figure}
-\begin{center}
- \includegraphics[width=.6\textwidth]{comparGrowthCurves}
-\end{center}
-\caption{comparGrowthCurves.png.}
-\label{fig:comparGrowthCurves}
-\end{figure}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+
+%\begin{center}
+% \includegraphics[width=.6\textwidth]{comparGrowthCurves}
+%\end{center}
 
 
 

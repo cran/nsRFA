@@ -102,7 +102,8 @@ l3unif <- l3/sl3
 
 Plot the result:
 <<echo=FALSE, eval=TRUE>>=
-bitmap(file="Fig1.png", type="png256", height=10, width=8, res=144, pointsize=16)
+#bitmap(file="Fig1.png", type="png256", height=10, width=8, res=144, pointsize=16)
+png(filename="Fig1.png", height=720, width=600, res=72, pointsize=16)
 @
 <<fig=FALSE, eval=TRUE, width=7, height=9>>=
 layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE))
@@ -119,12 +120,10 @@ qqnorm(l3unif, main="Normal Plot: Uniform samples")
 dev.off()
 @
 
-\begin{figure}
 \begin{center}
  \includegraphics[width=.9\textwidth]{Fig1.png}
 \end{center}
-\caption{Normal quantile plots and added line for $N=1000$ simulated values of $l_3/SE(l_3)$ from Gaussian, Student(5), Cauchy and Uniform samples of size $n=60$.}
-\end{figure}
+Normal quantile plots and added line for $N=1000$ simulated values of $l_3/SE(l_3)$ from Gaussian, Student(5), Cauchy and Uniform samples of size $n=60$.
 
 
 

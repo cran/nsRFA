@@ -142,6 +142,7 @@ For a complete list of the functions, use \code{library(help="nsRFA").}
 
 \bold{Main changes in version 0.6}
 \tabular{ll}{
+0.6-6: \tab some plotting position/probability plots have been added in \code{\link{DISTPLOTS}};\cr
 0.6-4: \tab refinement of function \code{\link{BayesianMCMC}};\cr
 0.6-2: \tab new vignette \code{nsRFA_ex02};\cr
 0.6-2: \tab refinement of function \code{\link{BayesianMCMC}};\cr
@@ -158,6 +159,9 @@ Maintainer: Alberto Viglione <viglione@hydro.tuwien.ac.at>
 }
 \references{
 All the manual references are listed here:
+
+Beirlant, J., Goegebeur, Y., Teugels, J., Segers, J., 2004. Statistics of 
+  Extremes: Theory and Applications. John Wiley and Sons Inc., 490 pp.
 
 Burn, D.H., 1990. Evaluation of regional flood frequency analysis with a
   region of influence approach. Water Resources Research 26(10), 2257-2265.
@@ -179,6 +183,9 @@ Dalrymple, T., 1960. Flood frequency analyses. Vol. 1543-A of Water Supply
 
 Durbin, J., Knott, M., 1971. Components of Cramer-von Mises statistics. 
   London School of Economics and Political Science, pp. 290-307.
+
+El Adlouni, S., Bob\'ee, B., Ouarda, T.B.M.J., 2008. On the tails of extreme 
+  event distributions in hydrology. Journal of Hydrology 355(1-4), 16-33.
 
 Elamir, E. A.H., Seheult, A.H., 2004. Exact variance structure of sample
   l-moments. Journal of Statistical Planning and Inference 124, 337-359.

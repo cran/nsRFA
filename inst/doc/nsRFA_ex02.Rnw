@@ -67,7 +67,7 @@ am696 <- am[!is.na(fac),]
 
 Figure 16.2 pag.157, FEH Vol.3:
 <<echo=FALSE, eval=TRUE>>=
-bitmap(file="fig16_2pag157.png", type="png256", height=4, width=12, res=72, pointsize=16)
+png(file="fig16_2pag157.png", height=480, width=1200, res=144, pointsize=16)
 @
 <<fig=FALSE>>=
 layout(matrix(c(1,2,3), 1, 3))
@@ -92,7 +92,7 @@ Di <- discordancy(am696[,"am"], am696[,"number"])
 @
 Sites with discordancy greater than 3:
 <<echo=FALSE, eval=TRUE>>=
-bitmap(file="discordancy.png", type="png256", height=6, width=12, res=72, pointsize=16)
+png(file="discordancy.png", height=480, width=960, res=144, pointsize=9)
 @
 <<fig=FALSE>>=
 par(mfrow=c(1,2))
@@ -196,7 +196,7 @@ prova28018 <- roi.st.year(roi.cd["28018",],roi.cd,row.names(roi.cd),am696[,"am"]
 @
 
 <<echo=FALSE, eval=TRUE>>=
-bitmap(file="ex16_3page164.png", type="png256", height=6, width=12, res=72, pointsize=16)
+png(file="ex16_3page164.png", height=480, width=960, res=144, pointsize=9)
 @
 <<fig=FALSE>>=
 Lmomenti696 <- as.data.frame(Lmomenti696)
@@ -288,7 +288,7 @@ prova40009 <- roi.st.year(roi.cd["40009",],roi.cd,row.names(roi.cd),am696[,"am"]
 @
 
 <<echo=FALSE, eval=TRUE>>=
-bitmap(file="fig16_9page174a.png", type="png256", height=10, width=12, res=72, pointsize=16)
+png(file="fig16_9page174a.png", height=960, width=1200, res=144, pointsize=12)
 @
 <<fig=FALSE>>=
 figure16.9a("40009",prova40009,cd696)
@@ -382,7 +382,7 @@ figure16.9b <- function (x,r,am,cd) {
 @
 
 <<echo=FALSE, eval=TRUE>>=
-bitmap(file="fig16_9page174b.png", type="png256", height=10, width=12, res=72, pointsize=16)
+png(file="fig16_9page174b.png", height=960, width=1200, res=144, pointsize=12)
 @
 <<fig=FALSE>>=
 figure16.9b("40009",prova40009,am696,cd696)
@@ -408,7 +408,7 @@ prova45001 <- roi.st.year(roi.cd["45001",],roi.cd,row.names(roi.cd),am696[,"am"]
 @
 
 <<echo=FALSE, eval=TRUE>>=
-bitmap(file="fig6_2page30a.png", type="png256", height=10, width=12, res=72, pointsize=16)
+png(file="fig6_2page30a.png", height=960, width=1200, res=144, pointsize=16)
 @
 <<fig=FALSE>>=
 figure16.9a("45001",prova45001,cd696)
@@ -424,7 +424,7 @@ dev.off()
 
 
 <<echo=FALSE, eval=TRUE>>=
-bitmap(file="fig6_2page30b.png", type="png256", height=10, width=12, res=72, pointsize=16)
+png(file="fig6_2page30b.png", height=960, width=1200, res=144, pointsize=12)
 @
 <<fig=FALSE>>=
 figure16.9b("45001",prova45001,am696,cd696)

@@ -67,23 +67,20 @@ The data of site number 69023 are used here:
 sitedata <- am[am[,1]==69023, ]
 @
 whose series can be plotted with:
-<<echo=FALSE, eval=TRUE>>=
-bitmap(file="serie.png", type="png256", height=6, width=8, res=144, pointsize=16)
-@
-<<fig=FALSE, width=5, height=5>>=
+%<<echo=FALSE, eval=TRUE>>=
+%png(file="serie.png", height=480, width=720, res=72, pointsize=12)
+%@
+<<fig=TRUE, width=6, height=4>>=
 serieplot(sitedata[,4], sitedata[,3], ylim=c(0,200), xlab="year", ylab="Max annual peak [m3/s]")
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
 
-\begin{figure}
-\begin{center}
- \includegraphics[width=.7\textwidth]{serie}
-\end{center}
-\caption{Series of maximum annual flood peaks in station 69023.}
-\label{fig:serie}
-\end{figure}
+%\begin{center}
+% \includegraphics[width=.7\textwidth]{serie}
+%\end{center}
+Series of maximum annual flood peaks in station 69023.
 
 
 
@@ -170,25 +167,22 @@ Summarizing the choices are:
 <<>>=
 summary(MSC)
 @
-The candidate distributions and the selected ones can be plotted in a log-normal probability plot (Figure \ref{fig:plotMSC}):
-<<echo=FALSE, eval=TRUE>>=
-bitmap(file="plotMSC.png", type="png256", height=8, width=8, res=144, pointsize=16)
-@
-<<fig=FALSE, width=5, height=5>>=
+The candidate distributions and the selected ones can be plotted in a log-normal probability plot:
+%<<echo=FALSE, eval=TRUE>>=
+%png(file="plotMSC.png", height=720, width=720, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=5, height=5>>=
 plot(MSC)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
 
-\begin{figure}
-\begin{center}
- \includegraphics[width=.7\textwidth]{plotMSC}
-\end{center}
-\caption{Data (Weibull plotting position) and candidate distributions in lognormal probability plot.
-The distributions selected by one criterion, at least, are plotted in black, the others in gray.}
-\label{fig:plotMSC}
-\end{figure}
+%\begin{center}
+% \includegraphics[width=.7\textwidth]{plotMSC}
+%\end{center}
+Data (Weibull plotting position) and candidate distributions in lognormal probability plot.
+The distributions selected by one criterion, at least, are plotted in black, the others in gray.
 
 
 % --------------------------------------------------------------------- %

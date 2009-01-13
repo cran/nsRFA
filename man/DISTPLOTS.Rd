@@ -4,19 +4,36 @@
 \alias{DISTPLOTS}
 \alias{plotpos}
 \alias{plotposRP}
+\alias{loglogplot}
 \alias{unifplot}
 \alias{normplot}
 \alias{lognormplot}
+\alias{studentplot}
+\alias{logisplot}
+\alias{gammaplot}
+\alias{expplot}
+\alias{paretoplot}
 \alias{gumbelplot}
+\alias{frechetplot}
+\alias{weibullplot}
 \alias{pointspos}
 \alias{pointsposRP}
+\alias{loglogpoints}
 \alias{unifpoints}
 \alias{normpoints}
+\alias{studentpoints}
+\alias{logispoints}
+\alias{gammapoints}
+\alias{exppoints}
 \alias{gumbelpoints}
+\alias{weibullpoints}
 \alias{regionalplotpos}
 \alias{regionalnormplot}
 \alias{regionallognormplot}
+\alias{regionalexpplot}
+\alias{regionalparetoplot}
 \alias{regionalgumbelplot}
+\alias{regionalfrechetplot}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Empirical distribution plots}
 \description{
@@ -25,26 +42,45 @@
 \usage{
  plotpos (x, a=0, orient="xF", ...)
  plotposRP (x, a=0, orient="xF", ...)
- unifplot (x, a=0, orient="xF", line=TRUE, ...)
- normplot (x, a=0, orient="xF", line=TRUE, ...)
- lognormplot (x, a=0, orient="xF", line=TRUE, ...)
- gumbelplot (x, a=0, orient="xF", line=TRUE, ...)
+ loglogplot (x, a=0, orient="xF", ...)
+ unifplot (x, a=0, orient="xF", line=FALSE, ...)
+ normplot (x, a=0, orient="xF", line=FALSE, ...)
+ lognormplot (x, a=0, orient="xF", line=FALSE, ...)
+ studentplot (x, df, a=0, orient="xF", line=FALSE,...)
+ logisplot (x, a=0, orient="xF", line=FALSE,...)
+ gammaplot (x, shape, a=0, orient="xF", line=FALSE,...)
+ expplot (x, a=0, orient="xF", line=FALSE,...)
+ paretoplot (x, a=0, orient="xF", line=FALSE,...)
+ gumbelplot (x, a=0, orient="xF", line=FALSE, ...)
+ frechetplot (x, a=0, orient="xF", line=FALSE,...)
+ weibullplot (x, a=0, orient="xF", line=FALSE,...)
  pointspos (x, a=0, orient="xF", ...)
  pointsposRP (x, a=0, orient="xF", ...)
+ loglogpoints (x, a=0, orient="xF", ...)
  unifpoints (x, a=0, orient="xF", ...)
  normpoints (x, a=0, orient="xF", ...)
+ studentpoints (x, df, a=0, orient="xF", ...)
+ logispoints (x, a=0, orient="xF", ...)
+ gammapoints (x, shape, a=0, orient="xF", ...)
+ exppoints (x, a=0, orient="xF", ...)
  gumbelpoints (x, a=0, orient="xF", ...)
+ weibullpoints (x, a=0, orient="xF", ...)
  regionalplotpos (x, cod, a=0, orient="xF", ...)
  regionalnormplot (x, cod, a=0, orient="xF", ...)
  regionallognormplot (x, cod, a=0, orient="xF", ...)
+ regionalexpplot (x, cod, a=0, orient="xF", ...)
+ regionalparetoplot (x, cod, a=0, orient="xF", ...)
  regionalgumbelplot (x, cod, a=0, orient="xF", ...)
+ regionalfrechetplot (x, cod, a=0, orient="xF", ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{vector representing a data-sample}
+ \item{df}{degrees of freedom (> 0, maybe non-integer) of the Student t distribution.  'df = Inf' is allowed.}
+ \item{shape}{shape parameter of the distribution}
  \item{a}{plotting position parameter, normally between 0 and 0.5 (the default value here, corresponding to the Hazen plotting position, see details)}
  \item{orient}{if \code{orient="xF"} the abscissa will be x and the ordinate F}
- \item{line}{if TRUE (default) a straight line indicating the normal, lognormal or Gumbel distribution with parameters estimated from \code{x} is plotted}
+ \item{line}{if TRUE (default) a straight line indicating the normal, lognormal, ..., distribution with parameters estimated from \code{x} is plotted}
  \item{cod}{array that defines the data subdivision among sites}
  \item{...}{graphical parameters as \code{xlab}, \code{ylab}, \code{main}, ...}
 }
@@ -74,8 +110,11 @@ For large sample size, \eqn{n}, there is little difference between these various
  The regional plots draw samples of a region on the same plot. 
 
  \code{pointspos}, \code{normpoints}, ... are the analogous of \code{points}, they can be used to add points or lines to \code{plotpos}, \code{normplot}, ...
- \code{normpoints} can be used either in \code{normplot} or \code{lognormplot}.
+ \code{normpoints} can be used either on \code{normplot} or \code{lognormplot}.
+ \code{exppoints} can be used either on \code{expplot} or \code{paretoplot} (since the log-transformed Pareto random variable is exponentially distributed).
+  \code{gumbelpoints} can be used either on \code{gumbelplot} or \code{frechetplot} (since the log-transformed Frechet random variable is distributed as a Gumbel).
 
+ \code{loglogplot} plots the logarithm of sample vs the logarithm of the empirical exceedance probability. For the log-log plot, the tail probability is represented by a straight line for power-law distributions (e.g. log-pearson, log-logistic, Frechet, ..., HEAVY TAIL), but not for the other subexponential or exponential distributions (e.g. gumbel, gamma, Pearson type III, ..., MODERATE TAIL); see El Adlouni et al. (2008).
 }
 %\references{}
 %\author{Alberto Viglione}

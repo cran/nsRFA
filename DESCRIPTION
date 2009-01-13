@@ -1,6 +1,6 @@
 Package: nsRFA
-Version: 0.6-4
-Date: 2008-12-02
+Version: 0.6-6
+Date: 2009-01-13
 Title: Non-supervised Regional Frequency Analysis
 Author: Alberto Viglione
 Maintainer: Alberto Viglione <viglione@hydro.tuwien.ac.at> 
@@ -13,4 +13,4 @@ Description: A collection of statistical tools for objective (non-supervised) ap
              empirical regional growth curves.
 License: GPL (>= 2)
 URL: http://www.idrologia.polito.it/~alviglio/index_en.htm
-Packaged: Tue Dec  2 14:54:28 2008; alviglio
+Packaged: Tue Jan 13 17:02:56 2009; alviglio
