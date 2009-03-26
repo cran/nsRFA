@@ -94,16 +94,22 @@ test would in fact be accurate only under special assumptions: to have
 independent data both serially and between sites, and the true
 regional distribution being kappa.
 
-Hosking and Wallis (1993) also give an alternative heterogeneity measure
-(that we call \eqn{HW_2}{HW2}), in which \eqn{V} is
+Hosking and Wallis (1993) also give alternative heterogeneity measures
+(that we call \eqn{HW_2}{HW2} and \eqn{HW_3}{HW3}), in which \eqn{V} is
 replaced by:
 \deqn{V_2 = \sum_{i=1}^k n_i \left\{ (t^{(i)} - t^R)^2 + (t_3^{(i)} - t_3^R)^2\right\}^{1/2} / \sum_{i=1}^k n_i}{%
       V2 = \sum[i from 1 to k] ni \{(t^(i) - t^R)^2 + (t3^(i) - t3^R)^2\}^(1/2) / \sum[i from 1 to k] ni}
+or
+\deqn{V_3 = \sum_{i=1}^k n_i \left\{ (t_3^{(i)} - t_3^R)^2 + (t_4^{(i)} - t_4^R)^2\right\}^{1/2} / \sum_{i=1}^k n_i}{%
+      V3 = \sum[i from 1 to k] ni \{(t3^(i) - t3^R)^2 + (t4^(i) - t4^R)^2\}^(1/2) / \sum[i from 1 to k] ni}
 The test statistic in this case becomes
 \deqn{\theta_{HW_2} = \frac{V_2 - \mu_{V_2}}{\sigma_{V_2}}}{%
       \theta(HW2) = (V2 - \mu(V2)) / (\sigma(V2))}
+or
+\deqn{\theta_{HW_3} = \frac{V_3 - \mu_{V_3}}{\sigma_{V_3}}}{%
+      \theta(HW3) = (V3 - \mu(V3)) / (\sigma(V3))}
 with similar acceptability limits as the \eqn{HW_1}{HW1} statistic. 
-Hosking and Wallis (1997) judge \eqn{\theta_{HW_2}}{\theta(HW2)} to be inferior to
+Hosking and Wallis (1997) judge \eqn{\theta_{HW_2}}{\theta(HW2)} and \eqn{\theta_{HW_3}}{\theta(HW3)} to be inferior to
 \eqn{\theta_{HW_1}}{\theta(HW1)} and say that it rarely yields values larger than 2 even for grossly heterogeneous regions.
 
 

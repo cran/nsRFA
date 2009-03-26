@@ -28,7 +28,9 @@ HW.tests <- function(x,cod,Nsim=500) {
   tau4Reg <- as.numeric(rLm[5])
 
   V1 <- (sum(ni*(ti-tauReg)^2)/sum(ni))^0.5
-  V2 <- (sum(ni * ((ti - tauReg)^2 + (t3i - tau3Reg)^2))/sum(ni))^0.5
+  #V2 <- (sum(ni * ((ti - tauReg)^2 + (t3i - tau3Reg)^2))/sum(ni))^0.5
+  V2 <- sum(ni * ((ti - tauReg)^2 + (t3i - tau3Reg)^2)^0.5)/sum(ni)
+  V3 <- sum(ni * ((t3i - tau3Reg)^2 + (t4i - tau4Reg)^2)^0.5)/sum(ni)
 
   parkappa <- par.kappa(lambda1Reg,lambda2Reg,tau3Reg,tau4Reg)
 
@@ -39,32 +41,41 @@ HW.tests <- function(x,cod,Nsim=500) {
 
   V1s <- rep(NA,Nsim)
   V2s <- rep(NA,Nsim)
+  V3s <- rep(NA,Nsim)
   for (i in 1:Nsim) {
     ti.sim <- rep(NA,k)
     t3i.sim <- rep(NA,k)
+    t4i.sim <- rep(NA,k)
     for (j in 1:k) {
       campione <- rand.kappa(ni[j],xi,alfa,kappa,hacca)
       campione.ad <- campione/mean(campione)
       lmom <- Lmoments(campione.ad)
       ti.sim[j] <- lmom[3]
       t3i.sim[j] <- lmom[4]
+      t4i.sim[j] <- lmom[5]
     }
     tauReg.sim <- sum(ni*ti.sim)/sum(ni)
     tau3Reg.sim <- sum(ni*t3i.sim)/sum(ni)
+    tau4Reg.sim <- sum(ni*t4i.sim)/sum(ni)
     V1s[i] <- (sum(ni*(ti.sim-tauReg.sim)^2)/sum(ni))^0.5
-    V2s[i] <- (sum(ni * ((ti.sim - tauReg.sim)^2 + (t3i.sim - tau3Reg.sim)^2))/sum(ni))^0.5
+    #V2s[i] <- (sum(ni * ((ti.sim - tauReg.sim)^2 + (t3i.sim - tau3Reg.sim)^2))/sum(ni))^0.5
+    V2s[i] <- sum(ni * ((ti.sim - tauReg.sim)^2 + (t3i.sim - tau3Reg.sim)^2)^0.5)/sum(ni)
+    V3s[i] <- sum(ni * ((t3i.sim - tau3Reg.sim)^2 + (t4i.sim - tau4Reg.sim)^2)^0.5)/sum(ni)
   }
 
   muV1 <- mean(V1s)
   stdV1 <- sd(V1s)
   muV2 <- mean(V2s)
   stdV2 <- sd(V2s)
+  muV3 <- mean(V3s)
+  stdV3 <- sd(V3s)
 
   H1 <- (V1 - muV1)/stdV1
   H2 <- (V2 - muV2)/stdV2
+  H3 <- (V3 - muV3)/stdV3
 
-  output <- c(H1,H2)
-  names(output) <- c("H1","H2")
+  output <- c(H1,H2,H3)
+  names(output) <- c("H1","H2","H3")
 
   return(output)
 }
