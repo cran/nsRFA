@@ -3,6 +3,8 @@
 \name{GOFmontecarlo}
 \alias{GOFmontecarlo}
 \alias{gofNORMtest}
+\alias{gofEXPtest}
+\alias{gofGUMBELtest}
 \alias{gofGENLOGIStest}
 \alias{gofGENPARtest}
 \alias{gofGEVtest}
@@ -15,6 +17,8 @@
 }
 \usage{
  gofNORMtest (x)
+ gofEXPtest (x, Nsim=1000)
+ gofGUMBELtest (x, Nsim=1000)
  gofGENLOGIStest (x, Nsim=1000)
  gofGENPARtest (x, Nsim=1000)
  gofGEVtest (x, Nsim=1000)
@@ -45,10 +49,14 @@ In practice, the statistic is calculated as:
 
 The statistic \eqn{A^2}{A2}, obtained in this way, may be confronted with the population of the \eqn{A^2}{A2}'s that one obtain if samples effectively belongs to the \eqn{F(x,\theta)} hypothetical distribution.
 In the case of the test of normality, this distribution is defined (see Laio, 2004).
-In other cases, e.g. the Pearson Type III case here, can be derived with a Monte-Carlo procedure.
+In other cases, e.g. the Pearson Type III case, can be derived with a Monte-Carlo procedure.
 }
 \value{
   \code{gofNORMtest} tests the goodness of fit of a normal (Gauss) distribution with the sample \code{x}.
+
+  \code{gofEXPtest} tests the goodness of fit of a exponential distribution with the sample \code{x}.
+
+  \code{gofGUMBELtest} tests the goodness of fit of a Gumbel (EV1) distribution with the sample \code{x}.
 
   \code{gofGENLOGIStest} tests the goodness of fit of a Generalized Logistic distribution with the sample \code{x}.
 

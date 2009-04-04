@@ -142,7 +142,8 @@ gofP3test <- function (x,Nsim=1000) {
 
  A2s <- rep(NA,Nsim)
  for (i in 1:Nsim) {
-  x.sim <- rand.gamma(n,par$xi,par$beta,par$alfa)
+  if(!is.na(par$beta)) x.sim <- rand.gamma(n,par$xi,par$beta,par$alfa)
+  else x.sim <- rnorm(n,par$mu,par$sigma)
   x.sim <- sort(x.sim)
   Lmom.xsim <- Lmoments(x.sim)
   par.sim <- par.gamma(Lmom.xsim["l1"],Lmom.xsim["l2"],Lmom.xsim["lca"])
@@ -362,12 +363,90 @@ gofLOGNORMtest <- function (x,Nsim=1000) {
 }
 
 
+# -------------------------------------------------------------------------------------- #
+
+gofEXPtest <- function (x,Nsim=1000) {
+
+ # Monte-Carlo procedure
+ # INPUT:
+ # x = sample
+ # Nsim = number of generations
+ x <- sort(x)
+ n <- length(x)
+ Lmom.x <- Lmoments(x)
+
+ par <- par.exp(Lmom.x["l1"],Lmom.x["l2"])
+ F <- suppressWarnings(F.exp(x,par$xi,par$alfa))
+ F[F<0.00000001] <- 0.00000001
+ F[F>0.99999999] <- 0.99999999
+ A2 <- -n-(1/n)*sum((seq(1,2*n-1,by=2))*log(F) + (seq(2*n-1,1,by=-2))*log(1-F))
+
+ A2s <- rep(NA,Nsim)
+ for (i in 1:Nsim) {
+  x.sim <- rand.exp(n,par$xi,par$alfa)
+  x.sim <- sort(x.sim)
+  Lmom.xsim <- Lmoments(x.sim)
+  par.sim <- par.exp(Lmom.xsim["l1"],Lmom.xsim["l2"])
+  F <- suppressWarnings(F.exp(x.sim,par.sim$xi,par.sim$alfa))
+  F[F<0.00000001] <- 0.00000001
+  F[F>0.99999999] <- 0.99999999
+  A2s[i] <- -n-(1/n)*sum((seq(1,2*n-1,by=2))*log(F) + (seq(2*n-1,1,by=-2))*log(1-F))
+ }
+
+ ecdfA2s <- ecdf(A2s)
+ probabilita <- ecdfA2s(A2)
+ output <- signif(c(A2, probabilita),4)
+ names(output) <- c("A2","P")
+
+ return(output)
+}
+
+
+# -------------------------------------------------------------------------------------- #
+
+gofGUMBELtest <- function (x,Nsim=1000) {
+
+ # Monte-Carlo procedure
+ # INPUT:
+ # x = sample
+ # Nsim = number of generations
+ x <- sort(x)
+ n <- length(x)
+ Lmom.x <- Lmoments(x)
+
+ par <- par.gumb(Lmom.x["l1"],Lmom.x["l2"])
+ F <- suppressWarnings(F.gumb(x,par$xi,par$alfa))
+ F[F<0.00000001] <- 0.00000001
+ F[F>0.99999999] <- 0.99999999
+ A2 <- -n-(1/n)*sum((seq(1,2*n-1,by=2))*log(F) + (seq(2*n-1,1,by=-2))*log(1-F))
+
+ A2s <- rep(NA,Nsim)
+ for (i in 1:Nsim) {
+  x.sim <- rand.gumb(n,par$xi,par$alfa)
+  x.sim <- sort(x.sim)
+  Lmom.xsim <- Lmoments(x.sim)
+  par.sim <- par.gumb(Lmom.xsim["l1"],Lmom.xsim["l2"])
+  F <- suppressWarnings(F.gumb(x.sim,par.sim$xi,par.sim$alfa))
+  F[F<0.00000001] <- 0.00000001
+  F[F>0.99999999] <- 0.99999999
+  A2s[i] <- -n-(1/n)*sum((seq(1,2*n-1,by=2))*log(F) + (seq(2*n-1,1,by=-2))*log(1-F))
+ }
+
+ ecdfA2s <- ecdf(A2s)
+ probabilita <- ecdfA2s(A2)
+ output <- signif(c(A2, probabilita),4)
+ names(output) <- c("A2","P")
+
+ return(output)
+}
+
+
 # ---------------------------------------------------------------------------------- #
 
 .test.GOFmontecarlo <- function (parameters, type="NORM", alfa=.05, n=30, N=100) {
 
   # testa se i test di goodness of fit funzionano correttamente
-  # type = "NORM", "GENLOGIS", "GENPAR", "GEV", "LOGNORM", "P3"
+  # type = "NORM", "GENLOGIS", "GENPAR", "GEV", "LOGNORM", "P3", "EXP", "GUMBEL"
   # alfa = limite di significativita
   # n = lunghezza dei campioni
   # N = numero di ripetizioni
@@ -377,6 +456,18 @@ gofLOGNORMtest <- function (x,Nsim=1000) {
    for (i in 1:N) {
     x <- rnorm(n,parameters[1],parameters[2])
     ps[i] <- gofNORMtest(x)["P"]
+   }
+  }
+  else if (type=="EXP") {
+   for (i in 1:N) {
+    x <- rand.exp(n,parameters[1],parameters[2])
+    ps[i] <- gofEXPtest(x)["P"]
+   }
+  }
+  else if (type=="GUMBEL") {
+   for (i in 1:N) {
+    x <- rand.gumb(n,parameters[1],parameters[2])
+    ps[i] <- gofGUMBELtest(x)["P"]
    }
   }
   else if (type=="GENLOGIS") {
@@ -430,5 +521,12 @@ gofLOGNORMtest <- function (x,Nsim=1000) {
 # param <- par.lognorm(lmom["l1"],lmom["l2"],lmom["lca"])
 # .test.GOFmontecarlo(c(param$xi,param$alfa,param$k),type="LOGNORM",n=100,alfa=.1,N=1000)  # = 0.122
 # param <- par.gamma(lmom["l1"],lmom["l2"],lmom["lca"])
-# .test.GOFmontecarlo(c(param$xi,param$beta,param$alfa),type="P3",n=100,alfa=.1,N=1000)   # = 0.043
- 
+# .test.GOFmontecarlo(c(param$xi,param$beta,param$alfa),type="P3",n=100,alfa=.1,N=1000)   # = 0.043  0.044
+# .test.GOFmontecarlo(c(20,1,70),type="P3",n=100,alfa=.1,N=1000)   # = 0.103 
+# .test.GOFmontecarlo(c(167.157813,99.583519,3.502665),type="P3",n=100,alfa=.1,N=1000)   # = 0.051
+# .test.GOFmontecarlo(c(226.714,130.4902,2.216652),type="P3",n=100,alfa=.1,N=1000)   # = 0.032
+# param <- par.exp(lmom["l1"],lmom["l2"])
+# .test.GOFmontecarlo(c(param$xi,param$alfa),type="EXP",n=100,alfa=.1,N=1000)   # = 0.109
+# param <- par.gumb(lmom["l1"],lmom["l2"])
+# .test.GOFmontecarlo(c(param$xi,param$alfa),type="GUMBEL",n=100,alfa=.1,N=1000)   # = 0.077  0.113 
+

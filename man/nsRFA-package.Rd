@@ -142,6 +142,7 @@ For a complete list of the functions, use \code{library(help="nsRFA").}
 
 \bold{Main changes in version 0.6}
 \tabular{ll}{
+0.6-8: \tab exponential and Gumbel distributions added in \code{\link{GOFmontecarlo}};\cr
 0.6-6: \tab some plotting position/probability plots have been added in \code{\link{DISTPLOTS}};\cr
 0.6-4: \tab refinement of function \code{\link{BayesianMCMC}};\cr
 0.6-2: \tab new vignette \code{nsRFA_ex02};\cr

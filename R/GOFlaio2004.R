@@ -96,34 +96,6 @@ A2_GOFlaio <- function (x, dist="NORM") {
  # alfa = significance level of the test
  # dist = distribution ("NORM","LN","EV1","EV2","GEV","GAM","LP3")
  # Nsim = number of repliques
- # examples:
- #  > typeIerror(100,c(10,3),0.1,dist="NORM",Nsim=10000)
- #  [1] 0.0979
- #  > typeIerror(100,c(10,3),0.1,dist="EV1",Nsim=10000)
- #  [1] 0.0921
- #  > typeIerror(100,c(10,3,0.1),0.1,dist="GEV",Nsim=1000)
- #  [1] 0.092
- # spesso con la GEV mi da l'errore:
- #  Error in optim(par = Tm, fn = .logLgev, x = x) :
- #        function cannot be evaluated at initial parameters
- #  > typeIerror(100,c(-10,0.3,70),0.1,dist="GAM",Nsim=10000)
- #  [1] 0.0913
- #  > typeIerror(100,c(20,1,70),0.1,dist="GAM",Nsim=10000)
- #  [1] 0.0949
- #  > typeIerror(100,c(0.2800572,0.1237543,5.817518),0.1,dist="GAM",Nsim=10000)
- #  [1] 0.0863
- #  > typeIerror(100,c(226.714,130.4902,2.216652),0.1,dist="GAM",Nsim=10000)
- #  [1] 0.1993 ????
- #  > typeIerror(100,c(167.157813,99.583519,3.502665),0.1,dist="GAM",Nsim=10000)
- #  [1] 0.1026
- #  > typeIerror(100,c(0.09,0.08,10),0.1,dist="GAM",Nsim=10000)
- #  [1] 0.0953
- #  > typeIerror(100,c(100,3),0.1,dist="LN",Nsim=10000)
- #  [1] 0.1120
- #  > typeIerror(100,c(100,3),0.1,dist="EV2",Nsim=10000)
- #  [1] 0.1149
- #  > typeIerror(100,c(-10,1,70),0.1,dist="LP3",Nsim=10000)
- #  [1] 0.1043 
  A <- rep(NA,Nsim)
  if (dist=="NORM") {
   for (i in 1:Nsim) {
@@ -173,3 +145,35 @@ A2_GOFlaio <- function (x, dist="NORM") {
  else stop("typeIerror(n,T,dist,case,Nsim): distribution unknown")
  1 - ecdf(A)(1-alfa)
 }
+
+ # examples:
+ #  > .typeIerrorA2_GOFlaio(100,c(10,3),0.1,dist="NORM",Nsim=10000)
+ #  [1] 0.0979
+ #  > .typeIerrorA2_GOFlaio(100,c(10,3),0.1,dist="EV1",Nsim=10000)
+ #  [1] 0.0921
+ #  > .typeIerrorA2_GOFlaio(100,c(10,3,0.1),0.1,dist="GEV",Nsim=1000)
+ #  [1] 0.092
+ # spesso con la GEV mi da l'errore:
+ #  Error in optim(par = Tm, fn = .logLgev, x = x) :
+ #        function cannot be evaluated at initial parameters
+ #  > .typeIerrorA2_GOFlaio(100,c(-10,0.3,70),0.1,dist="GAM",Nsim=10000)
+ #  [1] 0.0913
+ #  > .typeIerrorA2_GOFlaio(100,c(20,1,70),0.1,dist="GAM",Nsim=10000)
+ #  [1] 0.0949
+ #  > .typeIerrorA2_GOFlaio(100,c(0.2800572,0.1237543,5.817518),0.1,dist="GAM",Nsim=10000)
+ #  [1] 0.0863
+ #  > .typeIerrorA2_GOFlaio(100,c(226.714,130.4902,2.216652),0.1,dist="GAM",Nsim=10000)
+ #  [1] 0.1993 ????   0.1951
+ #  > .typeIerrorA2_GOFlaio(100,c(167.157813,99.583519,3.502665),0.1,dist="GAM",Nsim=10000)
+ #  [1] 0.1026
+ #  > .typeIerrorA2_GOFlaio(100,c(0.09,0.08,10),0.1,dist="GAM",Nsim=10000)
+ #  [1] 0.0953
+ #  > .typeIerrorA2_GOFlaio(100,c(100,3),0.1,dist="LN",Nsim=10000)
+ #  [1] 0.1120
+ #  > .typeIerrorA2_GOFlaio(100,c(100,3),0.1,dist="EV2",Nsim=10000)
+ #  [1] 0.1149
+ #  > .typeIerrorA2_GOFlaio(100,c(-10,1,70),0.1,dist="LP3",Nsim=10000)
+ #  [1] 0.1043
+ #  > .typeIerrorA2_GOFlaio(100,c(100,3),0.1,dist="EV1",Nsim=10000)
+ #  [1] 0.1003
+
