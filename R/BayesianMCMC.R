@@ -1,12 +1,21 @@
+# the .thresML is a minimum threshold below which the loglikelihood is considered is not considered 
+# (i.e., if the calculated loglikelihood is lower to .thresML, it is set to .thresML for numerical reasons).
 .thresML = -6000
+
 
 BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA,
                           nbpas=1000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV",
                           apriori=function(...){1}, parameters0=NA, varparameters0=NA) {
- reject <- round(nbpas/10)
+
+ # This is the main function! other functions are called in this one and are written below.
+ # To know the meaning of the inputs and the outputs you can type help(BayesianMCMC)
+
+ reject <- round(nbpas/10)   # number of initial steps that will be excluded from the posterior distribution
  nbpas <- nbpas + reject
  returnperiods <- 10^(seq(0.1, 4, by=.1))
  nonexceedF <- 1 - 1/returnperiods
+
+ # here, if initial parameters and parameter variances are not provided, a guess is made using the function .chooseparameters0 (see below)
  if (any(is.na(parameters0))) {
   parameters0_est <- parameters0
   parameters0 <- .chooseparameters0(xcont, xhist, infhist, suphist, dist)
@@ -19,7 +28,8 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  }
  lpar <- length(parameters0)
  
-
+ 
+ # here I initialize the arrays which will contain the results of the MCMC
  parameters <- array(data=NA, dim=c(nbpas, lpar, nbchaines))	# array 3D
  varparameters <- array(data=NA, dim=c(nbpas, lpar, nbchaines))    # array 3D
  vraisdist <- array(data=NA, dim=c(nbpas, nbchaines))
@@ -28,6 +38,7 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  #propsaut <- rep(0, nbchaines)
  qq <- array(data=NA, dim=c(nbpas, length(nonexceedF), nbchaines))    # array 3D 
 
+ # the following if-else selects the type of likelihood depending on the input provided
  if(all(is.na(c(xhist, infhist, suphist, seuil)))) {
   # Calcul sur les seules données systèmatiques
   funzionetest <- call(".lnvrais5", quote(parameters[1,,j]), quote(xcont), quote(dist))
@@ -90,33 +101,36 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  #    }
  #   }
 
+
  # Algorithm with repetitions
  # initialisation
  propsaut <- array(data=NA, dim=c(nbpas, nbchaines))
  for (j in 1:nbchaines) {
-  parameters[1,,j] <- .parameterscandMOD(parameters0, varparameters0, dist)
+  parameters[1,,j] <- .parameterscandMOD(parameters0, varparameters0, dist)   # forst step (see .parameterscandMOD below)
   varparameters[1,,j] <- varparameters0
   #vraistest[j] <- .lnvrais5(parameters[1,,j], xcont, dist)
   vraistest <- eval(funzionetest) + log(apriori(parameters[1,,j]))   # it is a log-likelihhod
   vraisdist[1,j] <- vraistest
-  qq[1,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[1,,j], dist=dist)
+  qq[1,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[1,,j], dist=dist)   # first quantiles (see .quantilesMOD below)
   nbsaut <- 0
   for (i in 2:nbpas) {
-   parameterscand <- .parameterscandMOD(parameters[i-1,,j], varparameters[i-1,,j], dist)
+   parameterscand <- .parameterscandMOD(parameters[i-1,,j], varparameters[i-1,,j], dist)   # other steps
    vraiscand <- eval(funzionecand) + log(apriori(parameterscand))   # it is a log-likelihhod
    valtest <- min((exp(vraiscand - vraistest)), 1)
    test <- runif(1)
    #if ((valtest > test) & (vraiscand > .thresML)) {
-   if (valtest > test) {
+   if (valtest > test) {   # I move to the new set of parameters
     nbsaut <- nbsaut + 1
     parameters[i,,j] <- parameterscand
     vraistest <- vraiscand
    }
-   else {
+   else {   # I remain where I am
     parameters[i,,j] <- parameters[i-1,,j]
    }
    vraisdist[i,j] <- vraistest
-   qq[i,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[i,,j], dist=dist)
+   qq[i,,j] <- .quantilesMOD(F=nonexceedF, parameters=parameters[i,,j], dist=dist)   # other quantiles
+   
+   # acceptance rate
    propsaut[i,j] <- nbsaut/i
    if (propsaut[i,j] < 0.33) {
     varparameters[i,,j] <- varparameters[i-1,,j]*(1+(propsaut[i,j]-0.34)/0.34/1000)
@@ -140,6 +154,7 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  propsaut <- propsaut[-c(1:reject),]
   dimnames(propsaut) <- list(c(1:nbpas), paste("chain", seq(1,nbchaines)))
 
+ # The maximum likelihood is here performed simply taking the maximum of vraisdist
  dummy1 <- which.max(apply(vraisdist, 2, max))
  dummy2 <- apply(vraisdist, 2, which.max)[dummy1]
  parametersML <- parameters[dummy2,,dummy1]
@@ -186,6 +201,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 # --------------------- #
 
 .plotdiagnMCMC01 <- function(x, ...) {
+ # Diagnostic plot of the parameters
  lpar <- dim(x$parameters)[2]
  #graphics.off()
  #x11()
@@ -219,6 +235,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 }
 
 .plotdiagnMCMC02 <- function(x, ...) {
+ # Plot of the frequency curve
  #if(is.na(x$nbans)) nbans <- 0 else nbans <- x$nbans
  #if(is.na(x$seuil)) seuil <- Inf else seuil <- x$seuil
  T <- c(1,1000)
@@ -253,6 +270,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 }
 
 .plotdiagnMCMC04 <- function(x, ...) {
+ # Plot of the acceptance rate and the likelihood
  op <- par(mfrow=c(2, 2))
   limiti <- range(x$vraisdist)
   plot(x$vraisdist[,1], type="l", col=2, ylim=limiti, ylab=paste("ln likelyhood"), xlab="")
@@ -283,6 +301,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 
 
 .plotdiagnMCMC05 <- function(x, ...) {
+ # A posteriori distribution of the parameters
  if (length(x$parametersML) == 2) {
   plot(x$parameters[,1:2,1], col=2, pch=".")
   for (i in 2:x$nbchaines) {
@@ -339,7 +358,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 
 
 .plotdiagnMCMC06 <- function(x, ...) {
- # plot the a-priori
+ # plot the a-priori distribution of the parameters
  if (length(x$parametersML) == 2) {
   plot(x$parameters[,1:2,1], type="n", ...)
   xr <- range(x$parameters[,1,1])
@@ -547,6 +566,8 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 # ---------------------------- #
 
 .parameterscandMOD <- function (parameters, varparameters, dist) {
+  # Perform a step using different distributions (normal or lognormal) depending on the parameter
+  # (essentially if it must be positive or can be also negative)
   if (dist=="GEV") {
    #parameterscand <- rnorm(rep(1, 3), mean=parameters, sd=sqrt(varparameters))
    # I know that the scale parameter is positive
@@ -634,6 +655,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 # ------------------------------------------------------------------------------------------ #
 
 .quantilesMOD <- function (F, parameters, dist="GEV") {
+ # calculates the quantiles for a given distribution, a given parameter set and a given non-exceedance probability
  if (dist=="GEV") {
   xi <- parameters[1]
   alfa <- parameters[2]

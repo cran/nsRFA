@@ -55,7 +55,7 @@ More details are provided in vignettes:
                   \tab Regional frequency analysis of the annual flows in Piemonte\cr
                   \tab and Valle d'Aosta\cr
 }
-
+that can be accessed via \code{vignette("nsRFA_ex01", package="nsRFA")}.
 
 
 
@@ -90,7 +90,7 @@ More details are provided in vignettes:
 \code{nsRFA_ex02} \tab How to use the package nsRFA (example 2):\cr
                   \tab Region-Of-Influence approach, some FEH examples\cr
 }
-
+that can be accessed via \code{vignette("nsRFA_ex01", package="nsRFA")}.
 
 
 
@@ -112,6 +112,7 @@ More details are provided in vignettes:
 \code{MSClaio2008} \tab Model selection techniques for the frequency analysis\cr 
                    \tab of hydrological extremes: the MSClaio2008 R function\cr
 }
+that can be accessed via \code{vignette("nsRFA_ex01", package="nsRFA")}.
 
 
 
@@ -142,6 +143,7 @@ For a complete list of the functions, use \code{library(help="nsRFA").}
 
 \bold{Main changes in version 0.6}
 \tabular{ll}{
+0.6-9: \tab new vignette \code{Fig11GriffisStedinger};\cr
 0.6-8: \tab exponential and Gumbel distributions added in \code{\link{GOFmontecarlo}};\cr
 0.6-6: \tab some plotting position/probability plots have been added in \code{\link{DISTPLOTS}};\cr
 0.6-4: \tab refinement of function \code{\link{BayesianMCMC}};\cr
