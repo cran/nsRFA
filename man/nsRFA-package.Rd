@@ -134,7 +134,7 @@ More details are provided in vignettes:
 \details{
 \tabular{ll}{
 Package: \tab nsRFA\cr
-Version: \tab 0.6\cr
+Version: \tab 0.7\cr
 }
 The package provides several tools for Regional Frequency Analysis of hydrological variables.
 The first version dates to 2006 and was developed in Turin at the Politecnico by Alberto Viglione.
@@ -143,6 +143,7 @@ For a complete list of the functions, use \code{library(help="nsRFA").}
 
 \bold{Main changes in version 0.6}
 \tabular{ll}{
+0.7-0: \tab plotting position for historical information in \code{\link{DISTPLOTS}};\cr
 0.6-9: \tab new vignette \code{Fig11GriffisStedinger};\cr
 0.6-8: \tab exponential and Gumbel distributions added in \code{\link{GOFmontecarlo}};\cr
 0.6-6: \tab some plotting position/probability plots have been added in \code{\link{DISTPLOTS}};\cr
@@ -267,6 +268,10 @@ Smouse, P.E., Long, J.C., Sokal, R.R., 1986. Multiple regression and correlation
 
 Stedinger, J., Lu, L., 1995. Appraisal of regional and index flood quantile
   estimators. Stochastic Hydrology and Hydraulics 9(1), 49-75.
+
+Stedinger, J.R., Vogel, R.M. and Foufoula-Georgiou, E., 1993. Frequency analysis of extreme events. 
+  In David R. Maidment, editor, Hand-Book of Hydrology, chapter 18. McGraw-Hill Companies, 
+  international edition.
 
 Viglione, A., Claps, P., Laio, F., 2006. Utilizzo di criteri di prossimit\`a 
   nell'analisi regionale del deflusso annuo, XXX Convegno di Idraulica e 

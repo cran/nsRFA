@@ -17,6 +17,8 @@
 \setlength{\topmargin}{-10mm}
 
 
+\SweaveOpts{keep.source=TRUE}
+
 %\VignetteIndexEntry{How to use the package nsRFA: example 1}
 
 
@@ -143,7 +145,8 @@ whose RMSE and RMSEjk are:
 nregr <- dim(multregr$subselect)[1]
 diagn <- data.frame(matrix(NA, nrow=nregr, ncol=2)); names(diagn) <- c("RMSE","RMSEjk")
 for (i in 1:nregr){
- f <- paste("logDm ~", paste(colnames(multregr$subselect)[multregr$subselect[i,]], collapse=" + "))
+ f <- paste("logDm ~", paste(colnames(multregr$subselect)[multregr$subselect[i,]], 
+                             collapse=" + "))
  regr <- lm(f, logattributes)
  fitt <- regr$fitted.values
  crossval <- jackknife1.lm(regr)
@@ -161,7 +164,8 @@ trasfregr_log <- bestlm(logDm, mixedattributes, kmax=3, nbest=4); trasfregr_log
 nregr <- dim(trasfregr_log$subselect)[1]
 diagn <- data.frame(matrix(NA, nrow=nregr, ncol=2)); names(diagn) <- c("RMSE","RMSEjk")
 for (i in 1:nregr){
- f <- paste("logDm ~", paste(colnames(trasfregr_log$subselect)[trasfregr_log$subselect[i,]], collapse=" + "))
+ f <- paste("logDm ~", paste(colnames(trasfregr_log$subselect)[trasfregr_log$subselect[i,]], 
+                             collapse=" + "))
  regr <- lm(f, mixedattributes)
  fitt <- regr$fitted.values
  crossval <- jackknife1.lm(regr)
@@ -178,7 +182,8 @@ trasfregr_sqrt <- bestlm(sqrtDm, mixedattributes, kmax=3, nbest=4); trasfregr_sq
 nregr <- dim(trasfregr_sqrt$subselect)[1]
 diagn <- data.frame(matrix(NA, nrow=nregr, ncol=2)); names(diagn) <- c("RMSE","RMSEjk")
 for (i in 1:nregr){
- f <- paste("sqrtDm ~", paste(colnames(trasfregr_sqrt$subselect)[trasfregr_sqrt$subselect[i,]], collapse=" + "))
+ f <- paste("sqrtDm ~", paste(colnames(trasfregr_sqrt$subselect)[trasfregr_sqrt$subselect[i,]], 
+                              collapse=" + "))
  regr <- lm(f, mixedattributes)
  fitt <- regr$fitted.values
  crossval <- jackknife1.lm(regr)
@@ -195,7 +200,8 @@ trasfregr_sqrt3 <- bestlm(sqrt3Dm, mixedattributes, kmax=3, nbest=4); trasfregr_
 nregr <- dim(trasfregr_sqrt3$subselect)[1]
 diagn <- data.frame(matrix(NA, nrow=nregr, ncol=2)); names(diagn) <- c("RMSE","RMSEjk")
 for (i in 1:nregr){
- f <- paste("sqrt3Dm ~", paste(colnames(trasfregr_sqrt3$subselect)[trasfregr_sqrt3$subselect[i,]], collapse=" + "))
+ f <- paste("sqrt3Dm ~", paste(colnames(trasfregr_sqrt3$subselect)[trasfregr_sqrt3$subselect[i,]], 
+                               collapse=" + "))
  regr <- lm(f, mixedattributes)
  fitt <- regr$fitted.values
  crossval <- jackknife1.lm(regr)
@@ -379,7 +385,8 @@ bestlm(LM15[,"lcv"], parameters15[,3:16], kmax=3)
 @
 or reasoning with distance matrices:
 <<>>=
-bestlm(as.numeric(AD.dist(D15,cod15)), data.frame(apply(parameters15[,3:16], 2, dist)), kmax=3)
+bestlm(as.numeric(AD.dist(D15,cod15)), data.frame(apply(parameters15[,3:16], 2, dist)), 
+       kmax=3)
 @
 
 We choose Hm and Ybar as classification variables.
@@ -397,7 +404,8 @@ Cluster formation:
 <<label=clusteranalysis>>=
 param <- parameters15[c("Hm","Ybar")]
 n <- dim(param)[1]; k <- dim(param)[2]
-param.norm <- (param - matrix(mean(param), nrow=n, ncol=k, byrow=TRUE))/matrix(sd(param), nrow=n, ncol=k, byrow=TRUE)
+param.norm <- (param - matrix(mean(param), nrow=n, ncol=k, byrow=TRUE))/
+              matrix(sd(param), nrow=n, ncol=k, byrow=TRUE)
 @
 <<echo=FALSE>>=
 set.seed(10)
@@ -442,9 +450,11 @@ op <- par(mfrow=c(2,2))
  plot(parameters15[c("Hm","Ybar")], col=clusters, pch=clusters, cex=0.6,
       main="Clusters in the space of classification variables", cex.main=1, font.main=1)
   grid()
-  points(tapply(parameters15["Hm"][,], clusters, mean), tapply(parameters15["Ybar"][,], clusters, mean),
+  points(tapply(parameters15["Hm"][,], clusters, mean), 
+         tapply(parameters15["Ybar"][,], clusters, mean),
          col=c(1:nclusters), pch=c(1:nclusters))
- legend("topleft",paste("clust ",c(1:nclusters)), col=c(1:nclusters), pch=c(1:nclusters), bty="n")
+ legend("topleft", paste("clust ",c(1:nclusters)), 
+        col=c(1:nclusters), pch=c(1:nclusters), bty="n")
 
  plot(parameters15[c("Xbar","Ybar")], col=clusters, pch=clusters, cex=0.6,
       main="Clusters in geographical space", cex.main=1, font.main=1)
@@ -479,7 +489,8 @@ Model selection (L-moments ratio diagram):
 <<fig=TRUE, width=7, height=7>>=
 Lmoment.ratio.diagram()
  points(regLM15[,2:3], col=c(1:nclusters), pch=c(1:nclusters))
- legend("bottomleft",paste("clust ", c(1:nclusters)), col=c(1:nclusters), pch=c(1:nclusters), bty="n")
+ legend("bottomleft",paste("clust ", c(1:nclusters)), 
+        col=c(1:nclusters), pch=c(1:nclusters), bty="n")
 @
 %<<echo=FALSE, eval=TRUE, results=hide>>=
 %dev.off()
@@ -536,7 +547,8 @@ Expressed in the other way:
 <<>>=
 for (i in 1:nclusters) {
  cat(paste("\nCluster",i,":\n"))
- print(format(par2mom.gamma(paramgamma[[i]]$xi, paramgamma[[i]]$beta, paramgamma[[i]]$alfa)))
+ print(format(par2mom.gamma(paramgamma[[i]]$xi, 
+       paramgamma[[i]]$beta, paramgamma[[i]]$alfa)))
 }
 @
 
@@ -548,12 +560,15 @@ png(file="GrowthCurves1.png", height=960, width=960, res=144, pointsize=9)
 <<fig=FALSE>>=
 op <- par(mfrow=c(2,2))
  for (i in 1:nclusters) {
-  FF <- F.gamma(D15adim[indclusters==i], paramgamma[[i]]$xi, paramgamma[[i]]$beta, paramgamma[[i]]$alfa)
-  regionalplotpos(D15adim[indclusters==i], cod15[indclusters==i], xlab=paste("cluster", i),
+  FF <- F.gamma(D15adim[indclusters==i], paramgamma[[i]]$xi, 
+                paramgamma[[i]]$beta, paramgamma[[i]]$alfa)
+  regionalplotpos(D15adim[indclusters==i], cod15[indclusters==i], 
+                  xlab=paste("cluster", i),
                   main="Empirical distributions", cex.main=1, font.main=1)
   lines(sort(D15adim[indclusters==i]), sort(FF))
   nomi <- names(clusters)[clusters==i]
-  legend("bottomright", legend=nomi, pch=c(1:length(nomi)), col=c(1:length(nomi)), bty="n", cex=.9)
+  legend("bottomright", legend=nomi, pch=c(1:length(nomi)), 
+         col=c(1:length(nomi)), bty="n", cex=.9)
  }
 par(op)
 @
@@ -574,11 +589,14 @@ png(file="GrowthCurves2.png", height=960, width=960, res=144, pointsize=9)
 op <- par(mfrow=c(2,2))
  for (i in 1:nclusters) {
   Fs <- seq(0.001,0.999,by=.001)
-  regionalnormplot(D15adim[indclusters==i], cod15[indclusters==i], xlab=paste("cluster", i),
-                  main="Empirical distributions", cex.main=1, font.main=1)
-  normpoints(invF.gamma(Fs, paramgamma[[i]]$xi, paramgamma[[i]]$beta, paramgamma[[i]]$alfa), type="l")
+  regionalnormplot(D15adim[indclusters==i], cod15[indclusters==i], 
+                   xlab=paste("cluster", i),
+                   main="Empirical distributions", cex.main=1, font.main=1)
+  normpoints(invF.gamma(Fs, paramgamma[[i]]$xi, paramgamma[[i]]$beta, 
+                        paramgamma[[i]]$alfa), type="l")
   nomi <- names(clusters)[clusters==i]
-  legend("bottomright", legend=nomi, pch=c(1:length(nomi)), col=c(1:length(nomi)), bty="n", cex=.9)
+  legend("bottomright", legend=nomi, pch=c(1:length(nomi)), 
+         col=c(1:length(nomi)), bty="n", cex=.9)
  }
 par(op)
 @
@@ -600,10 +618,12 @@ spess=c(1, 1.5, 2, 1.3)
 Fs <- seq(0.001,0.999,by=.001)
 lognormplot(D15adim, line=FALSE, type="n", )
 for (i in 1:nclusters) {
- qq <- invF.gamma(Fs, paramgamma[[i]]$xi, paramgamma[[i]]$beta, paramgamma[[i]]$alfa)
+ qq <- invF.gamma(Fs, paramgamma[[i]]$xi, paramgamma[[i]]$beta, 
+                  paramgamma[[i]]$alfa)
  normpoints(qq, type="l", lty=i, col=i, lwd=spess[i])
 }
-legend("bottomright", paste("cluster ", c(1:nclusters)), col=c(1:nclusters), lty=c(1:nclusters), lwd=spess, bty="n")
+legend("bottomright", paste("cluster ", c(1:nclusters)), 
+       col=c(1:nclusters), lty=c(1:nclusters), lwd=spess, bty="n")
 @
 %<<echo=FALSE, eval=TRUE, results=hide>>=
 %dev.off()

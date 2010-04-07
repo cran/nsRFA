@@ -17,6 +17,8 @@
 \setlength{\topmargin}{-10mm}
 
 
+\SweaveOpts{keep.source=TRUE}
+
 %\VignetteIndexEntry{How to use the package nsRFA: example 2}
 
 
@@ -136,7 +138,8 @@ roi01.50year <- new.env()
 for(i in 1:696) {
  print(paste(i,"/ 696"))
  assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
-        row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW",station.year=250,Nsim=100), env=roi01.50year)
+     row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW",station.year=250,Nsim=100), 
+     env=roi01.50year)
 }
 roi01.50year <- as.list(roi01.50year)
 @
@@ -158,7 +161,8 @@ roi01.100year <- new.env()
 for(i in 1:696) {
  print(paste(i,"/ 696"))
  assign(as.character(row.names(roi.cd)[i]), roi.st.year(roi.cd[i,],as.data.frame(roi.cd),
-        row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW",station.year=500,Nsim=100), env=roi01.100year)
+     row.names(roi.cd),am696[,"am"],am696[,"number"],test="HW",station.year=500,Nsim=100), 
+     env=roi01.100year)
 }
 roi01.100year <- as.list(roi01.100year)
 @
@@ -172,14 +176,16 @@ gH2gr4.100year <- sum(test.100year["H2",]>4)/696 #   0.15
 @
 
 <<eval=FALSE>>=
-table16.2 <- data.frame(signif(rbind(c(mL.50year,mH2.50year,gH2gr2.50year*100,gH2gr4.50year*100),
-             c(mL.100year,mH2.100year,gH2gr2.100year*100,gH2gr4.100year*100)),3), row.names=c("50-year","100-year"))
+table16.2 <- data.frame(signif(rbind(c(mL.50year,mH2.50year,
+                                       gH2gr2.50year*100,gH2gr4.50year*100),
+              c(mL.100year,mH2.100year,gH2gr2.100year*100,gH2gr4.100year*100)),3), 
+              row.names=c("50-year","100-year"))
 names(table16.2) <- c("Avg. n sites","m(H2)","% H2>2","% H2>4")
 print(table16.2)
 @
 <<echo=FALSE>>=
 table16.2 <- data.frame(signif(rbind(c(11.2,1.53,0.34*100,0.07*100),
-             c(21.8,2.19,0.52*100,0.15*100)),3), row.names=c("50-year","100-year"))
+              c(21.8,2.19,0.52*100,0.15*100)),3), row.names=c("50-year","100-year"))
 names(table16.2) <- c("Avg. n sites","m(H2)","% H2>2","% H2>4")
 print(table16.2)
 @
@@ -201,12 +207,18 @@ png(file="ex16_3page164.png", height=480, width=960, res=144, pointsize=9)
 <<fig=FALSE>>=
 Lmomenti696 <- as.data.frame(Lmomenti696)
 par(mfrow=c(1,2))
- plot(Lmomenti696[c("lca","lcv")],xlab="L-CA",ylab="L-CV",pch=".",cex=2,main="54088"); grid()
- points(Lmomenti696[c("54088"),c("lca","lcv")],pch=19,col="red",cex=1)
- points(Lmomenti696[prova54088$region[-1],c("lca","lcv")],pch=19,cex=1)
- plot(Lmomenti696[,c("lca","lkur")],xlab="L-CA",ylab="L-kur",pch=".",cex=2,main="28018"); grid()
- points(Lmomenti696[c("28018"),c("lca","lcv")],pch=19,col="red",cex=1)
- points(Lmomenti696[prova28018$region[-1],c("lca","lcv")],pch=19,cex=1)
+ plot(Lmomenti696[c("lca","lcv")], xlab="L-CA", ylab="L-CV",
+      pch=".", cex=2, main="54088"); grid()
+ points(Lmomenti696[c("54088"), c("lca","lcv")],
+        pch=19, col="red", cex=1)
+ points(Lmomenti696[prova54088$region[-1], c("lca","lcv")],
+        pch=19, cex=1)
+ plot(Lmomenti696[,c("lca","lkur")], xlab="L-CA", ylab="L-kur",
+      pch=".", cex=2, main="28018"); grid()
+ points(Lmomenti696[c("28018"), c("lca","lcv")],
+        pch=19, col="red", cex=1)
+ points(Lmomenti696[prova28018$region[-1], c("lca","lcv")],
+        pch=19, cex=1)
 par(mfrow=c(1,1))
 @
 <<echo=FALSE, eval=TRUE, results=hide>>=
@@ -233,7 +245,8 @@ figure16.9a <- function (x,r,cd) {
  par(mfrow=c(2,3))
   hist(log(cd[,"dtm_area"]),col="lightgray",border="lightgray",
        main="",xlab="AREA",axes=FALSE)
-  axis(1,at=c(log(1),log(10),log(100),log(1000),log(10000)),label=c("1","10","100","1000","10000"))
+  axis(1,at=c(log(1),log(10),log(100),log(1000),log(10000)),
+       label=c("1","10","100","1000","10000"))
   axis(2,at=seq(0,1,by=.05)*n,label=seq(0,1,by=.05))
   box()
   points(cbind(log(cd.r[-1,"dtm_area"]),0),pch=19,cex=.7)

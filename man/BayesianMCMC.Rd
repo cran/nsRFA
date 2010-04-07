@@ -25,8 +25,8 @@
  \item{xhist}{vector of historical data}
  \item{infhist}{inferior limit for historical data}
  \item{suphist}{superior limit for historical data}
- \item{nbans}{period (in years) over which the threshold has been exceeded by historical data}
- \item{seuil}{threshold exceeded by historical data}
+ \item{nbans}{period (in years) over which the threshold has not been exceeded except for the historical data}
+ \item{seuil}{threshold not exceeded in the historical period except for the historical data}
  \item{nbpas}{number of iterations for the MCMC algorithm}
  \item{nbchaines}{number of chains for the MCMC algorithm}
  \item{confint}{confidence limits for the flood quantiles}
@@ -110,7 +110,7 @@ It is still unstable and not all the distributions have been tested.
 
   \code{plot.BayesianMCMC} plots the following figures:
 
-   \code{1} data as plotting position, fitted distribution (maximum likelihood) and confidence intervals;
+   \code{1} data as plotting position (the Cunanne plotting position \eqn{a = 0.4} is used), fitted distribution (maximum likelihood) and confidence intervals;
 
    \code{2} diagnostic plot of the MCMC simulation (parameters);
 

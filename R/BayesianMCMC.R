@@ -242,10 +242,11 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
  X <- c(0, 1.3*max(c(x$xcont, x$xhist, x$infhist, x$suphist), na.rm=TRUE))
  plot(T, X, type="n", log="x", ...)
  grid(equilogs=FALSE)
- .pointspos3 (x$xcont, x$xhist, x$infhist, x$suphist, x$nbans, x$seuil)
+ ret <- .pointspos3 (x$xcont, x$xhist, x$infhist, x$suphist, x$nbans, x$seuil)
  lines(x$returnperiods, x$quantilesML)
  lines(x$returnperiods, x$intervals[1,], lty=2)
  lines(x$returnperiods, x$intervals[2,], lty=2)
+ invisible(ret)
 }
 
 .plotdiagnMCMC03 <- function(x, ...) {
@@ -410,7 +411,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 .pointspos3 <- function (xcont, xhist, infhist, suphist, nbans, seuil, ...)
 {
  if(all(is.na(c(xhist, infhist, suphist, seuil)))) {
-  # Calcul sur les seules données systèmatiques
+  # Calcul sur les seules données systèmatiques (Cunnane plotting position)
   xcont <- sort(xcont, decreasing=TRUE)
   F <- c(1:length(xcont))
   F <- 1 - ((F - 0.4)/(length(xcont) + 1 - 2*0.4))
@@ -419,6 +420,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   #plot(T, x, log="x", type="n", ...)
   #grid(equilogs = FALSE)
   points(T, x)
+  invisible(cbind(T,x))
  }
  else if (all(is.na(c(infhist, suphist))) & all(!is.na(c(xhist, seuil, nbans)))) {
   # Calcul avec info censurée mais débits historiques connus (Stedinger et Cohn, Naulet cas b)
@@ -448,6 +450,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
    points(T2[1:soprasoglia], xhist2[1:soprasoglia])
    points(T2[-c(1:soprasoglia)], xhist2[-c(1:soprasoglia)], pch=19)
   }
+  invisible(cbind(T,x))
  }
  else if (all(is.na(c(xhist, suphist))) & all(!is.na(c(infhist, seuil, nbans)))) {
   # Calcul avec info censurée mais débits historiques non connus (Stedinger et Cohn, Naulet cas a)
@@ -480,6 +483,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
    points(T2[-c(1:soprasoglia)], infhist2[-c(1:soprasoglia)], pch=24, bg=1)
    segments(T2[-c(1:soprasoglia)], infhist2[-c(1:soprasoglia)], T2[-c(1:soprasoglia)], 10*max(x), lty=3)
   }
+  invisible(cbind(T,x))
  }
  else if (all(is.na(c(xhist))) & all(!is.na(c(infhist, suphist, seuil, nbans)))) {
   # Calcul avec prise en compte des seuls intervalles d'estimation de débit
@@ -498,7 +502,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xx2 <- 1 - ((xx2 - 0.4)/(length(mezzohist2) + 1 - 2*0.4)*(1 - xseuil))
   T2 <- 1/(1 - xx2)
 
-  x <- c(xcont2, mezzohist2)
+  x <- c(xcont2, infhist2)
   T <- c(T1, T2)
   #plot(T, x, log="x", type="n", ...)
   #grid(equilogs = FALSE)
@@ -515,6 +519,7 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
    points(T2[-c(1:soprasoglia)], suphist2[-c(1:soprasoglia)], pch=25, bg=1)
    segments(T2[-c(1:soprasoglia)], infhist2[-c(1:soprasoglia)], T2[-c(1:soprasoglia)], suphist2[-c(1:soprasoglia)], lty=3)
   }
+  invisible(cbind(T,x))
  }
 }
 

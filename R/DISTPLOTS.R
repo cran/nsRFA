@@ -1041,3 +1041,226 @@ pointsposRP <- function(x, a=0, orient="xF", ...) {
 }
 
 
+
+
+# ---------------------------------------------------------------- #
+
+plotposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, col12=c(1,1), a=0, orient="xF", ...) {
+ # Method in Maidment pag 18.41-42:
+ #  Jery R. Stedinger, Richard M. Vogel, and Eﬁ Foufoula-Georgiou. Frequency analysis of extreme events. In David R. Maidment, editor, Hand-Book of Hydrology, chapter 18. McGraw-Hill Companies, international edition, 1993.
+
+  # see BayesianMCMC for the notation
+  # col12 = colors for systematic and historical points
+ if(all(is.na(c(xhist, infhist, suphist, seuil)))) {
+  # systematic data only
+  n <- length(xcont)
+  i <- n + 1 - rank(xcont, ties.method="first")
+  q <- ((i - a)/(n + 1 - 2*a))
+  T <- 1/q
+  x <- xcont
+  if (orient=="xF") plot(x,T, log="y", col=col12[1], ...)
+  else if (orient=="Fx") plot(T,x, log="x", col=col12[1], ...)
+  else stop("plotposRPhist(xcont, xhist, infhist, suphist, nbans, seuil, col12, a, orient=, ...): orient unknown")
+  grid(equilogs=FALSE)
+  invisible(cbind(T,x))
+ }
+ else if (all(is.na(c(infhist, suphist))) & all(!is.na(c(xhist, seuil, nbans)))) {
+  # historical data known
+  xcont_u <- xcont[xcont > seuil]
+  xcont_l <- xcont[xcont <= seuil]
+  xhist_u <- xhist[xhist > seuil]
+  xhist_l <- xhist[xhist <= seuil]  
+  x_u <- c(xcont_u, xhist_u)
+   col_x_u <- rep(col12, c(length(xcont_u), length(xhist_u)))
+  x_l <- c(xcont_l, xhist_l)
+   col_x_l <- rep(col12, c(length(xcont_l), length(xhist_l)))
+
+  r <- length(x_u)                                    # number of times the threshold is exceeded
+  se <- length(x_l)                                   # number of times the threshold is not exceeded
+  n <- length(xcont) + nbans                          # length of the all period (historic + recent)
+  qe <- r/n                                           # exceedence probability of the perception threshold
+
+  i <- r + 1 - rank(x_u, ties.method="first")
+  qi <- qe*((i - a)/(r + 1 - 2*a))                    # eq. 18.6.11 in Maidment
+  T_u <- 1/qi                                          # return periods above threshold
+
+  j <- se + 1 - rank(x_l, ties.method="first")
+  qj <- qe + (1 - qe)*((j - a)/(se + 1 - 2*a))        # eq. 18.6.12 in Maidment
+  T_l <- 1/qj                                          # return periods below threshold
+
+  x <- c(x_l, x_u)
+  T <- c(T_l, T_u)
+  colori <- c(col_x_l, col_x_u)
+  if (orient=="xF") {
+   plot(x,T, log="y", col=colori, ...)
+    abline(v=seuil, lty=3)
+  }
+  else if (orient=="Fx") {
+   plot(T,x, log="x", col=colori, ...) 
+   abline(h=seuil, lty=3)
+  }
+  else stop("plotposRPhist(xcont, xhist, infhist, suphist, nbans, seuil, col12, a, orient=, ...): orient unknown")
+  grid(equilogs=FALSE)
+  invisible(cbind(T,x))
+ }
+ else if (all(is.na(c(xhist))) & all(!is.na(c(infhist, suphist, seuil, nbans)))) {
+  # just ranges for the historicals
+  xhist <- (infhist + suphist)/2
+  xcont_u <- xcont[xcont > seuil]
+  xcont_l <- xcont[xcont <= seuil]
+  xhist_u <- xhist[xhist > seuil]
+  xhist_l <- xhist[xhist <= seuil]
+  x_u <- c(xcont_u, xhist_u)
+   col_x_u <- rep(c(col12[1],NA), c(length(xcont_u), length(xhist_u)))
+  x_l <- c(xcont_l, xhist_l)
+   col_x_l <- rep(c(col12[1],NA), c(length(xcont_l), length(xhist_l)))
+
+  r <- length(x_u)                                    # number of times the threshold is exceeded
+  se <- length(x_l)                                   # number of times the threshold is not exceeded
+  n <- length(xcont) + nbans                          # length of the all period (historic + recent)
+  qe <- r/n                                           # exceedence probability of the perception threshold
+
+  i <- r + 1 - rank(x_u, ties.method="first")
+  qi <- qe*((i - a)/(r + 1 - 2*a))                    # eq. 18.6.11 in Maidment
+  T_u <- 1/qi                                          # return periods above threshold
+
+  j <- se + 1 - rank(x_l, ties.method="first")
+  qj <- qe + (1 - qe)*((j - a)/(se + 1 - 2*a))        # eq. 18.6.12 in Maidment
+  T_l <- 1/qj                                          # return periods below threshold
+
+  x <- c(x_l, x_u)
+  T <- c(T_l, T_u)
+
+  Thist <- T[x %in% xhist]
+  colori <- c(col_x_l, col_x_u)
+  if (orient=="xF") {
+   plot(x,T, log="y", col=colori, ...)
+    abline(v=seuil, lty=3)
+    points(infhist, Thist, pch=24, bg=col12[2], col=col12[2])
+    points(suphist, Thist, pch=25, bg=col12[2], col=col12[2])
+    segments(infhist, Thist, suphist, Thist, lty=3, col=col12[2])
+  }
+  else if (orient=="Fx") {
+   plot(T,x, log="x", col=colori, ...)
+    abline(h=seuil, lty=3)
+    points(Thist, infhist, pch=24, bg=col12[2], col=col12[2])
+    points(Thist, suphist, pch=25, bg=col12[2], col=col12[2])
+    segments(Thist, infhist, Thist, suphist, lty=3, col=col12[2])
+  }
+  else stop("plotposRPhist(xcont, xhist, infhist, suphist, nbans, seuil, col12, a, orient=, ...): orient unknown")
+  grid(equilogs=FALSE)
+  invisible(cbind(T,x))
+ }
+}
+
+
+# ---------------------------------------------------------------- #
+
+pointsposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, col12=c(1,1), a=0, orient="xF", ...) {
+ # Method in Maidment pag 18.41-42:
+ #  Jery R. Stedinger, Richard M. Vogel, and Eﬁ Foufoula-Georgiou. Frequency analysis of extreme events. In David R. Maidment, editor, Hand-Book of Hydrology, chapter 18. McGraw-Hill Companies, international edition, 1993.
+
+  # see BayesianMCMC for the notation
+  # col12 = colors for systematic and historical points
+ if(all(is.na(c(xhist, infhist, suphist, seuil)))) {
+  # systematic data only
+  n <- length(xcont)
+  i <- n + 1 - rank(xcont, ties.method="first")
+  q <- ((i - a)/(n + 1 - 2*a))
+  T <- 1/q
+  x <- xcont
+  if (orient=="xF") points(x,T, col=col12[1], ...)
+  else if (orient=="Fx") points(T,x, col=col12[1], ...)
+  else stop("plotposRPhist(xcont, xhist, infhist, suphist, nbans, seuil, col12, a, orient=, ...): orient unknown")
+  grid(equilogs=FALSE)
+  invisible(cbind(T,x))
+ }
+ else if (all(is.na(c(infhist, suphist))) & all(!is.na(c(xhist, seuil, nbans)))) {
+  # historical data known
+  xcont_u <- xcont[xcont > seuil]
+  xcont_l <- xcont[xcont <= seuil]
+  xhist_u <- xhist[xhist > seuil]
+  xhist_l <- xhist[xhist <= seuil]  
+  x_u <- c(xcont_u, xhist_u)
+   col_x_u <- rep(col12, c(length(xcont_u), length(xhist_u)))
+  x_l <- c(xcont_l, xhist_l)
+   col_x_l <- rep(col12, c(length(xcont_l), length(xhist_l)))
+
+  r <- length(x_u)                                    # number of times the threshold is exceeded
+  se <- length(x_l)                                   # number of times the threshold is not exceeded
+  n <- length(xcont) + nbans                          # length of the all period (historic + recent)
+  qe <- r/n                                           # exceedence probability of the perception threshold
+
+  i <- r + 1 - rank(x_u, ties.method="first")
+  qi <- qe*((i - a)/(r + 1 - 2*a))                    # eq. 18.6.11 in Maidment
+  T_u <- 1/qi                                          # return periods above threshold
+
+  j <- se + 1 - rank(x_l, ties.method="first")
+  qj <- qe + (1 - qe)*((j - a)/(se + 1 - 2*a))        # eq. 18.6.12 in Maidment
+  T_l <- 1/qj                                          # return periods below threshold
+
+  x <- c(x_l, x_u)
+  T <- c(T_l, T_u)
+  colori <- c(col_x_l, col_x_u)
+  if (orient=="xF") {
+   points(x,T, col=colori, ...)
+    abline(v=seuil, lty=3)
+  }
+  else if (orient=="Fx") {
+   points(T,x, col=colori, ...) 
+   abline(h=seuil, lty=3)
+  }
+  else stop("plotposRPhist(xcont, xhist, infhist, suphist, nbans, seuil, col12, a, orient=, ...): orient unknown")
+  grid(equilogs=FALSE)
+  invisible(cbind(T,x))
+ }
+ else if (all(is.na(c(xhist))) & all(!is.na(c(infhist, suphist, seuil, nbans)))) {
+  # just ranges for the historicals
+  xhist <- (infhist + suphist)/2
+  xcont_u <- xcont[xcont > seuil]
+  xcont_l <- xcont[xcont <= seuil]
+  xhist_u <- xhist[xhist > seuil]
+  xhist_l <- xhist[xhist <= seuil]
+  x_u <- c(xcont_u, xhist_u)
+   col_x_u <- rep(c(col12[1],NA), c(length(xcont_u), length(xhist_u)))
+  x_l <- c(xcont_l, xhist_l)
+   col_x_l <- rep(c(col12[1],NA), c(length(xcont_l), length(xhist_l)))
+
+  r <- length(x_u)                                    # number of times the threshold is exceeded
+  se <- length(x_l)                                   # number of times the threshold is not exceeded
+  n <- length(xcont) + nbans                          # length of the all period (historic + recent)
+  qe <- r/n                                           # exceedence probability of the perception threshold
+
+  i <- r + 1 - rank(x_u, ties.method="first")
+  qi <- qe*((i - a)/(r + 1 - 2*a))                    # eq. 18.6.11 in Maidment
+  T_u <- 1/qi                                          # return periods above threshold
+
+  j <- se + 1 - rank(x_l, ties.method="first")
+  qj <- qe + (1 - qe)*((j - a)/(se + 1 - 2*a))        # eq. 18.6.12 in Maidment
+  T_l <- 1/qj                                          # return periods below threshold
+
+  x <- c(x_l, x_u)
+  T <- c(T_l, T_u)
+
+  Thist <- T[x %in% xhist]
+  colori <- c(col_x_l, col_x_u)
+  if (orient=="xF") {
+   points(x,T, col=colori, ...)
+    abline(v=seuil, lty=3)
+    points(infhist, Thist, pch=24, bg=col12[2], col=col12[2])
+    points(suphist, Thist, pch=25, bg=col12[2], col=col12[2])
+    segments(infhist, Thist, suphist, Thist, lty=3, col=col12[2])
+  }
+  else if (orient=="Fx") {
+   points(T,x, col=colori, ...)
+    abline(h=seuil, lty=3)
+    points(Thist, infhist, pch=24, bg=col12[2], col=col12[2])
+    points(Thist, suphist, pch=25, bg=col12[2], col=col12[2])
+    segments(Thist, infhist, Thist, suphist, lty=3, col=col12[2])
+  }
+  else stop("plotposRPhist(xcont, xhist, infhist, suphist, nbans, seuil, col12, a, orient=, ...): orient unknown")
+  grid(equilogs=FALSE)
+  invisible(cbind(T,x))
+ }
+}
+

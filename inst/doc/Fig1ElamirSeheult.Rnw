@@ -18,6 +18,8 @@
 \setlength{\topmargin}{-10mm}
 
 
+\SweaveOpts{keep.source=TRUE}
+
 %\VignetteIndexEntry{Figure 1 in Elamir and Seheult (2004)}
 
 

@@ -16,6 +16,7 @@
 \alias{gumbelplot}
 \alias{frechetplot}
 \alias{weibullplot}
+\alias{plotposRPhist}
 \alias{pointspos}
 \alias{pointsposRP}
 \alias{loglogpoints}
@@ -34,6 +35,7 @@
 \alias{regionalparetoplot}
 \alias{regionalgumbelplot}
 \alias{regionalfrechetplot}
+\alias{pointsposRPhist}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Empirical distribution plots}
 \description{
@@ -54,6 +56,7 @@
  gumbelplot (x, a=0, orient="xF", line=FALSE, ...)
  frechetplot (x, a=0, orient="xF", line=FALSE,...)
  weibullplot (x, a=0, orient="xF", line=FALSE,...)
+ plotposRPhist (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, col12=c(1,1), a=0, orient="xF", ...)
  pointspos (x, a=0, orient="xF", ...)
  pointsposRP (x, a=0, orient="xF", ...)
  loglogpoints (x, a=0, orient="xF", ...)
@@ -72,16 +75,24 @@
  regionalparetoplot (x, cod, a=0, orient="xF", ...)
  regionalgumbelplot (x, cod, a=0, orient="xF", ...)
  regionalfrechetplot (x, cod, a=0, orient="xF", ...)
+ pointsposRPhist (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, col12=c(1,1), a=0, orient="xF", ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{vector representing a data-sample}
+ \item{xcont}{vector of systematic data (see \code{\link{BayesianMCMC}})}
+ \item{xhist}{vector of historical data (see \code{\link{BayesianMCMC}})}
+ \item{infhist}{inferior limit for historical data (see \code{\link{BayesianMCMC}})}
+ \item{suphist}{superior limit for historical data (see \code{\link{BayesianMCMC}})}
+ \item{nbans}{period (in years) over which the threshold has not been exceeded except for the historical data (see \code{\link{BayesianMCMC}})}
+ \item{seuil}{threshold non exceeded in the historical period except for the historical data (see \code{\link{BayesianMCMC}})}
  \item{df}{degrees of freedom (> 0, maybe non-integer) of the Student t distribution.  'df = Inf' is allowed.}
  \item{shape}{shape parameter of the distribution}
  \item{a}{plotting position parameter, normally between 0 and 0.5 (the default value here, corresponding to the Hazen plotting position, see details)}
  \item{orient}{if \code{orient="xF"} the abscissa will be x and the ordinate F}
  \item{line}{if TRUE (default) a straight line indicating the normal, lognormal, ..., distribution with parameters estimated from \code{x} is plotted}
  \item{cod}{array that defines the data subdivision among sites}
+ \item{col12}{vector of 2 elements containing the colors for the systematic and historical data respectively}
  \item{...}{graphical parameters as \code{xlab}, \code{ylab}, \code{main}, ...}
 }
 \details{
@@ -115,6 +126,8 @@ For large sample size, \eqn{n}, there is little difference between these various
   \code{gumbelpoints} can be used either on \code{gumbelplot} or \code{frechetplot} (since the log-transformed Frechet random variable is distributed as a Gumbel).
 
  \code{loglogplot} plots the logarithm of sample vs the logarithm of the empirical exceedance probability. For the log-log plot, the tail probability is represented by a straight line for power-law distributions (e.g. log-pearson, log-logistic, Frechet, ..., HEAVY TAIL), but not for the other subexponential or exponential distributions (e.g. gumbel, gamma, Pearson type III, ..., MODERATE TAIL); see El Adlouni et al. (2008).
+
+ \code{plotposRPhist} is based on the method in Stedinger et al. (1993, pp. 18.41-42).
 }
 %\references{}
 %\author{Alberto Viglione}
