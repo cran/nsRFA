@@ -11,12 +11,15 @@
  Plots from books and articles.
 }
 \usage{
- Lmoment.ratio.diagram ()
- Lspace.HWvsAD ()
- Lspace.limits ()
+ Lmoment.ratio.diagram (grid=TRUE, ...)
+ Lspace.HWvsAD (grid=TRUE, ...)
+ Lspace.limits (grid=TRUE, ...)
 }
 %- maybe also `usage' for other objects documented here.
-%\arguments{\item{}{}}
+\arguments{
+ \item{grid}{should a grid be plotted?}
+ \item{...}{other arguments}
+}
 %\details{}
 \value{
  \code{Lmoment.ratio.diagram} plots points corresponding to two parameters distributions and lines corresponding to three parameters distributions on the 'L-CA - L-kur' plane.

@@ -1,4 +1,4 @@
-Lmoment.ratio.diagram <- function() {
+Lmoment.ratio.diagram <- function(grid=TRUE, ...) {
 
   # INPUT
   # ...
@@ -15,9 +15,11 @@ Lmoment.ratio.diagram <- function() {
   # LN3 = lognormal
   # PE3 = Pearson type III
 
-  plot(c(-0.2,0.6),c(-0.1,0.4),type="n",xlab="L-CA",ylab="L-kur",main="")
-  abline(v=seq(-0.2,0.6,by=0.02),col="lightgray",lty = "dotted")
-  abline(h=seq(-0.1,0.4,by=0.02),col="lightgray",lty = "dotted")
+  plot(c(-0.2,0.6),c(-0.1,0.4),type="n",xlab="L-CA",ylab="L-kur",main="", ...)
+  if (grid) {
+   abline(v=seq(-0.2,0.6,by=0.02),col="lightgray",lty = "dotted")
+   abline(h=seq(-0.1,0.4,by=0.02),col="lightgray",lty = "dotted")
+  }
 
   GPA <- function(x) 0.20196*x + 0.95924*x^2 - 0.20096*x^3 + 0.04061*x^4
   curve(GPA, -0.2, 0.6, add=TRUE, lty=2)
@@ -49,17 +51,17 @@ Lmoment.ratio.diagram <- function() {
   #L <- c(0,1/6)
   points(0,1/6, pch=4, cex=1.2)
 
-  legend(0.6,-0.1,c("E","G","L","N","U"),pch=c(5,6,4,2,3),xjust=1,yjust=0,bty="n")
-  legend(-0.2,0.4,c("GLO","GEV","GPA","LN3","PE3"),lty=c(3,5,2,4,1),xjust=0,yjust=1,bty="n")
+  legend("bottomright", c("E","G","L","N","U"),pch=c(5,6,4,2,3),xjust=1,yjust=0,bty="n")
+  legend("topleft", c("GLO","GEV","GPA","LN3","PE3"),lty=c(3,5,2,4,1),xjust=0,yjust=1,bty="n")
 }
 
 
 # -------------------------------------------------------------------------------------------- #
 
-Lspace.HWvsAD <- function () {
+Lspace.HWvsAD <- function (grid=TRUE, ...) {
 
-  plot(c(-0.1,0.5),c(0.1,0.6),type="n",xlab="L-CA",ylab="L-CV")
-  grid()
+  plot(c(-0.1,0.5),c(0.1,0.6),type="n",xlab="L-CA",ylab="L-CV", ...)
+  if(grid) {grid()}
 
   abline(-0.2,1,lty=2)
   abline(0.4,1,lty=2)
@@ -74,12 +76,12 @@ Lspace.HWvsAD <- function () {
 
 # ------------------------------------------------------------------------------------------ #
 
-Lspace.limits <- function () {
+Lspace.limits <- function (grid=TRUE, ...) {
 
   # Produce una figura dello spazio di interesse
 
-  plot(c(-0.2,0.8),c(0.1,0.8),type="n",xlab="L-CA",ylab="L-CV")
-  grid()
+  plot(c(-0.2,0.8),c(0.1,0.8),type="n",xlab="L-CA",ylab="L-CV", ...)
+  if(grid) {grid()}
 
   abline(0.5,0.5,lty=3, col=1)
   abline(-0.2,1,lty=2, col=1)

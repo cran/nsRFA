@@ -1051,7 +1051,10 @@ plotposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
 
   # see BayesianMCMC for the notation
   # col12 = colors for systematic and historical points
- if(all(is.na(c(xhist, infhist, suphist, seuil)))) {
+ if (all(is.na(c(xcont, xhist, infhist, suphist, seuil)))) {
+  stop("plotposRPhist(xcont, xhist, infhist, suphist, nbans, seuil, ...): no input data")
+ }
+ else if (all(is.na(c(xhist, infhist, suphist, seuil)))) {
   # systematic data only
   n <- length(xcont)
   i <- n + 1 - rank(xcont, ties.method="first")
@@ -1066,17 +1069,22 @@ plotposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  }
  else if (all(is.na(c(infhist, suphist))) & all(!is.na(c(xhist, seuil, nbans)))) {
   # historical data known
-  xcont_u <- xcont[xcont > seuil]
-  xcont_l <- xcont[xcont <= seuil]
-  xhist_u <- xhist[xhist > seuil]
-  xhist_l <- xhist[xhist <= seuil]  
+  if (!all(is.na(xcont))) {
+   xcont_u <- xcont[xcont >= seuil]
+   xcont_l <- xcont[xcont < seuil]
+  } else {
+   xcont_u <- NULL
+   xcont_l <- NULL
+  }
+  xhist_u <- xhist[xhist >= seuil]
+  xhist_l <- xhist[xhist < seuil]  
   x_u <- c(xcont_u, xhist_u)
    col_x_u <- rep(col12, c(length(xcont_u), length(xhist_u)))
   x_l <- c(xcont_l, xhist_l)
    col_x_l <- rep(col12, c(length(xcont_l), length(xhist_l)))
 
   r <- length(x_u)                                    # number of times the threshold is exceeded
-  se <- length(x_l)                                   # number of times the threshold is not exceeded
+  se <- length(x_l)                               # number of times the threshold is not exceeded by station-record data
   n <- length(xcont) + nbans                          # length of the all period (historic + recent)
   qe <- r/n                                           # exceedence probability of the perception threshold
 
@@ -1086,7 +1094,7 @@ plotposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
 
   j <- se + 1 - rank(x_l, ties.method="first")
   qj <- qe + (1 - qe)*((j - a)/(se + 1 - 2*a))        # eq. 18.6.12 in Maidment
-  T_l <- 1/qj                                          # return periods below threshold
+  T_l <- 1/qj                                     # return periods below threshold
 
   x <- c(x_l, x_u)
   T <- c(T_l, T_u)
@@ -1106,10 +1114,15 @@ plotposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  else if (all(is.na(c(xhist))) & all(!is.na(c(infhist, suphist, seuil, nbans)))) {
   # just ranges for the historicals
   xhist <- (infhist + suphist)/2
-  xcont_u <- xcont[xcont > seuil]
-  xcont_l <- xcont[xcont <= seuil]
-  xhist_u <- xhist[xhist > seuil]
-  xhist_l <- xhist[xhist <= seuil]
+  if (!all(is.na(xcont))) {
+   xcont_u <- xcont[xcont >= seuil]
+   xcont_l <- xcont[xcont < seuil]
+  } else {
+   xcont_u <- NULL
+   xcont_l <- NULL
+  }
+  xhist_u <- xhist[xhist >= seuil]
+  xhist_l <- xhist[xhist < seuil]
   x_u <- c(xcont_u, xhist_u)
    col_x_u <- rep(c(col12[1],NA), c(length(xcont_u), length(xhist_u)))
   x_l <- c(xcont_l, xhist_l)
@@ -1162,7 +1175,10 @@ pointsposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, s
 
   # see BayesianMCMC for the notation
   # col12 = colors for systematic and historical points
- if(all(is.na(c(xhist, infhist, suphist, seuil)))) {
+ if (all(is.na(c(xcont, xhist, infhist, suphist, seuil)))) {
+  stop("plotposRPhist(xcont, xhist, infhist, suphist, nbans, seuil, ...): no input data")
+ }
+ else if (all(is.na(c(xhist, infhist, suphist, seuil)))) {
   # systematic data only
   n <- length(xcont)
   i <- n + 1 - rank(xcont, ties.method="first")
@@ -1177,10 +1193,15 @@ pointsposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, s
  }
  else if (all(is.na(c(infhist, suphist))) & all(!is.na(c(xhist, seuil, nbans)))) {
   # historical data known
-  xcont_u <- xcont[xcont > seuil]
-  xcont_l <- xcont[xcont <= seuil]
-  xhist_u <- xhist[xhist > seuil]
-  xhist_l <- xhist[xhist <= seuil]  
+  if (!all(is.na(xcont))) {
+   xcont_u <- xcont[xcont >= seuil]
+   xcont_l <- xcont[xcont < seuil]
+  } else {
+   xcont_u <- NULL
+   xcont_l <- NULL
+  }
+  xhist_u <- xhist[xhist >= seuil]
+  xhist_l <- xhist[xhist < seuil]  
   x_u <- c(xcont_u, xhist_u)
    col_x_u <- rep(col12, c(length(xcont_u), length(xhist_u)))
   x_l <- c(xcont_l, xhist_l)
@@ -1217,10 +1238,15 @@ pointsposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, s
  else if (all(is.na(c(xhist))) & all(!is.na(c(infhist, suphist, seuil, nbans)))) {
   # just ranges for the historicals
   xhist <- (infhist + suphist)/2
-  xcont_u <- xcont[xcont > seuil]
-  xcont_l <- xcont[xcont <= seuil]
-  xhist_u <- xhist[xhist > seuil]
-  xhist_l <- xhist[xhist <= seuil]
+  if (!all(is.na(xcont))) {
+   xcont_u <- xcont[xcont >= seuil]
+   xcont_l <- xcont[xcont < seuil]
+  } else {
+   xcont_u <- NULL
+   xcont_l <- NULL
+  }
+  xhist_u <- xhist[xhist >= seuil]
+  xhist_l <- xhist[xhist < seuil]
   x_u <- c(xcont_u, xhist_u)
    col_x_u <- rep(c(col12[1],NA), c(length(xcont_u), length(xhist_u)))
   x_l <- c(xcont_l, xhist_l)

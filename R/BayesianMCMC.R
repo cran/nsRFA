@@ -39,7 +39,10 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
  qq <- array(data=NA, dim=c(nbpas, length(nonexceedF), nbchaines))    # array 3D 
 
  # the following if-else selects the type of likelihood depending on the input provided
- if(all(is.na(c(xhist, infhist, suphist, seuil)))) {
+ if(all(is.na(c(xcont, xhist, infhist, suphist, seuil)))) {
+  stop("BayesianMCMC(xcont, xhist, infhist, suphist, nbpas, nbchaines, dist): no input data")
+ }
+ else if(all(is.na(c(xhist, infhist, suphist, seuil)))) {
   # Calcul sur les seules données systèmatiques
   funzionetest <- call(".lnvrais5", quote(parameters[1,,j]), quote(xcont), quote(dist))
   funzionecand <- call(".lnvrais5", quote(parameterscand), quote(xcont), quote(dist))
@@ -104,6 +107,7 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
 
  # Algorithm with repetitions
  # initialisation
+ #hasaltato=0
  propsaut <- array(data=NA, dim=c(nbpas, nbchaines))
  for (j in 1:nbchaines) {
   parameters[1,,j] <- .parameterscandMOD(parameters0, varparameters0, dist)   # forst step (see .parameterscandMOD below)
@@ -141,6 +145,21 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
    else {
     varparameters[i,,j] <- varparameters[i-1,,j]
    }
+   # ALTERNATIVE, IT DOES NOT SOLVE THE PROBLEM
+   #varparameters[i,,j] <- varparameters[i-1,,j]
+   #if (propsaut[i,j] < 0.33) {
+   # if (hasaltato == -1) {quale <- ifelse(quale < lpar, quale+1, 1)} else {quale <- sample(1:lpar, size=1)}
+   # varparameters[i,quale,j] <- varparameters[i-1,quale,j]*(1+(propsaut[i,j]-0.34)/0.34/10)
+   # hasaltato <- -1
+   #}
+   #else if (propsaut[i,j] > 0.35) {
+   # if (hasaltato == 1) {quale <- ifelse(quale < lpar, quale+1, 1)} else {quale <- sample(1:lpar, size=1)}
+   # varparameters[i,quale,j] <- varparameters[i-1,quale,j]*(1+(propsaut[i,j]-0.34)/0.34/10)
+   # hasaltato <- 1
+   #}
+   #else {
+   # hasaltato <- 0
+   #}
   }
  }
  nbpas <- nbpas - reject
@@ -155,6 +174,7 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
   dimnames(propsaut) <- list(c(1:nbpas), paste("chain", seq(1,nbchaines)))
 
  # The maximum likelihood is here performed simply taking the maximum of vraisdist
+ logML <- max(vraisdist)
  dummy1 <- which.max(apply(vraisdist, 2, max))
  dummy2 <- apply(vraisdist, 2, which.max)[dummy1]
  parametersML <- parameters[dummy2,,dummy1]
@@ -166,10 +186,34 @@ BayesianMCMC <- function (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
                 parameters0=parameters0, varparameters0=varparameters0,
                 vraisdist=vraisdist, propsaut=propsaut,
                 returnperiods=returnperiods, intervals=intervals,
-                parametersML=parametersML, quantilesML=qqML)
+                parametersML=parametersML, quantilesML=qqML, logML=logML)
  class(output) <- "BayesianMCMC"
  return(output)
 }
+
+
+
+
+BayesianMCMCcont <- function (x, nbpas=NA) {
+ if(is.na(nbpas)) nbpas <- x$nbpas
+ parameters0 <- x$parametersML
+ #varparameters0 <- apply(x$varparameters[x$nbpas,,],1,mean)
+ varparameters0 <- rowMeans(apply(x$parameters, c(2,3), var))
+ 
+ output <- BayesianMCMC (xcont=x$xcont, xhist=x$xhist, infhist=x$infhist, suphist=x$suphist,
+               nbans=x$nbans, seuil=x$seuil, nbpas=nbpas, nbchaines=x$nbchaines,
+               confint=x$confint, dist=x$dist,
+               apriori=x$apriori,
+               parameters0=parameters0, varparameters0=varparameters0)
+ if(output$logML < x$logML) {
+  output$logML <- x$logML
+  output$parametersML <- x$parametersML
+  output$quantilesML <- x$quantilesML
+ }
+ return(output)
+}
+
+
 
 
 # ----------------------------- #
@@ -818,10 +862,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]  
-  if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.GEV(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.GEV(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if ((k*(seuil-xi)/alfa) < 1) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.GEV(seuil, xi, alfa, k))
   }
@@ -832,7 +879,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   else lnvraishist <- .thresML
  }
  else if (dist=="NORM") {
-  lnvraiscont <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
                      log(pnorm(seuil, mean=parameters[1], sd=parameters[2]))
   lnvraishist <- lnvraishist + sum(log(dnorm(xhist, mean=parameters[1], sd=parameters[2])))
@@ -840,7 +890,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
  else if (dist=="EXP") {
   xi <- parameters[1]
   alfa <- parameters[2]
-  lnvraiscont <- sum(log(f.exp(xcont, xi, alfa)))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(f.exp(xcont, xi, alfa)))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * 
                      log(F.exp(seuil, xi, alfa)) + sum(log(f.exp(xhist, xi, alfa)))
  }
@@ -848,10 +901,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]
-  if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.genlogis(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.genlogis(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if ((k*(seuil-xi)/alfa) < 1) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.genlogis(seuil, xi, alfa, k))
   }
@@ -865,11 +921,14 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]
-  if (sum((k*(xcont-xi)/alfa) > 1)==0 & all(xcont > xi)) {
-  #if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.genpar(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0 & all(xcont > xi)) {
+   #if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.genpar(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if (((k*(seuil-xi)/alfa) < 1) & (seuil > xi)) {
   #if (((k*(seuil-xi)/alfa) < 1)) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.genpar(seuil, xi, alfa, k))
@@ -884,7 +943,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
  else if ((dist=="GUMBEL")||(dist=="EV1")) {
   xi <- parameters[1]
   alfa <- parameters[2]
-  lnvraiscont <- sum(log(f.gumb(xcont, xi, alfa)))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(f.gumb(xcont, xi, alfa)))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- (nbans - longhist) * log(F.gumb(seuil, xi, alfa)) + sum(log(f.gumb(xhist, xi, alfa)))
  }
  #else if (dist=="KAPPA") {
@@ -899,10 +961,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]
-  if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.lognorm(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.lognorm(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if ((k*(seuil-xi)/alfa) < 1) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.lognorm(seuil, xi, alfa, k))
   }
@@ -913,7 +978,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   else lnvraishist <- .thresML
  }
  else if ((dist=="LN")||(dist=="LN2")) {
-  lnvraiscont <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * 
                      log(plnorm(seuil, meanlog=parameters[1], sdlog=parameters[2]))
   lnvraishist <- lnvraishist + sum(log(dlnorm(xhist, meanlog=parameters[1], sdlog=parameters[2])))
@@ -923,12 +991,18 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   beta <- parameters[2]
   alfa <- parameters[3]
   if (alfa > 0) {
-   lnvraiscont <- sum(log(f.gamma(xcont, xi, beta, alfa)))
+   if (!all(is.na(xcont))) {
+    lnvraiscont <- sum(log(f.gamma(xcont, xi, beta, alfa)))
+   }
+   else lnvraiscont <- 0
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.gamma(seuil, xi, beta, alfa)) + 
                   sum(log(f.gamma(xhist, xi, beta, alfa)))
   }
   else {
-   lnvraiscont <- .thresML
+   if (!all(is.na(xcont))) {
+    lnvraiscont <- .thresML
+   }
+   else lnvraiscont <- 0
    lnvraishist <- .thresML
   }
  }
@@ -953,10 +1027,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]  
-  if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.GEV(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.GEV(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if ((k*(seuil-xi)/alfa) < 1) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.GEV(seuil, xi, alfa, k))
   }
@@ -967,7 +1044,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   else lnvraishist <- .thresML
  }
  else if (dist=="NORM") {
-  lnvraiscont <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
+  }
+  else lnvraishist <- .thresML
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
                      log(pnorm(seuil, mean=parameters[1], sd=parameters[2]))
   lnvraishist <- lnvraishist + sum(log(1 - pnorm(infhist, mean=parameters[1], sd=parameters[2])))
@@ -975,17 +1055,23 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
  else if (dist=="EXP") {
   xi <- parameters[1]
   alfa <- parameters[2]
-  lnvraiscont <- sum(log(f.exp(xcont, xi, alfa)))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(f.exp(xcont, xi, alfa)))
+  }
+  else lnvraishist <- .thresML
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.exp(seuil, xi, alfa)) + sum(log(1 - F.exp(infhist, xi, alfa)))
  }
  else if (dist=="GENLOGIS") {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]
-  if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.genlogis(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.genlogis(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if ((k*(seuil-xi)/alfa) < 1) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.genlogis(seuil, xi, alfa, k))
   }
@@ -999,10 +1085,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]
-  if (sum((k*(xcont-xi)/alfa) > 1)==0 & all(xcont > xi)) {
-   lnvraiscont <- sum(log(f.genpar(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0 & all(xcont > xi)) {
+    lnvraiscont <- sum(log(f.genpar(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if (((k*(seuil-xi)/alfa) < 1) & (seuil > xi)) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.genpar(seuil, xi, alfa, k))
   }
@@ -1015,17 +1104,23 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
  else if ((dist=="GUMBEL")||(dist=="EV1")) {
   xi <- parameters[1]
   alfa <- parameters[2]
-  lnvraiscont <- sum(log(f.gumb(xcont, xi, alfa)))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(f.gumb(xcont, xi, alfa)))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.gumb(seuil, xi, alfa)) + sum(log(1 - F.gumb(infhist, xi, alfa)))
  }
  else if ((dist=="LOGNORM")||(dist=="LN3")) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]
-  if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.lognorm(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.lognorm(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if ((k*(seuil-xi)/alfa) < 1) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.lognorm(seuil, xi, alfa, k))
   }
@@ -1036,7 +1131,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   else lnvraishist <- .thresML
  }
  else if ((dist=="LN")||(dist=="LN2")) {
-  lnvraiscont <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
                      log(plnorm(seuil, meanlog=parameters[1], sdlog=parameters[2]))
   lnvraishist <- lnvraishist + sum(log(1 - plnorm(infhist, meanlog=parameters[1], sdlog=parameters[2])))
@@ -1045,7 +1143,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   beta <- parameters[2]
   alfa <- parameters[3]
-  lnvraiscont <- sum(log(f.gamma(xcont, xi, beta, alfa)))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(f.gamma(xcont, xi, beta, alfa)))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.gamma(seuil, xi, beta, alfa)) + 
                  sum(log(1 - F.gamma(infhist, xi, beta, alfa)))
  }
@@ -1070,10 +1171,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]  
-  if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.GEV(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.GEV(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if ((k*(seuil-xi)/alfa) < 1) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.GEV(seuil, xi, alfa, k))
   }
@@ -1084,7 +1188,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   else lnvraishist <- .thresML
  }
  else if (dist=="NORM") {
-  lnvraiscont <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(dnorm(xcont, mean=parameters[1], sd=parameters[2])))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
                      log(pnorm(seuil, mean=parameters[1], sd=parameters[2]))
   lnvraishist <- lnvraishist + sum(log(pnorm(suphist, mean=parameters[1], sd=parameters[2]) -
@@ -1093,7 +1200,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
  else if (dist=="EXP") {
   xi <- parameters[1]
   alfa <- parameters[2]
-  lnvraiscont <- sum(log(f.exp(xcont, xi, alfa)))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(f.exp(xcont, xi, alfa)))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.exp(seuil, xi, alfa)) + 
                  sum(log(F.exp(suphist, xi, alfa) - F.exp(infhist, xi, alfa)))
  }
@@ -1101,10 +1211,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]
-  if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.genlogis(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.genlogis(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if ((k*(seuil-xi)/alfa) < 1) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.genlogis(seuil, xi, alfa, k))
   }
@@ -1118,10 +1231,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]
-  if (sum((k*(xcont-xi)/alfa) > 1)==0 & all(xcont > xi)) {
-   lnvraiscont <- sum(log(f.genpar(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0 & all(xcont > xi)) {
+    lnvraiscont <- sum(log(f.genpar(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if (((k*(seuil-xi)/alfa) < 1) & (seuil > xi)) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.genpar(seuil, xi, alfa, k))
   }
@@ -1134,7 +1250,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
  else if ((dist=="GUMBEL")||(dist=="EV1")) {
   xi <- parameters[1]
   alfa <- parameters[2]
-  lnvraiscont <- sum(log(f.gumb(xcont, xi, alfa)))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(f.gumb(xcont, xi, alfa)))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.gumb(seuil, xi, alfa)) + 
                  sum(log(F.gumb(suphist, xi, alfa) - F.gumb(infhist, xi, alfa)))
  }
@@ -1142,10 +1261,13 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   alfa <- parameters[2]
   k <- parameters[3]
-  if (sum((k*(xcont-xi)/alfa) > 1)==0) {
-   lnvraiscont <- sum(log(f.lognorm(xcont, xi, alfa, k)))
+  if (!all(is.na(xcont))) {
+   if (sum((k*(xcont-xi)/alfa) > 1)==0) {
+    lnvraiscont <- sum(log(f.lognorm(xcont, xi, alfa, k)))
+   }
+   else lnvraiscont <- .thresML
   }
-  else lnvraiscont <- .thresML
+  else lnvraiscont <- 0
   if ((k*(seuil-xi)/alfa) < 1) {
    lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.lognorm(seuil, xi, alfa, k))
   }
@@ -1156,7 +1278,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   else lnvraishist <- .thresML
  }
  else if ((dist=="LN")||(dist=="LN2")) {
-  lnvraiscont <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(dlnorm(xcont, meanlog=parameters[1], sdlog=parameters[2])))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) *
                      log(plnorm(seuil, meanlog=parameters[1], sdlog=parameters[2]))
   lnvraishist <- lnvraishist + sum(log(plnorm(suphist, meanlog=parameters[1], sdlog=parameters[2]) - 
@@ -1166,7 +1291,10 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
   xi <- parameters[1]
   beta <- parameters[2]
   alfa <- parameters[3]
-  lnvraiscont <- sum(log(f.gamma(xcont, xi, beta, alfa)))
+  if (!all(is.na(xcont))) {
+   lnvraiscont <- sum(log(f.gamma(xcont, xi, beta, alfa)))
+  }
+  else lnvraiscont <- 0
   lnvraishist <- log(choose(nbans, longhist)) + (nbans - longhist) * log(F.gamma(seuil, xi, beta, alfa)) + 
                  sum(log(F.gamma(suphist, xi, beta, alfa) - F.gamma(infhist, xi, beta, alfa)))
  }

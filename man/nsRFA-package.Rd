@@ -143,6 +143,7 @@ For a complete list of the functions, use \code{library(help="nsRFA").}
 
 \bold{Main changes in version 0.6}
 \tabular{ll}{
+0.7-1: \tab refinement of function \code{\link{BayesianMCMC}};\cr
 0.7-0: \tab plotting position for historical information in \code{\link{DISTPLOTS}};\cr
 0.6-9: \tab new vignette \code{Fig11GriffisStedinger};\cr
 0.6-8: \tab exponential and Gumbel distributions added in \code{\link{GOFmontecarlo}};\cr

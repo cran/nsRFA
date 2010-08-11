@@ -2,6 +2,7 @@
 %
 \name{BayesianMCMC}
 \alias{BayesianMCMC}
+\alias{BayesianMCMCcont}
 \alias{print.BayesianMCMC}
 \alias{plot.BayesianMCMC}
 %- Also NEED an `\alias' for EACH other topic documented here.
@@ -15,6 +16,7 @@
                confint=c(0.05, 0.95), dist="GEV",
                apriori=function(...){1}, 
                parameters0=NA, varparameters0=NA)
+ BayesianMCMCcont (x, nbpas=NA)
  \method{plot}{BayesianMCMC} (x, which=1, ask=FALSE, ...)
  \method{print}{BayesianMCMC} (x, ...)
 }
@@ -89,7 +91,7 @@ The MCMC algorithm is based on a code developed by Eric Gaume on Scilab.
 It is still unstable and not all the distributions have been tested.
 }
 \value{
-  \code{BayesianMCMC} returns the following values:
+  \code{BayesianMCMC} and \code{BayesianMCMCcont} (which just continues the simulations of \code{BayesianMCMC} starting from its output) return the following values:
 
    \code{parameters} matrix (nbpas)x(nbchaines) with the simulated sets of parameters with the MCMC algorithm;
 
@@ -98,6 +100,8 @@ It is still unstable and not all the distributions have been tested.
    \code{returnperiods} return periods for which \code{quantilesML} and \code{intervals} are calculated;
 
    \code{quantilesML} quantiles correspondent to \code{returnperiods} for the distribution whose parameters are \code{parametersML};
+
+   \code{logML} maximum log-likelihood;
 
    \code{intervals} confidence intervals for the quantiles \code{quantilesML} for limits \code{confint};
 
@@ -144,18 +148,20 @@ abline(h=0)
 points(serie100, col=2)
 
 # Using only sistematic data
-only_sist <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=NA, suphist=NA, 
-                           nbans=NA, seuil=NA,
-                           nbpas=5000, nbchaines=3, 
+only_sist <- BayesianMCMC (xcont=serie20, nbpas=5000, nbchaines=3, varparameters0=c(70, 20, 0.5), 
                            confint=c(0.05, 0.95), dist="GEV")
+plot(only_sist, which=c(1:3), ask=TRUE, ylim=c(1,600))
+only_sist <- BayesianMCMCcont(only_sist)
+plot(only_sist, which=c(1:3), ask=TRUE, ylim=c(1,600))
+only_sist <- BayesianMCMCcont(only_sist)
 plot(only_sist, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 
 # Adding the information that the threshold 250 m3/s was exceeded 
 #   3 times in the past 100 years
-with_hist_thresh <- BayesianMCMC (xcont=serie20, xhist=NA, infhist=rep(250,3), 
-                                  suphist=NA, nbans=100, seuil=250,
+with_hist_thresh <- BayesianMCMC (xcont=serie20, infhist=rep(250,3), 
+                                  nbans=100, seuil=250,
                                   nbpas=5000, nbchaines=3, 
                                   confint=c(0.05, 0.95), dist="GEV")
 plot(with_hist_thresh, which=c(1:3), ask=TRUE, ylim=c(1,600))
@@ -163,7 +169,7 @@ plot(with_hist_thresh, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 # Assuming that the 3 historical events are known with high uncertainty
-with_hist_limits <- BayesianMCMC (xcont=serie20, xhist=NA, 
+with_hist_limits <- BayesianMCMC (xcont=serie20,  
                                   infhist=c(320,320,250), 
                                   suphist=c(360,400,270), 
                                   nbans=100, seuil=250,
@@ -175,7 +181,6 @@ plot(with_hist_limits, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 # Assuming that the 3 historical events are perfectly known
 with_hist_known <- BayesianMCMC (xcont=serie20, xhist=serie100[!is.na(serie100)], 
-                                 infhist=NA, suphist=NA, 
                                  nbans=100, seuil=250,
                                  nbpas=5000, nbchaines=3, 
                                  confint=c(0.05, 0.95), dist="GEV")
@@ -200,7 +205,6 @@ fNORM3 <- function (x) {
 }
 
 with_hist_known2 <- BayesianMCMC (xcont=serie20, xhist=serie100[!is.na(serie100)], 
-                                  infhist=NA, suphist=NA,
                                   nbans=100, seuil=250,
                                   nbpas=5000, nbchaines=3, apriori=fNORM3,
                                   confint=c(0.05, 0.95), dist="GEV")
@@ -227,7 +231,6 @@ fNORM3 <- function (x) {
 }
 
 with_hist_known3 <- BayesianMCMC (xcont=serie20, xhist=serie100[!is.na(serie100)], 
-                                  infhist=NA, suphist=NA,
                                   nbans=100, seuil=250,
                                   nbpas=5000, nbchaines=3, apriori=fNORM3,
                                   confint=c(0.05, 0.95), dist="GEV")
