@@ -60,7 +60,7 @@ In this document we show how the \verb+nsRFA+ package can be used to:
  \item regionalize the index-flow;
  \item regionalize the growth curve, i.e. the rescaled distribution function.
 \end{enumerate}
-The methodology has been applied to Piemonte and Valle d’Aosta, two contiguous regions in the North-West of Italy. 
+The methodology has been applied to Piemonte and Valle d'Aosta, two contiguous regions in the North-West of Italy. 
 This territory is characterized by a marked heterogeneity. 
 In this relatively small region, very different orographic and climatic conditions coexist: in few hundreds kilometres the climate changes from the appenninic-mediterranean one in the south-eastern hills to the alpine-continental one in the mountainous Valle d'Aosta, passing from all the intermediate conditions. 
 For this reason, a regional frequency analysis in this territory is both complex and interesting.

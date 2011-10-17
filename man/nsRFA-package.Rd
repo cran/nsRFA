@@ -141,10 +141,13 @@ The first version dates to 2006 and was developed in Turin at the Politecnico by
 
 For a complete list of the functions, use \code{library(help="nsRFA").}
 
-\bold{Main changes in version 0.6}
+\bold{Main changes in version 0.7}
 \tabular{ll}{
 0.7-1: \tab refinement of function \code{\link{BayesianMCMC}};\cr
 0.7-0: \tab plotting position for historical information in \code{\link{DISTPLOTS}};\cr
+}
+\bold{Main changes in version 0.6}
+\tabular{ll}{
 0.6-9: \tab new vignette \code{Fig11GriffisStedinger};\cr
 0.6-8: \tab exponential and Gumbel distributions added in \code{\link{GOFmontecarlo}};\cr
 0.6-6: \tab some plotting position/probability plots have been added in \code{\link{DISTPLOTS}};\cr

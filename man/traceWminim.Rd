@@ -55,8 +55,8 @@ summary(parameters)
 # traceWminim
 param <- parameters[c("Hm","Ybar")]
 n <- dim(param)[1]; k <- dim(param)[2]
-param.norm <- (param - matrix(mean(param),nrow=n,ncol=k,
-               byrow=TRUE))/matrix(sd(param),
+param.norm <- (param - matrix(apply(param,2,mean),nrow=n,ncol=k,
+               byrow=TRUE))/matrix(apply(param,2,sd),
                nrow=n,ncol=k,byrow=TRUE)
 clusters <- traceWminim(param.norm,4); 
 names(clusters) <- parameters["cod"][,]

@@ -1144,7 +1144,7 @@ plotposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
   x <- c(x_l, x_u)
   T <- c(T_l, T_u)
 
-  Thist <- T[x %in% xhist]
+  Thist <- sort(T[x %in% xhist])[order(xhist)]
   colori <- c(col_x_l, col_x_u)
   if (orient=="xF") {
    plot(x,T, log="y", col=colori, ...)
