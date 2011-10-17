@@ -112,7 +112,7 @@ print(mantel.lm(regrmantel, Nperm=100))
 
 param <- parameters15[c("Hm","Ybar")]
 n <- dim(param)[1]; k <- dim(param)[2]
-param.norm <- (param - matrix(mean(param),nrow=n,ncol=k,byrow=TRUE))/matrix(sd(param),nrow=n,ncol=k,byrow=TRUE)
+param.norm <- (param - matrix(colMeans(param),nrow=n,ncol=k,byrow=TRUE))/matrix(sapply(param, sd),nrow=n,ncol=k,byrow=TRUE)
 clusters <- traceWminim(param.norm,4);
 names(clusters) <- parameters15["cod"][,]
 print(clusters)
@@ -423,7 +423,7 @@ grid()
 abline(v=2.492,lty=2,col=2)
 abline(v=3.880,lty=2,col=2)
 text(A2s[A2s>3.880],errors[A2s>3.880],labels=codici[A2s>3.880]-2,pos=1)
-axis(1,at=c(2.492,3.880),labels=c("5\%","1\%"),col=2,col.axis=2,cex.axis=.8)
+axis(1,at=c(2.492,3.880),labels=c("5\\%","1\\%"),col=2,col.axis=2,cex.axis=.8)
 
 # ------------------------------------------------------------------------------------- #
 # ------------------------------------------------------------------------------------- #
