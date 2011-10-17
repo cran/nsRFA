@@ -998,7 +998,7 @@ C
      *   WK(J1), WK(J2), SMAX, JMAX, IER)
       IF (NBEST .GT. 0) CALL EXADD1(SIZE+1, RSS, BOUND, NVMAX, RESS,
      *    IR, NBEST, LOPT, IL, VORDER, SMAX, JMAX, WK, WK(J1), LAST)
-      write(*, *) 'Best variable to add: ', VORDER(JMAX)
+Calberto      write(*, *) 'Best variable to add: ', VORDER(JMAX)
 C
 C     Calculate 'F-to-enter' value
 C
@@ -1014,8 +1014,8 @@ C
       ELSE
 	  F = SMAX / VAR
       END IF
-      write(*, 900) F
-  900 format(' F-to-enter = ', f10.2)
+Calberto      write(*, 900) F
+Calberto  900 format(' F-to-enter = ', f10.2)
 C
 C     Exit if F < FIN or IER < 0 (perfect fit)
 C
@@ -1034,8 +1034,8 @@ C
      *    WK(J1), SMIN, JMIN, IER)
       VAR = RSS(SIZE) / (NOBS - SIZE)
       F = SMIN / VAR
-      write(*, 910) VORDER(JMIN), F
-  910 format(' F-to-drop variable: ', i4, ' = ', f10.2)
+Calberto      write(*, 910) VORDER(JMIN), F
+Calberto  910 format(' F-to-drop variable: ', i4, ' = ', f10.2)
       IF (F .LT. FOUT) THEN
 	CALL VMOVE(NP, NRBAR, VORDER, D, RBAR, THETAB, RSS, JMIN, SIZE,
      *        TOL, IER)

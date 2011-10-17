@@ -554,10 +554,10 @@ for (i in 1:nclusters) {
 
 
 Regional growth-curves:
-<<label=GrowthCurves1.png, echo=FALSE, eval=TRUE>>=
-png(file="GrowthCurves1.png", height=960, width=960, res=144, pointsize=9)
-@
-<<fig=FALSE>>=
+%<<label=GrowthCurves1.png, echo=FALSE, eval=TRUE>>=
+%png(file="GrowthCurves1.png", height=960, width=960, res=144, pointsize=9)
+%@
+<<fig=TRUE, width=7, height=7>>=
 op <- par(mfrow=c(2,2))
  for (i in 1:nclusters) {
   FF <- F.gamma(D15adim[indclusters==i], paramgamma[[i]]$xi, 
@@ -572,20 +572,20 @@ op <- par(mfrow=c(2,2))
  }
 par(op)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-
-\begin{center}
- \includegraphics[width=.9\textwidth]{GrowthCurves1}
-\end{center}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+%
+%\begin{center}
+% \includegraphics[width=.9\textwidth]{GrowthCurves1}
+%\end{center}
 
 
 Regional growth-curves:
-<<label=GrowthCurves2.png, echo=FALSE, eval=TRUE>>=
-png(file="GrowthCurves2.png", height=960, width=960, res=144, pointsize=9)
-@
-<<fig=FALSE>>=
+%<<label=GrowthCurves2.png, echo=FALSE, eval=TRUE>>=
+%png(file="GrowthCurves2.png", height=960, width=960, res=144, pointsize=9)
+%@
+<<fig=TRUE, width=7, height=7>>=
 op <- par(mfrow=c(2,2))
  for (i in 1:nclusters) {
   Fs <- seq(0.001,0.999,by=.001)
@@ -600,13 +600,13 @@ op <- par(mfrow=c(2,2))
  }
 par(op)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-
-\begin{center}
- \includegraphics[width=.9\textwidth]{GrowthCurves2}
-\end{center}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+%
+%\begin{center}
+% \includegraphics[width=.9\textwidth]{GrowthCurves2}
+%\end{center}
 
 
 Comparison between regional growth-curves:

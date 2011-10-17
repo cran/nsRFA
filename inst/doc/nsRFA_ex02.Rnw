@@ -68,22 +68,22 @@ am696 <- am[!is.na(fac),]
 % ------------------------------------------------------------------------------- %
 
 Figure 16.2 pag.157, FEH Vol.3:
-<<echo=FALSE, eval=TRUE>>=
-png(file="fig16_2pag157.png", height=480, width=1200, res=144, pointsize=16)
-@
-<<fig=FALSE>>=
+%<<echo=FALSE, eval=TRUE>>=
+%png(file="fig16_2pag157.png", height=480, width=1200, res=144, pointsize=16)
+%@
+<<fig=TRUE, width=7, height=3>>=
 layout(matrix(c(1,2,3), 1, 3))
 plot(cd696[c("dtm_area","saar")], pch=".", cex=2, log="x")
 plot(cd696[c("dtm_area","bfihost")], pch=".", cex=2, log="x")
 plot(cd696[c("saar","bfihost")], pch=".", cex=2)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-
-\begin{center}
- \includegraphics[width=1.0\textwidth]{fig16_2pag157}
-\end{center}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+%
+%\begin{center}
+% \includegraphics[width=1.0\textwidth]{fig16_2pag157}
+%\end{center}
 
 % ------------------------------------------------------------------------------- %
 
@@ -93,10 +93,10 @@ Lmomenti696 <- t(sapply(split(am696[,4],am696[,1]),Lmoments))
 Di <- discordancy(am696[,"am"], am696[,"number"])
 @
 Sites with discordancy greater than 3:
-<<echo=FALSE, eval=TRUE>>=
-png(file="discordancy.png", height=480, width=960, res=144, pointsize=9)
-@
-<<fig=FALSE>>=
+%<<echo=FALSE, eval=TRUE>>=
+%png(file="discordancy.png", height=480, width=960, res=144, pointsize=9)
+%@
+<<fig=TRUE, width=6, height=3>>=
 par(mfrow=c(1,2))
  plot(Lmomenti696[,c("lca","lcv")],xlab="L-CA",ylab="L-CV",pch=".",cex=2); grid()
  points(Lmomenti696[(Di>3),c("lca","lcv")],pch=19,cex=.7)
@@ -104,13 +104,13 @@ par(mfrow=c(1,2))
  points(Lmomenti696[(Di>3),c("lca","lkur")],pch=19,cex=.7)
 par(mfrow=c(1,1))
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-
-\begin{center}
- \includegraphics[width=0.9\textwidth]{discordancy}
-\end{center}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+%
+%\begin{center}
+% \includegraphics[width=0.9\textwidth]{discordancy}
+%\end{center}
 
 
 
@@ -201,10 +201,10 @@ prova28018 <- roi.st.year(roi.cd["28018",],roi.cd,row.names(roi.cd),am696[,"am"]
                           am696[,"number"],test="HW",station.year=250,Nsim=500)
 @
 
-<<echo=FALSE, eval=TRUE>>=
-png(file="ex16_3page164.png", height=480, width=960, res=144, pointsize=9)
-@
-<<fig=FALSE>>=
+%<<echo=FALSE, eval=TRUE>>=
+%png(file="ex16_3page164.png", height=480, width=960, res=144, pointsize=9)
+%@
+<<fig=TRUE, width=6, height=3>>=
 Lmomenti696 <- as.data.frame(Lmomenti696)
 par(mfrow=c(1,2))
  plot(Lmomenti696[c("lca","lcv")], xlab="L-CA", ylab="L-CV",
@@ -221,13 +221,13 @@ par(mfrow=c(1,2))
         pch=19, cex=1)
 par(mfrow=c(1,1))
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-
-\begin{center}
- \includegraphics[width=0.9\textwidth]{ex16_3page164}
-\end{center}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+%
+%\begin{center}
+% \includegraphics[width=0.9\textwidth]{ex16_3page164}
+%\end{center}
 
 
 % ------------------------------------------------------------------------------- %
@@ -300,19 +300,19 @@ prova40009 <- roi.st.year(roi.cd["40009",],roi.cd,row.names(roi.cd),am696[,"am"]
                           am696[,"number"],test="HW",station.year=500,Nsim=500)
 @
 
-<<echo=FALSE, eval=TRUE>>=
-png(file="fig16_9page174a.png", height=960, width=1200, res=144, pointsize=12)
-@
-<<fig=FALSE>>=
+%<<echo=FALSE, eval=TRUE>>=
+%png(file="fig16_9page174a.png", height=960, width=1200, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=7, height=5>>=
 figure16.9a("40009",prova40009,cd696)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-
-\begin{center}
- \includegraphics[width=1.0\textwidth]{fig16_9page174a}
-\end{center}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+%
+%\begin{center}
+% \includegraphics[width=1.0\textwidth]{fig16_9page174a}
+%\end{center}
 
 
 Figure 16.9 pag.174 (2nd part), FEH Vol.3:
@@ -394,19 +394,19 @@ figure16.9b <- function (x,r,am,cd) {
 }
 @
 
-<<echo=FALSE, eval=TRUE>>=
-png(file="fig16_9page174b.png", height=960, width=1200, res=144, pointsize=12)
-@
-<<fig=FALSE>>=
+%<<echo=FALSE, eval=TRUE>>=
+%png(file="fig16_9page174b.png", height=960, width=1200, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=7, height=5>>=
 figure16.9b("40009",prova40009,am696,cd696)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-
-\begin{center}
- \includegraphics[width=1.0\textwidth]{fig16_9page174b}
-\end{center}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+%
+%\begin{center}
+% \includegraphics[width=1.0\textwidth]{fig16_9page174b}
+%\end{center}
 
 There are differences because: 
  I plot the empirical growth curves; 
@@ -420,35 +420,35 @@ prova45001 <- roi.st.year(roi.cd["45001",],roi.cd,row.names(roi.cd),am696[,"am"]
                           am696[,"number"],test="HW",station.year=250,Nsim=500)
 @
 
-<<echo=FALSE, eval=TRUE>>=
-png(file="fig6_2page30a.png", height=960, width=1200, res=144, pointsize=16)
-@
-<<fig=FALSE>>=
+%<<echo=FALSE, eval=TRUE>>=
+%png(file="fig6_2page30a.png", height=960, width=1200, res=144, pointsize=16)
+%@
+<<fig=TRUE, width=7, height=5>>=
 figure16.9a("45001",prova45001,cd696)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+%
+%\begin{center}
+% \includegraphics[width=1.0\textwidth]{fig6_2page30a}
+%\end{center}
 
-\begin{center}
- \includegraphics[width=1.0\textwidth]{fig6_2page30a}
-\end{center}
 
 
-
-<<echo=FALSE, eval=TRUE>>=
-png(file="fig6_2page30b.png", height=960, width=1200, res=144, pointsize=12)
-@
-<<fig=FALSE>>=
+%<<echo=FALSE, eval=TRUE>>=
+%png(file="fig6_2page30b.png", height=960, width=1200, res=144, pointsize=12)
+%@
+<<fig=TRUE, width=7, height=5>>=
 figure16.9b("45001",prova45001,am696,cd696)
 @
-<<echo=FALSE, eval=TRUE, results=hide>>=
-dev.off()
-@
-
-\begin{center}
- \includegraphics[width=1.0\textwidth]{fig6_2page30b}
-\end{center}
+%<<echo=FALSE, eval=TRUE, results=hide>>=
+%dev.off()
+%@
+%
+%\begin{center}
+% \includegraphics[width=1.0\textwidth]{fig6_2page30b}
+%\end{center}
 
 
 

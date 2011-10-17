@@ -34,7 +34,7 @@ print.bestlm <- function (x, ...) {
 summary.bestlm <- function (object, ...) {
   N <- dim(object$subselect)[1]
   regr <- rep(NA, length=N)
-  diagn <- data.frame(matrix(NA, nrow=nregr, ncol=8)); 
+  diagn <- data.frame(matrix(NA, nrow=N, ncol=8)); 
    names(diagn) <- c("RMSE","RMSEP","MAE","MAEP",
                      "RMSEjk","RMSEjkP","MAEjk","MAEjkP")
   Y <- object$dip

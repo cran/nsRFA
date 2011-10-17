@@ -51,8 +51,8 @@ C
       PARA(2)=XMOM(1)/ALPHA
       RETURN
 C
- 1000 WRITE(6,7000)
-      PARA(1)=ZERO
+Calberto 1000 WRITE(6,7000)
+ 1000 PARA(1)=ZERO
       PARA(2)=ZERO
       RETURN
 C
