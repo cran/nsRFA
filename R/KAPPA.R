@@ -36,7 +36,7 @@ f.kappa <- function (x,xi,alfa,k,h) {
     f <- f.GEV(x,xi,alfa,k)
   } 
   else {
-    f <- alfa^(-1) *(1 - k*(x - xi)/alfa)^(1/(k-1)) * (F.kappa(x,xi,alfa,k,h))^(1/h)
+    f <- alfa^(-1) *(1 - k*(x - xi)/alfa)^(1/(k-1)) * (F.kappa(x,xi,alfa,k,h))^(1-h)
   }
 
   return(f)

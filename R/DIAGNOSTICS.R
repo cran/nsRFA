@@ -12,7 +12,7 @@ R2 <- function(x, y, na.rm=FALSE) {
  }
  n <- length(x)
  if (!length(y)==n) stop("R2: x and y must have the same length")
- SST <- sum(x^2) - n*mean(x)^2
+ SST <- sum((x-mean(x))^2)
  SSRes <- sum((x-y)^2)
  R2 <- 1-SSRes/SST
 
