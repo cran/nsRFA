@@ -404,8 +404,8 @@ Cluster formation:
 <<label=clusteranalysis>>=
 param <- parameters15[c("Hm","Ybar")]
 n <- dim(param)[1]; k <- dim(param)[2]
-param.norm <- (param - matrix(mean(param), nrow=n, ncol=k, byrow=TRUE))/
-              matrix(sd(param), nrow=n, ncol=k, byrow=TRUE)
+param.norm <- (param - matrix(sapply(param, mean), nrow=n, ncol=k, byrow=TRUE))/
+              matrix(sapply(param, sd), nrow=n, ncol=k, byrow=TRUE)
 @
 <<echo=FALSE>>=
 set.seed(10)

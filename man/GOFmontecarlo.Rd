@@ -68,8 +68,9 @@ In other cases, e.g. the Pearson Type III case, can be derived with a Monte-Carl
 
   \code{gofP3test} tests the goodness of fit of a Pearson type III (gamma) distribution with the sample \code{x}.
 
-  They return the value \eqn{A_2}{A2} of the Anderson-Darling statistics and its probability \eqn{P}.
-  If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the test is not passed at level \eqn{\alpha=10\%}.
+  They return the value \eqn{A_2}{A2} of the Anderson-Darling statistics and its non exceedence probability \eqn{P}.
+  Note that \eqn{P} is the probability of obtaining the test statistic \eqn{A_2}{A2} lower than the one that was actually observed, assuming that the null hypothesis is true, i.e., \eqn{P} is one minus the p-value usually employed in statistical testing (see \url{http://en.wikipedia.org/wiki/P-value}).
+  If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the null hypothesis at significance level \eqn{\alpha=10\%} is rejected.
   %If \eqn{P} is, for example, 0.92, the sample shouldn't be considered extracted from the hypothetical parent distribution with significance level greater than 8%.
 }
 %\references{}

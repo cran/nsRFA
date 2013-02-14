@@ -31,8 +31,10 @@
  The original paper of Laio (2004) is available on his web site.
 }
 \value{
-  \code{A2_GOFlaio} tests the goodness of fit of a distribution with the sample \code{x}; it return the value \eqn{A_2} of the Anderson-Darling statistics and its probability \eqn{P(A_2)}{P(A2)}. 
-  If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the test is not passed at level \eqn{\alpha=10\%}.
+  \code{A2_GOFlaio} tests the goodness of fit of a distribution with the sample \code{x}; it return the value \eqn{A_2} of the Anderson-Darling statistics and its non-exceedence probability \eqn{P(A_2)}{P(A2)}. 
+  Note that \eqn{P} is the probability of obtaining the test statistic \eqn{A_2}{A2} lower than the one that was actually observed, assuming that the null hypothesis is true, i.e., \eqn{P} is one minus the p-value usually employed in statistical testing (see \url{http://en.wikipedia.org/wiki/P-value}).
+  If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the null hypothesis at significance level \eqn{\alpha=10\%} is rejected.
+  %If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the test is not passed at level \eqn{\alpha=10\%}.
 
   \code{A2} is the Anderson-Darling test statistic; it is used by \code{A2_GOFlaio}.
 

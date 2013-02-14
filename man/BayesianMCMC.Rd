@@ -147,6 +147,8 @@ plot(serie, type="h", ylim=c(0, 600), xlab="",
 abline(h=0)
 points(serie100, col=2)
 
+
+\dontrun{
 # Using only sistematic data
 only_sist <- BayesianMCMC (xcont=serie20, nbpas=5000, nbchaines=3, varparameters0=c(70, 20, 0.5), 
                            confint=c(0.05, 0.95), dist="GEV")
@@ -215,7 +217,7 @@ plot(with_hist_known)
 plot(with_hist_known2)
 
 
-\dontrun{
+
 # Using one non-reasonable a-priori distribution
 fNORM3 <- function (x) {
  # x = vector of values
