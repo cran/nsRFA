@@ -1,0 +1,143 @@
+
+\documentclass[a4paper]{article}
+\usepackage{graphics}                 % Packages to allow inclusion of graphics
+\usepackage[pdftex]{graphicx}
+\usepackage{fancyhdr}
+\usepackage[figuresright]{rotating}
+\usepackage{natbib}
+
+
+
+% Margini
+\setlength{\textwidth} {170mm}
+\setlength{\textheight}{240mm}      %Altezza testo 227 mm
+%\setlength{\topmargin} {0.1mm}
+
+\setlength{\evensidemargin}{-5mm} %Margini per l'opzione twoside
+\setlength{\oddsidemargin} {-5mm}
+\setlength{\topmargin}{-10mm}
+
+
+\SweaveOpts{keep.source=TRUE}
+
+%\VignetteIndexEntry{Figure 1 in Elamir and Seheult (2004)}
+
+
+\title{Figure 1 in Elamir and Seheult (2004)}
+\author{Alberto Viglione}
+\date{}
+
+
+
+
+\begin{document}
+\maketitle
+
+
+
+
+First of all load the library:
+<<>>=
+library(nsRFA)
+@
+and generate the samples from the Normal distribution:
+<<>>=
+Nsim=1000
+n=60
+@
+<<eval=TRUE>>=
+campsimulati <- rnorm(n*Nsim)
+@
+<<a, eval=TRUE>>=
+campsimulati <- matrix(campsimulati, ncol=n)
+@
+Then calculate $l_3$ and $SE(l_3)$:
+<<b, eval=TRUE>>=
+lmom <- t(apply(campsimulati, 1, Lmoments))
+vlmom <- t(apply(campsimulati, 1, varLmoments, matrix=FALSE))
+
+l3 <- lmom[,"lca"]*lmom[,"l2"]
+sl3 <- sqrt(vlmom[,"var.l3"])
+@
+<<eval=TRUE>>=
+l3gaussian <- l3/sl3
+@
+and plot the results:
+<<fig=FALSE, eval=TRUE>>=
+qqnorm(l3gaussian, main="Normal Q-Q Plot for Gaussian samples")
+ qqline(l3gaussian)
+@
+
+Repeat the same procedure for the Student distribution:
+<<eval=TRUE>>=
+campsimulati <- rt(n*Nsim, df=5)
+@
+<<eval=TRUE>>=
+<<a>>
+<<b>>
+@
+<<eval=TRUE>>=
+l3student <- l3/sl3
+@
+the Cauchy distribution:
+<<eval=TRUE>>=
+campsimulati <- rcauchy(n*Nsim)
+@
+<<eval=TRUE>>=
+<<a>>
+<<b>>
+@
+<<eval=TRUE>>=
+l3cauchy <- l3/sl3
+@
+and the Uniform distribution:
+<<eval=TRUE>>=
+campsimulati <- runif(n*Nsim)
+@
+<<eval=TRUE>>=
+<<a>>
+<<b>>
+@
+<<eval=TRUE>>=
+l3unif <- l3/sl3
+@
+
+Plot the result:
+<<echo=FALSE, eval=TRUE>>=
+#bitmap(file="Fig1.png", type="png256", height=10, width=8, res=144, pointsize=16)
+png(filename="Fig1.png", height=720, width=600, res=72, pointsize=16)
+@
+<<fig=FALSE, eval=TRUE, width=7, height=9>>=
+layout(matrix(c(1,2,3,4), 2, 2, byrow = TRUE))
+qqnorm(l3gaussian, main="Normal Plot: Gaussian samples")
+ qqline(l3gaussian)
+qqnorm(l3student, main="Normal Plot: Student (df=5) samples")
+ qqline(l3student)
+qqnorm(l3cauchy, main="Normal Plot: Cauchy samples")
+ qqline(l3cauchy)
+qqnorm(l3unif, main="Normal Plot: Uniform samples")
+ qqline(l3unif)
+@
+<<echo=FALSE, eval=TRUE, results=hide>>=
+dev.off()
+@
+
+\begin{center}
+ \includegraphics[width=.9\textwidth]{Fig1.png}
+\end{center}
+Normal quantile plots and added line for $N=1000$ simulated values of $l_3/SE(l_3)$ from Gaussian, Student(5), Cauchy and Uniform samples of size $n=60$.
+
+
+
+\begin{thebibliography}{}
+
+\bibitem[Elamir and Seheult, 2004]{ElamirSeheult2004}
+Elamir, E.A.H., and Seheult, A.H. (2004).
+\newblock Exact variance structure of sample L-moments.
+\newblock {\em Journal of Statistical Planning and Inference}, 124:337--359.
+
+\end{thebibliography}
+
+
+\end{document}
+

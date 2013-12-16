@@ -56,7 +56,8 @@
  gumbelplot (x, a=0, orient="xF", line=FALSE, ...)
  frechetplot (x, a=0, orient="xF", line=FALSE,...)
  weibullplot (x, a=0, orient="xF", line=FALSE,...)
- plotposRPhist (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, col12=c(1,1), a=0, orient="xF", ...)
+ plotposRPhist (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, 
+                col12=c(1,1), a=0, orient="xF", ...)
  pointspos (x, a=0, orient="xF", ...)
  pointsposRP (x, a=0, orient="xF", ...)
  loglogpoints (x, a=0, orient="xF", ...)
@@ -75,7 +76,8 @@
  regionalparetoplot (x, cod, a=0, orient="xF", ...)
  regionalgumbelplot (x, cod, a=0, orient="xF", ...)
  regionalfrechetplot (x, cod, a=0, orient="xF", ...)
- pointsposRPhist (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, col12=c(1,1), a=0, orient="xF", ...)
+ pointsposRPhist (xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, 
+                  col12=c(1,1), a=0, orient="xF", ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

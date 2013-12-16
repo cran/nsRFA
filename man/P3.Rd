@@ -46,7 +46,8 @@ See \url{http://en.wikipedia.org/wiki/Pearson_distribution} for an introduction 
 
 \bold{Definition}
 
-Parameters (3): \eqn{\mu} (location), \eqn{\sigma} (scale), \eqn{\gamma} (shape).
+Parameters (3): \eqn{\xi} (location), \eqn{\beta} (scale), \eqn{\alpha} (shape).
+Moments (3): \eqn{\mu} (mean), \eqn{\sigma} (standard deviation), \eqn{\gamma} (skewness).
 
 If \eqn{\gamma \ne 0}, let \eqn{\alpha=4/\gamma^2}, \eqn{\beta=\frac{1}{2}\sigma |\gamma|}, and \eqn{\xi= \mu - 2 \sigma/\gamma}.
 If \eqn{\gamma > 0}, then the range of \eqn{x} is \eqn{\xi \le x < \infty} and
