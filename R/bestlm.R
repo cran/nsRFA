@@ -110,7 +110,7 @@ summary.bestlm <- function (object, ...) {
 	wt=as.double(wt),tx=t(xx),y=as.double(y),d=numeric(np),
 	rbar=numeric(nrbar),
         thetab=numeric(np),sserr=numeric(1),ier=as.integer(0),
-        PACKAGE="nsRFA",DUP=FALSE)
+        PACKAGE="nsRFA") #,DUP=FALSE)
   if (qrleaps$ier!=0)
       warning(paste("MAKEQR returned error code",qrleaps$ier))
   qrleaps$tx<-NULL

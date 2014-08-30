@@ -1,0 +1,384 @@
+
+\documentclass[a4paper]{article}
+\usepackage{graphics}                 % Packages to allow inclusion of graphics
+\usepackage[pdftex]{graphicx}
+\usepackage{fancyhdr}
+\usepackage[figuresright]{rotating}
+\usepackage{natbib}
+\usepackage{color}
+
+
+
+
+
+% Margini
+\setlength{\textwidth} {170mm}
+\setlength{\textheight}{240mm}      %Altezza testo 227 mm
+%\setlength{\topmargin} {0.1mm}
+
+\setlength{\evensidemargin}{-5mm} %Margini per l'opzione twoside
+\setlength{\oddsidemargin} {-5mm}
+\setlength{\topmargin}{-10mm}
+
+
+\SweaveOpts{keep.source=TRUE}
+
+%\VignetteIndexEntry{Local and regional analyses with BayesianMCMC}
+
+
+\title{Local and regional flood frequency analyses with BayesianMCMC}
+\author{Karine Halbert}
+\date{}
+
+
+
+
+\begin{document}
+\maketitle
+
+
+With this document, we illustrate the use of the functions \verb+BayesianMCMC+ and \verb+BayesianMCMCreg+.
+In the first section, flood frequency analysis is performed using the function \verb+BayesianMCMC+ with the data of the gauged station Saint Martin d'Ard\`eche (south-east of France), for which a lot of information on historical extreme floods is available \citep[see][]{Naulet2002PhD}. The methodology used for incorporation of historical information in \verb+BayesianMCMC+ is described in \citet{Payrastreetal2011WRR}.
+In the second section, a regional flood frequency analysis is performed using the function \verb+BayesianMCMCreg+ with data from several sites in the Ard\`eche region, which is exposed to frequent and severe flash floods, thus having a lot of records of extreme flood observations at different ungauged sites that were collected under the European Hydrate project \citep{Borgaetal2011ESP,Gaumeetal2009JoH}. Methodological aspects of this regional flood frequency approach are developped in \citet{Gaumeetal2010JoH,Nguyenetal2014JoH}.
+
+
+% --------------------------------------------------------------------------------------------------------------------------------------------------------- %
+
+\section{Local flood frequency analysis with historical data}
+
+We use here systematic data and historical flood data as described respectively in \citet{Nguyen2012PhD} and \citet{Naulet2002PhD}.
+Load the data available in the \verb+nsRFA+ package:
+<<>>=  # WILL HAVE TO BE POSSIBLE
+library(nsRFA)
+data(Ardechedata)
+ls()
+@
+
+
+The systematic data, including the maximum annual flood peaks (m$^3$/s) for the station Saint Martin d'Ard\`eche is \citep[Table A.10, page 180 in][catchment size 2240 km$^2$]{Nguyen2012PhD}:
+<<>>=
+str(SaintMartin_cont)
+@
+
+At this location, a lot of information on extreme historical floods have been collected and analysed in \citet[][Table 5.8, page 200; Fig. 5.30, page 208]{Naulet2002PhD}. 
+<<>>=
+str(SaintMartin_hist)
+@
+The perception thresholds in \verb+SaintMartin_hist$thresholds+ indicate the dicharges that are assumed not to have been exceeded in the indicated time periods except for the historical floods in \verb+SaintMartin_hist$peaks+.
+The historical period has been stopped here in 1962, i.e. before the beginning of the systematic series.
+
+<<plot_SaintMartin_cont_hist, eval=FALSE>>=
+plot(c(1640,2010), c(0, 8000), type="n", xlab="", ylab="discharge (m3/s)")
+ points(SaintMartin_cont[,"year"], SaintMartin_cont[,"peak"], type="o", pch=21, bg="white")
+ points(SaintMartin_hist$peaks[,"year"], SaintMartin_hist$peaks[,"peak"], pch=16)
+ points(SaintMartin_hist$peaks[,"year"], SaintMartin_hist$peaks[,"peak"], type="h")
+ segments(x0=SaintMartin_hist$thresholds[,"from.yr"], 
+          x1=SaintMartin_hist$thresholds[,"to.yr"],
+          y0=SaintMartin_hist$thresholds[,"threshold"], lty=2)
+@
+<<echo=FALSE, fig=TRUE, results=hide, width=8, height=4>>=
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="i", yaxs="i", las=0)
+<<plot_SaintMartin_cont_hist>>
+@
+
+With the function \verb+BayesianMCMC+ we fit a flood frequency model to the flood data using a Bayesian Markov Chain Monte Carlo algorithm. 
+The particularity of this function is that it takes into account historical information \citep[see e.g.][]{Payrastreetal2011WRR}, and that several perception thresholds can be specified.
+In order to do so, we have to organise the historical data into 3 vectors of equal length:
+\begin{itemize}
+\item \verb+xhist+ containing the historical flood peak values;
+\item \verb+seuil+ containing the perception thresholds associated with each historical flood in \verb+xhist+ ;
+\item \verb+nbans+ containing the number of years covered by the percception thresholds in \verb+seuil+ (number of years during with the thresholds have not been exceeded except for the floods listed in \verb+xhist+).
+\end{itemize}
+<<>>=
+xhistSM <- c(-1,SaintMartin_hist$peaks[,"peak"])
+seuilSM <- c(7250, 6000, rep(5050, 10), rep(2400, 21))
+nbansSM <- c(127, 55, 65, rep(0,9), 71, rep(0, 20))
+data.frame(xhistSM, seuilSM, nbansSM)
+@
+This presentation of the dataset gives directly the correpondance between each historical flood and the associated perception threshold. Since the same threshold value is repeated several times (once for each historical flood), the application period of each threshold has to be parted in \verb+nbansSM+: the only requirement is that for each threshold, when you sum up the \verb+nbansSM+ values next to it, the sum is the total number of years covered by the threshold.
+For simplicity reasons, here we just put once in \verb+nbansSM+ the total number of years covered by each threshold, the other values being set to 0.
+Finally, in this step you just have to repeat in \verb+seuilSM+ the value of each perception threshold as many times as peak discharge information is available during the application period of the threshold, and then indicate once in \verb+nbansSM+ the duration of the application period for each threshold, the other values being set to zero.
+
+You can also notice that the first value in \verb+xhistSM+ is equal to -1: this is because the perception threshold defined in \verb+seuilSM+ has never been exceeded and no information is available on floods that did not exceed the threshold (see help).
+
+The Bayesian MCMC algorithm is applied as follows:
+<<echo=FALSE>>=
+set.seed(198)
+@
+<<eval=T>>=  # must be T the first time
+fit <- BayesianMCMC(xcont=SaintMartin_cont[,"peak"], 
+                    xhist=xhistSM, 
+                    seuil=seuilSM, 
+                    nbans=nbansSM, 
+                    nbpas=1000, nbchaines=3, confint=c(0.05, 0.95), dist="GEV",
+                    varparameters0=c(NA, NA, 0.5))
+@
+Here we choose a generalized extreme value (GEV) distribution as model, with 3 Markov chains, and a confidence interval of 90\% (from 5\% to 95\%).
+Note that, to have better convergence, higher values of \verb+nbpas+ should be used (e.g., 10000).
+
+Usually you need to run it a second time to make sure the Bayesian MCMC algorithm has converged, that is what the \verb+BayesianMCMCcont+ function is for:
+<<eval=T>>=  # must be T the first time
+fit <- BayesianMCMCcont(fit)
+@
+
+The results of the fitting and some diagnostic graphs can be plotted with the command:
+<<eval=FALSE>>=
+plot(fit, which=1:4, ask=TRUE)
+@
+
+
+The first plot which can be seen is the plotting position of the data, as well as the fitted distribution (with the maximum likelihood) and the confidence intervals:
+
+<<plot_fit_1, echo=FALSE, fig=TRUE, results=hide, include=FALSE, width=6, height=5>>=
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+plot(fit, 1)
+@
+
+\includegraphics[width=.6\textwidth]{BayesianMCMC_reg-plot_fit_1}
+
+
+Note that the crosses are standing for the systematic data and the points for the historical data.
+
+\clearpage
+The second plot allows a diagnostic of the MCMC simulation by looking at the parameters:
+
+<<echo=FALSE, fig=TRUE, results=hide, width=6, height=5>>=
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+plot(fit, 2)
+@
+
+\vspace{.5cm}
+The third plot is also for a diagnostic of the MCMC simulation but looking at the likelihood and MCMC acceptance rate:
+
+<<plot_fit_3, echo=FALSE, fig=TRUE, results=hide, include=FALSE, width=6, height=5>>=
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+plot(fit, 3)
+@
+
+\includegraphics[width=.6\textwidth]{BayesianMCMC_reg-plot_fit_3}
+
+
+\clearpage
+Finally, the fourth plot is showing as cloud plots the posterior distribution of parameters obtained with the MCMC simulation:
+
+<<plot_fit_4, echo=FALSE, fig=TRUE, results=hide, include=FALSE, width=6, height=5>>=
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+plot(fit, 4)
+@
+
+\includegraphics[width=.6\textwidth]{BayesianMCMC_reg-plot_fit_4}
+
+
+
+
+
+
+
+
+
+% --------------------------------------------------------------------------------------------------------------------------------------------------------- %
+
+\section{Regional flood frequency analysis with extreme floods in ungauged catchments}
+
+We use here data from 5 streamgauges in the Ard\`eche region as described in \citet[][pages 180-184]{Nguyen2012PhD}.
+<<eval=FALSE>>=
+SaintMartin_cont
+Vogue_cont
+SaintLaurent_cont
+Beauvene_cont
+Chambonas_cont
+@
+
+<<plot_Ardeche_cont, eval=FALSE>>=
+plot(SaintMartin_cont[,"year"], SaintMartin_cont[,"peak"], type="o", pch=21, bg="white", 
+     xlab="", ylab="discharge (m3/s)", main=" Saint Martin on the Ardeche River (2240 km2)")
+plot(Vogue_cont[,"year"], Vogue_cont[,"peak"], type="o", pch=21, bg="white", 
+     xlab="", ylab="discharge (m3/s)", main="Vogue on the Ardeche River (636 km2)")
+plot(SaintLaurent_cont[,"year"], SaintLaurent_cont[,"peak"], type="o", pch=21, bg="white", 
+     xlab="", ylab="discharge (m3/s)", main="Saint Laurent on the Borne River (63 km2)")
+plot(Beauvene_cont[,"year"], Beauvene_cont[,"peak"], type="o", pch=21, bg="white", 
+     xlab="", ylab="discharge (m3/s)", main="Beauvene on the Eyrieux River (392 km2)")
+plot(Chambonas_cont[,"year"], Chambonas_cont[,"peak"], type="o", pch=21, bg="white", 
+     xlab="", ylab="discharge (m3/s)", main="Chambonas on the Chassezac River (507 km2)")
+@
+<<echo=FALSE, fig=TRUE, results=hide, width=8, height=6>>=
+layout(matrix(1:6, ncol=2))
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+<<plot_Ardeche_cont>>
+@
+
+On top of that, extreme flood events have been reconstructed for several ungauged catchments, or for periods preceeding the systematic records in gauged catchments \citep[see Table 4.2, page 127, in][]{Nguyen2012PhD}.
+<<>>=
+Ardeche_areas  # km2
+Ardeche_ungauged_extremes  # m3/s
+@
+
+<<>>=
+Ardeche_ungauged_extremes_new <- merge(Ardeche_ungauged_extremes, Ardeche_areas)
+@
+
+In the following, the usage of the function \verb+BayesianMCMCreg+ is illustrated to provide a regional flood frequency analysis including both systematic and extreme flood data \citep[see][]{Gaumeetal2010JoH}. 
+This function uses the catchment areas to draw an index flood relationship on the form $\mu=S^\beta$. 
+Therefore, the datasets have first to be organised in the following way:
+\begin{itemize}
+\item one vector \verb+xcont+ including all the systematic series;
+\item one vector \verb+scont+ including the catchment surfaces for each record in \verb+xcont+;
+\item one vector \verb+xhist+ including the peak discharges of extreme floods;
+\item one vector \verb+shist+ including the catchment surfaces for each extreme flood in \verb+xhist+;
+\item one vector \verb+seuil+ including the perception thresholds associated with each extreme flood in \verb+xhist+;
+\item one vector \verb+nbans+ including the period of application of each perception threshold, i.e. the period during which the threshold has been exceeded only by the extreme flood in \verb+xhist+ 
+\end{itemize}
+
+<<>>=
+xcont <- c(SaintMartin_cont[,2],
+           Vogue_cont[,2], 
+           SaintLaurent_cont[,2], 
+           Beauvene_cont[,2], Chambonas_cont[,2])
+scont <- c(rep(2240, length(SaintMartin_cont[,2])), 
+           rep(636, length(Vogue_cont[,2])), 
+           rep(63, length(SaintLaurent_cont[,2])), 
+           rep(392, length(Beauvene_cont[,2])), 
+           rep(507, length(Chambonas_cont[,2])))                           
+xhist <- Ardeche_ungauged_extremes_new[,"peak"]
+xhist[Ardeche_ungauged_extremes_new[,"station"]=="Chambonas"] <- -1
+shist <- Ardeche_ungauged_extremes_new[,"area"]
+nbans <- Ardeche_ungauged_extremes_new[,"associated.period"]
+seuil <- Ardeche_ungauged_extremes_new[,"peak"]
+@
+    
+\verb+BayesianMCMCreg+ can then be applied in the following way:
+<<echo=FALSE>>=
+set.seed(198)
+@
+<<eval=T>>=  # must be T the first time
+fitreg <- BayesianMCMCreg(xcont=xcont, 
+                          scont=scont,
+                          xhist=xhist,
+                          shist=shist,
+                          nbans=nbans,
+                          seuil=seuil,
+                          nbpas=1000, nbchaines=3, confint=c(0.05,0.95), dist="GEV",
+                          varparameters0=c(NA, NA, NA, 0.5))
+fitreg <- BayesianMCMCregcont(fitreg)
+fitreg <- BayesianMCMCregcont(fitreg)
+@
+Note that, to have better convergence, higher values of \verb+nbpas+ should be used (e.g., 10000).
+
+The method assumes that, once the data are scaled by the catchment area (to the power of $\beta$), the peaks can be pooled into a single sample and the regional growth curve can be estimated using it.
+Several assumptions are therefore made: that the scaled samples are homogeneous, identically distributed and independent.
+
+One good thing is that the method uses the MCMC algorithm not only for the regional growth curve parameters, but also to estimate $\beta$.
+
+Also, the method allows to include historical data (associated with gauged series) as well as extreme discharge events available at ungauged sites, as in this example, which are treated as the historical ones.
+In the example, it is assumed that extreme floods observed have not been exceeded in the last 50 years (ungauged sites), or during the 50 years before the beginning of the gauged series (historical floods). Therefore, here \verb+seuil+=\verb+xhist+). 
+
+Since one of the extreme floods recorded is already included in the systematic gauged series (1980 flood at Chambonas), its value has been replaced here by -1 in \verb+xhist+, 
+and the corresponding lines in \verb+nbans+ and \verb+seuil+ are kept unchanged to indicate that this extreme flood has not been exceeded during a 50-year period preceeding the systematic series (see above).  
+    
+Note that once again you may need to run the Bayesian MCMC algorithm a second time to make sure it converged, this time with the function \verb+BayesianMCMCregcont+.
+
+The same graphics, as the ones plotted for the local analysis, can be plotted here.
+<<eval=FALSE>>=
+plot(fitreg, which=1:4, ask=TRUE)
+@
+
+The first one refers to the regional growth curve, valid for an ungauged site with area 1 km$^2$:
+
+<<plot_fitreg_1, echo=FALSE, fig=TRUE, results=hide, include=FALSE, width=6, height=5>>=
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+plot(fitreg, 1)
+@
+
+\includegraphics[width=.6\textwidth]{BayesianMCMC_reg-plot_fitreg_1}
+
+
+<<echo=FALSE, fig=TRUE, results=hide, width=6, height=7>>=
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+plot(fitreg, 2)
+@
+
+
+
+<<plot_fitreg_3, echo=FALSE, fig=TRUE, results=hide, include=FALSE, width=6, height=5>>=
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+plot(fitreg, 3)
+@
+
+\includegraphics[width=.6\textwidth]{BayesianMCMC_reg-plot_fitreg_3}
+
+
+<<plot_fitreg_4, echo=FALSE, fig=TRUE, results=hide, include=FALSE, width=6, height=4>>=
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+plot(fitreg, 4)
+@
+
+\includegraphics[width=.6\textwidth]{BayesianMCMC_reg-plot_fitreg_4}
+
+
+
+For graphs accounting for catchment areas, the function \verb+plotBayesianMCMCreg_surf+ can be used. 
+Here we will do it for every catchment surface of the gauged stations:
+<<plotBayesianMCMCreg_surfArdeche, eval=FALSE>>=
+plotBayesianMCMCreg_surf(fitreg, surf=unique(Ardeche_areas$area))
+@
+<<plotBayesianMCMCreg_surfArdechegrosso, echo=FALSE, fig=TRUE, results=hide, include=FALSE, width=10, height=12>>=
+layout(matrix(1:20, ncol=4, byrow=TRUE))
+par(mar=c(3,3,2,1)+0.03, mgp=c(1.5,0.3,0), tcl=.2, xaxs="r", yaxs="r", las=0)
+<<plotBayesianMCMCreg_surfArdeche>>
+@
+
+\includegraphics[width=.999\textwidth]{BayesianMCMC_reg-plotBayesianMCMCreg_surfArdechegrosso}
+
+The last graph produces means of the previous mean discharge and 90\% confidence intervals as a function of the surface. 
+It efficiently shows how the surfaces of the chosen catchments have an influence on the algorithm.
+For more information about how the regional version works, you can see the PhD thesis \citet{Nguyen2012PhD}, and \citet{Nguyenetal2014JoH}.
+
+
+
+
+
+
+\begin{thebibliography}{}
+
+\bibitem[Borga et al., 2011]{Borgaetal2011ESP}
+Borga, M., E.N. Anagnostou, Bl\"oschl G., and Creutin, J.D. (2011).
+\newblock Flash flood forecasting, warning and risk management: the HYDRATE project,
+\newblock {\em Environmental Science \& Policy}, 14(7):834--844, doi:10.1016/j.envsci.2011.05.017.
+
+\bibitem[Gaume et al., 2009]{Gaumeetal2009JoH}
+Gaume, E., V. Bain, , P. Bernardara, O. Newinger, M. Barbuc, A. Bateman, L. Blaskovicova, G. Bloschl, M. Borga, A. Dumitrescu, I. Daliakopoulos, J. Garcia, A. Irimescu, S. Kohnova, A. Koutroulis, L. Marchi, S. Matreata, V. Medina, E. Preciso, D. Sempere-Torres, G. Stancalie, J. Szolgay, J. Tsanis, D. Velasco, and A. Viglione, (2009).
+\newblock A compilation of data on {E}uropean flash floods,
+\newblock {\em Journal of Hydrology}, 367:70--80, doi:10.1016/j.jhydrol.2008.1012.1028.
+
+\bibitem[Gaume et al., 2010]{Gaumeetal2010JoH}
+Gaume, E., L. Ga\'al, A. Viglione, J. Szolgay, S. Kohnov\'a, and G. Bl\"oschl (2010).
+\newblock Bayesian MCMC approach to regional flood frequency analyses involving extraordinary flood events at ungauged sites,
+\newblock {\em Journal of Hydrology}, 394:101--117, doi:10.1016/j.jhydrol.2010.01.008.
+
+\bibitem[Naulet, 2002]{Naulet2002PhD} 
+Naulet, R. (2002).
+\newblock Utilisation de l'information des crues historiques pour une meilleure pr\'ed\'etermination du risque d'inondation. Application au bassin de l'Ard\`eche \`a Vallon Pont-d'Arc et St-Martin d'Ard\`eche. 
+\newblock PhD thesis at CEMAGREF, Lyon, and at the Universit\'e du Qu\'ebec, pp. 322.
+\newblock http://www.lthe.fr/OHM-CV/Documents/theses/these\_naulet.pdf
+
+\bibitem[Nguyen, 2012]{Nguyen2012PhD}
+Nguyen, C.C. (2012).
+\newblock {\em Am\'elioration des approches Bay\'esiennes MCMC pour l'analyse r\'egionale des crues (Improvement of BayesianMCMC approaches for regional flood frequency analyses)}.
+\newblock PhD thesis at the University of Nantes, pp. 192. 
+\newblock (http://archive.bu.univ-nantes.fr/pollux/show.action?id=178da900-8dd8-491b-8720-011608382b98)
+
+\bibitem[Nguyen et al., 2014]{Nguyenetal2014JoH}
+Nguyen, C.C., E. Gaume, and O. Payrastre (2014).
+\newblock Regional flood frequency analyses involving extraordinary flood events at ungauged sites: further developments and validations,
+\newblock {\em Journal of Hydrology}, 508:385--396, doi:10.1016/j.jhydrol.2013.09.058.
+
+\bibitem[Payrastre et al., 2011]{Payrastreetal2011WRR}
+Payrastre, O., E. Gaume, and H. Andrieu (2011).
+\newblock Usefulness of historical information for flood frequency analyses: {D}evelopments based on a case study,
+\newblock {\em Water resources research}, 47, doi:10.1029/2010WR009812.
+
+\end{thebibliography}
+
+
+\end{document}
+

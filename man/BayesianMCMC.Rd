@@ -1,14 +1,20 @@
 % 2008-07-09, Alberto Viglione
+% 2014-07-15, Karine Halbert
 %
 \name{BayesianMCMC}
 \alias{BayesianMCMC}
 \alias{BayesianMCMCcont}
+\alias{BayesianMCMCreg}
+\alias{BayesianMCMCregcont}
+\alias{plotBayesianMCMCreg_surf}
 \alias{print.BayesianMCMC}
 \alias{plot.BayesianMCMC}
+\alias{print.BayesianMCMCreg}
+\alias{plot.BayesianMCMCreg}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Bayesian MCMC frequency analysis}
 \description{
- Bayesian Markov Chain Monte Carlo algorithm for flood frequency analysis with historical and other information.
+ Bayesian Markov Chain Monte Carlo algorithm for flood frequency analysis with historical and other information. The user can choose between a local and a regional analysis.
 }
 \usage{
  BayesianMCMC (xcont, xhist=NA, infhist=NA, suphist=NA, 
@@ -17,31 +23,60 @@
                apriori=function(...){1}, 
                parameters0=NA, varparameters0=NA)
  BayesianMCMCcont (x, nbpas=NA)
+ BayesianMCMCreg (xcont, scont, xhist=NA, infhist=NA, suphist=NA, shist=NA, 
+                  nbans=NA, seuil=NA, nbpas=1000, nbchaines=3,
+                  confint=c(0.05, 0.95), dist="GEV",
+                  apriori=function(...){1},
+                  parameters0=NA, varparameters0=NA) 
+ BayesianMCMCregcont (x, nbpas=NA)
+ plotBayesianMCMCreg_surf (x, surf, ask=FALSE, ...)
  \method{plot}{BayesianMCMC} (x, which=1, ask=FALSE, ...)
  \method{print}{BayesianMCMC} (x, ...)
+ \method{plot}{BayesianMCMCreg} (x, which=1, ask=FALSE, ...)
+ \method{print}{BayesianMCMCreg} (x, ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
  \item{x}{object of class \code{BayesianMCMC}, output of function \code{BayesianMCMC}}
  \item{xcont}{vector of systematic data}
- \item{xhist}{vector of historical data}
- \item{infhist}{inferior limit for historical data}
- \item{suphist}{superior limit for historical data}
- \item{nbans}{period (in years) over which the threshold has not been exceeded except for the historical data}
- \item{seuil}{threshold not exceeded in the historical period except for the historical data}
+ \item{scont}{vector of upstream catchment surfaces of systematic data}
+ \item{xhist}{vector of historical data and/or extreme discharges at ungauged sites}                     
+ \item{infhist}{vector of inferior limit for historical data and/or extreme discharges at ungauged sites}         
+ \item{suphist}{vector of superior limit for historical data and/or extreme discharges at ungauged sites}
+ \item{shist}{vector of upstream catchment surfaces of extreme discharges at ungauged sites }
+ \item{nbans}{period (in years) over which every threshold has not been exceeded except for the historical data and/or extreme discharges at ungauged sites. If several values of xhist for a same threshold, put the number of years associated to the threshold on the first row, then put 0 (see examples)}
+ \item{seuil}{threshold not exceeded in the historical period except for the historical data and/or extreme discharges at ungauged sites (several thresholds allowed).}
  \item{nbpas}{number of iterations for the MCMC algorithm}
  \item{nbchaines}{number of chains for the MCMC algorithm}
  \item{confint}{confidence limits for the flood quantiles}
- \item{dist}{distribution: normal \code{"NORM"}, log-normal with 2 parameters \code{"LN"}, Exponential \code{"EXP"}, Gumbel \code{"GUMBEL"}, Generalized Extreme Value \code{"GEV"}, Generalized Logistic \code{"GENLOGIS"}, Generalized Pareto \code{"GENPAR"}, log-normal with 3 parameters \code{"LN3"}, Pearson type III \code{"P3"}, log-Pearson type III \code{"LP3"}}
+ \item{dist}{distribution: normal \code{"NORM"}, log-normal with 2 parameters \code{"LN"}, Exponential \code{"EXP"}, Gumbel \code{"GUMBEL"}, Generalized Extreme Value \code{"GEV"}, Generalized Logistic \code{"GENLOGIS"}, Generalized Pareto \code{"GENPAR"}, log-normal with 3 parameters \code{"LN3"}, Pearson type III \code{"P3"}, (log-Pearson type III \code{"LP3"}, not implemented yet)}
  \item{apriori}{function of the parameters of the model `proportional to' their a-priori guessed distribution.
                 The default fuction returns always 1, i.e. there is no a-priori information}
  \item{parameters0}{initial values of the parameters for the MCMC algorithm}
  \item{varparameters0}{initial values of the parameter variances for the MCMC algorithm}
  \item{which}{a number of a vector of numbers that defines the graph to plot (see details)}
  \item{ask}{if TRUE, the interactive mode is run}
+ \item{surf}{a particular surface (number or vector), not necessarily being a surface included in the scont or shist vectors}
  \item{...}{other arguments}
+% ... to add
 }
 \details{
+\bold{Supported cases}
+
+These functions are taking 4 cases into account, depending on the type of data provided:
+- Using only the systematic data: xcont provided, xhist=NA, infhist=NA and suphist=NA
+- Using censored information, historical flood known: xcont and xhist provided, infhist=NA and suphist=NA
+- Using censored information, historical flood unknown precisely but its lower limit known: xcont and infhist provided, xhist=NA and suphist=NA
+- Taking into account flood estimation intervals: infhist and suphist (respectively lower and upper limits) provided, xcont provided, xhist=NA  
+- Please note that every other case is NOT supported. For example, you can't have some historical flood values perfectly known as well as some other for which you only know a lower limit or an interval.
+
+Regarding the perception thresholds:
+- By definition, the number of exceedances of each perception threshold within its application period has to be known precisely, and all the floods exceeding the threshold have to be included in xhist (or infhist or suphist).  
+- Several thresholds are allowed.
+- It is possible to include in xhist (or infhist or suphist) historical values that do not exceed the associated perception threshold.
+- If for one or several thresholds you only know that this or these threshold have never been exceeded and no more information is available on floods that did not exceed the threshold(s), this case is also supported. In this case, put for the historical flood corresponding to the threshold xhist=-1 (or infhist=-1 or infhist=suphist=-1). 
+
+
 \bold{Bayesian inference}
 
 Bayesian inference uses a numerical estimate of the degree of belief in a hypothesis before evidence has been observed and calculates a numerical estimate of the degree of belief in the hypothesis after evidence has been observed.
@@ -91,7 +126,9 @@ The MCMC algorithm is based on a code developed by Eric Gaume on Scilab.
 It is still unstable and not all the distributions have been tested.
 }
 \value{
-  \code{BayesianMCMC} and \code{BayesianMCMCcont} (which just continues the simulations of \code{BayesianMCMC} starting from its output) return the following values:
+  \code{BayesianMCMC} and \code{BayesianMCMCcont} (which just continues the simulations of \code{BayesianMCMC} for local analyses and \code{BayesianMCMCreg} and \code{BayesianMCMCregcont} for regional analyses return the following values:
+  
+  \code{BayesianMCMCreg} and \code{BayesianMCMCregcont} (which just continues the simulations of \code{BayesianMCMC} starting from its output) return the following values:
 
    \code{parameters} matrix (nbpas)x(nbchaines) with the simulated sets of parameters with the MCMC algorithm;
 
@@ -109,25 +146,32 @@ It is still unstable and not all the distributions have been tested.
 
    \code{vraisdist} likelihoods for the sets \code{parameters};
 
+   \code{propsaut} vector showing the evolution of the acceptance rate during the Bayesian MCMC fitting;
 
 
 
-  \code{plot.BayesianMCMC} plots the following figures:
+
+  \code{plot.BayesianMCMC} and \code{plot.BayesianMCMCreg} (for a normalized surface of 1 km2) plot the following figures:
 
    \code{1} data as plotting position (the Cunanne plotting position \eqn{a = 0.4} is used), fitted distribution (maximum likelihood) and confidence intervals;
 
    \code{2} diagnostic plot of the MCMC simulation (parameters);
 
-   \code{3} diagnostic plot of the MCMC simulation (likelyhood and MCMC acceptance rate);
+   \code{3} diagnostic plot of the MCMC simulation (likelihood and MCMC acceptance rate);
 
    \code{4} posterior distribution of parameters obtained with the MCMC simulation (cloud plots);
 
    \code{5} a-priori distribution of parameters (contour plots);
+     
+  
+ 
+  \code{plotBayesianMCMCreg_surf} plots the same plot as the first one given by \code{plot.BayesianMCMCreg} but for each surface in argument, as well as its mean as a function of the surfaces; 
+   
 }
 
 
 %\references{}
-%\author{Alberto Viglione}
+\author{Eric Gaume, Alberto Viglione, Jose Luis Salinas, Olivier Payrastre, Chi Cong N'guyen, Karine Halbert}
 \note{For information on the package and the Author, and for all the references, see \code{\link{nsRFA}}.}
 
 
@@ -191,6 +235,16 @@ plot(with_hist_known, which=c(1:3), ask=TRUE, ylim=c(1,600))
 
 
 
+# Perception threshold without available information on floods
+without_info <- BayesianMCMC (xcont=serie20, xhist=-1, 
+                                 nbans=100, seuil=2400,
+                                 nbpas=5000, nbchaines=3, 
+                                 confint=c(0.05, 0.95), dist="GEV")
+plot(without_info, which=c(1:3), ask=TRUE, ylim=c(1,600))
+
+
+
+
 # Using one reasonable a-priori distribution
 fNORM3 <- function (x) {
  # x = vector of values
@@ -241,6 +295,60 @@ plot(with_hist_known3, 4)
 plot(with_hist_known, 4)
 plot(with_hist_known)
 plot(with_hist_known3)
+}
+
+\dontrun{
+# Assuming that the historical events are perfectly known and there are 4 different thresholds 
+# The data file is presenting this way: 
+
+# xhist nbans seuil 
+#  6000    55  6000 
+#  7400    28  7250 
+#  6350     8  3050 
+#  4000     0  3050 
+#  4550     0  3050 
+#  3950     0  3050 
+#  7550    58  2400 
+#  4650     0  2400 
+#  3950     0  2400 
+
+## Warning: nbans and seuil should have the same length as xhist. 
+
+# So when a threshold is exceeded several times, replicate it as many times it is exceeded 
+# and part the number of years of exceedance into the number of times of exceedance 
+# (the way you part the nbans vector is not important, what is important is that you have 
+# length(nbans)=length(xhist) and the total of years for one same threshold equals the number 
+# of years covered by the perception threshold) 
+xhist_thres <- c(6000, 7400, 6350, 4000, 4550, 3950, 7550, 4650, 3950) 
+seuil_thres <- c(6000, 7250, rep(3050, 4), rep(2400, 3)) 
+nbans_thres <- c(55, 28, 8, 0, 0, 0, 58, 0, 0) 
+
+# The threshold at 6000 has been exceeded for 55 years, the one at 7250 for 28 years, 
+# the one at 3050 for 8 years and the one at 2400 for 58 years 
+with_hist_known_several_thresholds <- BayesianMCMC (xcont=serie20, 
+                                                    xhist=xhist_thres, 
+                                                    nbans=nbans_thres, seuil=seuil_thres, 
+                                                    nbpas=5000, nbchaines=3, 
+                                                    confint=c(0.05, 0.95), dist="GEV", 
+                                                    varparameters0=c(NA, NA, 0.5)) 
+plot(with_hist_known_several_thresholds, which=c(1:3), ask=TRUE)
+
+
+## REGIONAL:
+# Regional analysis, assuming that the 3 historical events are perfectly known and 
+# there are 2 perception thresholds
+regional_with_hist_known <- BayesianMCMCreg (xcont=serie20, 
+                                             scont=c(rep(507,9),rep(2240,11)), 
+                                             xhist=serie100[!is.na(serie100)],
+				             shist=c(495, 495, 87), 
+                                             nbans=c(100, 0, 50), seuil=c(312, 312, 221),
+                                             nbpas=5000, nbchaines=3, 
+                                             confint=c(0.05, 0.95), dist="GEV", 
+                                             varparameters0=c(NA, NA, NA, 0.5))
+plot(regional_with_hist_known, which=1:3, ask=TRUE, ylim=c(1,600))
+
+surf=c(571, 2240)
+plotBayesianMCMCreg_surf(regional_with_hist_known, surf)
 }
 }
 \keyword{htest}

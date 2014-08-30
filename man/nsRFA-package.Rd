@@ -143,7 +143,7 @@ For a complete list of the functions, use \code{library(help="nsRFA").}
 
 \bold{Main changes in version 0.7}
 \tabular{ll}{
-0.7-2: \tab ???;\cr
+0.7-12: \tab refinement of function \code{\link{BayesianMCMC}} allowing several threshold and new function \code{\link{BayesianMCMCreg}};\cr
 0.7-1: \tab refinement of function \code{\link{BayesianMCMC}};\cr
 0.7-0: \tab plotting position for historical information in \code{\link{DISTPLOTS}};\cr
 }
