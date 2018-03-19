@@ -1,7 +1,7 @@
 Package: nsRFA
-Version: 0.7-12
-Date: 2014-08-30
-Title: Non-supervised Regional Frequency Analysis
+Version: 0.7-13
+Date: 2018-03-18
+Title: Non-Supervised Regional Frequency Analysis
 Authors@R: c(person("Alberto", "Viglione", role=c("aut", "cre"), email="viglione@hydro.tuwien.ac.at"),
              person("Jonathan R. M.", "Hosking", role="ctb"),
              person("Francesco", "Laio", role="ctb"),
@@ -27,8 +27,8 @@ Copyright: The fortran routines for the function HW.original are from
         published material). The fortran routines for the function
         'bestlm' are from Alan Miller and were obtained from his R
         package 'leaps'.
-URL: http://www.idrologia.polito.it/~alviglio/index_en.htm
-Packaged: 2014-08-30 19:29:36 UTC; alviglio
+NeedsCompilation: yes
+Packaged: 2018-03-19 17:01:23 UTC; alviglio
 Author: Alberto Viglione [aut, cre],
   Jonathan R. M. Hosking [ctb],
   Francesco Laio [ctb],
@@ -39,6 +39,5 @@ Author: Alberto Viglione [aut, cre],
   Chi Cong N'guyen [ctb],
   Karine Halbert [ctb]
 Maintainer: Alberto Viglione <viglione@hydro.tuwien.ac.at>
-NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2014-08-30 23:16:35
+Date/Publication: 2018-03-19 19:20:53 UTC

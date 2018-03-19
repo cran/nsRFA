@@ -88,8 +88,8 @@ ADbootstrap.test <- function (x,cod,Nsim=500,index=2) {
   # x = vettore contenente i dati di tutte le stazioni da sottoporre al test
   # fac = vettore tipo factor associato ad x con gli identificativi delle stazioni
   # Nsim = numero di generazioni
-  # index = 1: grandezza indice è la media
-  #         2: grandezza indice è la mediana (default)
+  # index = 1: grandezza indice e la media
+  #         2: grandezza indice e la mediana (default)
 
   if (length(x)!=length(cod)) {stop('x and cod must have the same length')}
 

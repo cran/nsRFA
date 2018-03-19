@@ -1047,7 +1047,7 @@ pointsposRP <- function(x, a=0, orient="xF", ...) {
 
 plotposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, col12=c(1,1), a=0, orient="xF", ...) {
  # Method in Maidment pag 18.41-42:
- #  Jery R. Stedinger, Richard M. Vogel, and Eﬁ Foufoula-Georgiou. Frequency analysis of extreme events. In David R. Maidment, editor, Hand-Book of Hydrology, chapter 18. McGraw-Hill Companies, international edition, 1993.
+ #  Jery R. Stedinger, Richard M. Vogel, and Efi Foufoula-Georgiou. Frequency analysis of extreme events. In David R. Maidment, editor, Hand-Book of Hydrology, chapter 18. McGraw-Hill Companies, international edition, 1993.
 
   # see BayesianMCMC for the notation
   # col12 = colors for systematic and historical points
@@ -1171,7 +1171,7 @@ plotposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seu
 
 pointsposRPhist <- function(xcont, xhist=NA, infhist=NA, suphist=NA, nbans=NA, seuil=NA, col12=c(1,1), a=0, orient="xF", ...) {
  # Method in Maidment pag 18.41-42:
- #  Jery R. Stedinger, Richard M. Vogel, and Eﬁ Foufoula-Georgiou. Frequency analysis of extreme events. In David R. Maidment, editor, Hand-Book of Hydrology, chapter 18. McGraw-Hill Companies, international edition, 1993.
+ #  Jery R. Stedinger, Richard M. Vogel, and Efi Foufoula-Georgiou. Frequency analysis of extreme events. In David R. Maidment, editor, Hand-Book of Hydrology, chapter 18. McGraw-Hill Companies, international edition, 1993.
 
   # see BayesianMCMC for the notation
   # col12 = colors for systematic and historical points

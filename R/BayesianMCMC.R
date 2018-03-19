@@ -288,19 +288,19 @@ plot.BayesianMCMC <- function (x, which=1, ask=FALSE, ...) {
 .plotdiagnMCMC03 <- function(x, ...) {
  Nsim=10000
  #if(all(is.na(c(x$xhist, x$infhist, x$suphist, x$seuil)))) {
- # # Calcul sur les seules données systèmatiques
+ # # Calcul sur les seules donnees systematiques
  # funzione <- call(".lnvrais5", quote(x$parametersML), quote(xcont), quote(dist))
  #}
  #else if (all(is.na(c(x$infhist, x$suphist))) & all(!is.na(c(x$xhist, x$seuil, x$nbans)))) {
- # # Calcul avec info censurée mais débits historiques connus (Stedinger et Cohn, Naulet cas b)
+ # # Calcul avec info censuree mais debits historiques connus (Stedinger et Cohn, Naulet cas b)
  # funzione <- call(".lnvrais1", quote(x$parametersML), quote(xcont), quote(xhist), quote(nbans), quote(seuil), quote(dist))
  #}
  #else if (all(is.na(c(x$xhist, x$suphist))) & all(!is.na(c(x$infhist, x$seuil, x$nbans)))) {
- # # Calcul avec info censurée mais débits historiques non connus (Stedinger et Cohn, Naulet cas a)
+ # # Calcul avec info censuree mais debits historiques non connus (Stedinger et Cohn, Naulet cas a)
  # funzione <- call(".lnvrais2", quote(x$parametersML), quote(xcont), quote(infhist), quote(nbans), quote(seuil), quote(dist))
  #}
  #else if (all(is.na(c(x$xhist))) & all(!is.na(c(x$infhist, x$suphist, x$seuil, x$nbans)))) {
- # # Calcul avec prise en compte des seuls intervalles d'estimation de débit
+ # # Calcul avec prise en compte des seuls intervalles d'estimation de debit
  # funzione <- call(".lnvrais4", quote(x$parametersML), quote(xcont), quote(infhist), quote(suphist),
  #                                   quote(nbans), quote(seuil), quote(dist))
  #}
