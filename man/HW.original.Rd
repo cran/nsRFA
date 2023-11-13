@@ -58,8 +58,8 @@
              Hosking et al. (1985, technometrics) for the GEV distribution.}
 }
 \details{
-Documentation of the original Fortran routines by Hosking available at
-\url{http://www.research.ibm.com/people/h/hosking/lmoments.html}.
+%Documentation of the original Fortran routines by Hosking available at
+%\url{https://www.research.ibm.com/people/h/hosking/lmoments.html}.
 
 Differences among \code{HW.original} and \code{HW.tests} should depend on differences among \code{PEL} and \code{par.kappa} for the kappa distribution.
 A numerical algorithm is used to resolve the implicit Equations (A.99) and (A.100) in Hosking and Wallis (1997, pag. 203-204).

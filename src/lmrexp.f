@@ -36,7 +36,7 @@ C
       XMOM(2)=HALF*A
       IF(NMOM.EQ.2)RETURN
       DO 10 J=3,NMOM
-   10 XMOM(J)=TWO/DFLOAT(J*(J-1))
+   10 XMOM(J)=TWO/DBLE(J*(J-1))
       RETURN
 C
 Calberto 1000 WRITE(6,7000)

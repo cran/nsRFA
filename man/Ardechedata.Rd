@@ -15,9 +15,9 @@
 \title{Data-sample}
 \description{
 Systematic flood data and historical flood data for the Ard\`eche region (France) as described in: \\
-Naulet, R. (2002). Utilisation de l'information des crues historiques pour une meilleure pr\'ed\'etermination du risque d'inondation. Application au bassin de l'Ard\`eche \`a Vallon Pont-d'Arc et St-Martin d'Ard\`eche. PhD thesis at CEMAGREF, Lyon, and at the Universit\'e du Qu\'ebec, pp. 322. (http://www.lthe.fr/OHM-CV/Documents/theses/these\_naulet.pdf) \\
+Naulet, R. (2002). Utilisation de l'information des crues historiques pour une meilleure pr\'ed\'etermination du risque d'inondation. Application au bassin de l'Ard\`eche \`a Vallon Pont-d'Arc et St-Martin d'Ard\`eche. PhD thesis at CEMAGREF, Lyon, and at the Universit\'e du Qu\'ebec, pp. 322. \\ %(http://www.lthe.fr/OHM-CV/Documents/theses/these\_naulet.pdf) \\
 and \\
-Nguyen, C.C. (2012). Am\'elioration des approches Bay\'esiennes MCMC pour l'analyse r\'egionale des crues (Improvement of BayesianMCMC approaches for regional flood frequency analyses). PhD thesis at the University of Nantes, pp. 192. (http://archive.bu.univ-nantes.fr/pollux/show.action?id=178da900-8dd8-491b-8720-011608382b98)
+Nguyen, C.C. (2012). Am\'elioration des approches Bay\'esiennes MCMC pour l'analyse r\'egionale des crues (Improvement of BayesianMCMC approaches for regional flood frequency analyses). PhD thesis at the University of Nantes, pp. 192. %(http://archive.bu.univ-nantes.fr/pollux/show.action?id=178da900-8dd8-491b-8720-011608382b98)
 }
 \usage{
  data(Ardechedata)

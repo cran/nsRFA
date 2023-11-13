@@ -33,7 +33,7 @@ rand.exp (numerosita, xi, alfa)
  \item{numerosita}{numeric value indicating the length of the vector to be generated}
 }
 \details{
-See \url{http://en.wikipedia.org/wiki/Exponential_distribution} for a brief introduction on the Exponential distribution.
+See \url{https://en.wikipedia.org/wiki/Exponential_distribution} for a brief introduction on the Exponential distribution.
 
 \bold{Definition}
 

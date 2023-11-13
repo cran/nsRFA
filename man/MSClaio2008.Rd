@@ -5,6 +5,11 @@
 \alias{print.MSClaio2008}
 \alias{plot.MSClaio2008}
 \alias{summary.MSClaio2008}
+\alias{.lnML}
+\alias{.AIC}
+\alias{.AICc}
+\alias{.BIC}
+\alias{.ADC}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Model Selection Criteria}
 \description{

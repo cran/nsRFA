@@ -42,7 +42,7 @@ par2mom.gamma (alfa, beta, xi)
  \item{xi}{vector of gamma location parameters}
 }
 \details{
-See \url{http://en.wikipedia.org/wiki/Pearson_distribution} for an introduction to the Pearson distribution, and \url{http://en.wikipedia.org/wiki/Gamma_distribution} for an introduction to the Gamma distribution (the Pearson type III distribution is, essentially, a Gamma distribution with 3 parameters).
+See \url{https://en.wikipedia.org/wiki/Pearson_distribution} for an introduction to the Pearson distribution, and \url{https://en.wikipedia.org/wiki/Gamma_distribution} for an introduction to the Gamma distribution (the Pearson type III distribution is, essentially, a Gamma distribution with 3 parameters).
 
 \bold{Definition}
 

@@ -228,7 +228,7 @@ Institute of Hydrology, 1999. Flood Estimation Handbook, Institute of
   Hydrology, Oxford.
 
 Kendall, M., Stuart, A., 1961-1979. The Advanced Theory of Statistics.
-  Charles Griffin \& Company Limited, London.
+  Charles Griffin & Company Limited, London.
 
 Kottegoda, N.T., Rosso, R., 1997. Statistics, Probability, and Reliability for
   Civil and Environmental Engineers, international Edition. McGraw-Hill

@@ -4,6 +4,14 @@
 \alias{bestlm}
 \alias{print.bestlm}
 \alias{summary.bestlm}
+\alias{.leaps.setup}
+\alias{.leaps.exhaustive}
+\alias{.leaps.backward}
+\alias{.leaps.forward}
+\alias{.leaps.seqrep}
+\alias{.summary.regsubsets}
+\alias{.leaps}
+
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Subsets regression}
 \description{

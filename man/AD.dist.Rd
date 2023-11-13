@@ -17,7 +17,7 @@
  \item{index}{if \code{index}=1 samples are divided by their average value;
               if \code{index}=2 (default) samples are divided by their median value}
 }
-\details{The Anderson-Darling statistic used here is the one defined in \url{http://en.wikipedia.org/wiki/Anderson-Darling_test} as \eqn{A^2}{A2}.}
+\details{The Anderson-Darling statistic used here is the one defined in \url{https://en.wikipedia.org/wiki/Anderson-Darling_test} as \eqn{A^2}{A2}.}
 \value{
  \code{AD.dist} returns the distance matrix between growth-curves built with the Anderson-Darling statistic.
 }

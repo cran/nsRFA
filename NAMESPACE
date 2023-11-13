@@ -8,6 +8,7 @@ import(
 )
 
 importFrom("utils", "data")
+importFrom("methods", "is")
 
 # Register S3 methods
 S3method(print, BayesianMCMC)

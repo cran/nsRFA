@@ -177,7 +177,8 @@ mantel.lm <- function (x, Nperm = 1000) {
     betas <- x$coefficients[-1]
     mY <- m[, 1]
     mX <- m[, -1, drop=FALSE]
-    if (class(mY) != "dist") stop("mantel.lm: distance matrices of class \"dist\" must be tested.")
+    #if (class(mY) != "dist") stop("mantel.lm: distance matrices of class \"dist\" must be tested.")
+    if (!is(mY, 'dist')) stop("mantel.lm: distance matrices of class \"dist\" must be tested.")
     M <- as.matrix(mY)
     nsiti <- dim(M)[1]
     k <- length(betas)

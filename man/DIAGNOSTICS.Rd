@@ -32,7 +32,7 @@
   \deqn{MAE = \frac{1}{n} \sum_1^n |x_i-y_i|}{MAE = 1/n sum(|xi-yi|)}
   \deqn{RMSEP = \sqrt{\frac{1}{n} \sum_1^n ((x_i-y_i)/x_i)^2}}{RMSEP = sqrt(1/n sum((xi-yi)/xi)^2)}
   \deqn{MAEP = \frac{1}{n} \sum_1^n |(x_i-y_i)/x_i|}{MAEP = 1/n sum(|(xi-yi)/xi|}
- See \url{http://en.wikipedia.org/wiki/Coefficient_of_determination}, \url{http://en.wikipedia.org/wiki/Mean_squared_error} and \url{http://en.wikipedia.org/wiki/Mean_absolute_error} for other details.
+ See \url{https://en.wikipedia.org/wiki/Coefficient_of_determination}, \url{https://en.wikipedia.org/wiki/Mean_squared_error} and \url{https://en.wikipedia.org/wiki/Mean_absolute_error} for other details.
 }
 \value{
  \code{R2} returns the coefficient of determination \eqn{R^2}{R2} of a model.

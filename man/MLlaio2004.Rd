@@ -4,6 +4,11 @@
 \alias{MLlaio2004}
 \alias{ML_estimation}
 \alias{moment_estimation}
+\alias{.Fx}
+\alias{.logLgumb}
+\alias{.logLgev}
+\alias{.logLgam}
+\alias{.sample_generator}
 %\alias{logLgumb}
 %\alias{logLgev}
 %\alias{logLgam}

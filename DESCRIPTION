@@ -1,6 +1,6 @@
 Package: nsRFA
-Version: 0.7-15
-Date: 2020-02-25
+Version: 0.7-16
+Date: 2023-11-13
 Title: Non-Supervised Regional Frequency Analysis
 Authors@R: c(person("Alberto", "Viglione", role=c("aut", "cre"), email="alberto.viglione@polito.it"),
              person("Jonathan R. M.", "Hosking", role="ctb"),
@@ -11,7 +11,7 @@ Authors@R: c(person("Alberto", "Viglione", role=c("aut", "cre"), email="alberto.
              person("Jose Luis", "Salinas", role="ctb"),
              person("Chi Cong", "N'guyen", role="ctb"),
              person("Karine", "Halbert", role="ctb"))
-Depends: R (>= 3.0.0), stats, graphics
+Depends: R (>= 3.0.0), stats, graphics, methods
 Description: A collection of statistical tools for objective (non-supervised) applications 
              of the Regional Frequency Analysis methods in hydrology. 
              The package refers to the index-value method and, more precisely, helps the
@@ -32,7 +32,7 @@ Copyright: The fortran routines for the function HW.original are from
         'bestlm' are from Alan Miller and were obtained from his R
         package 'leaps'.
 NeedsCompilation: yes
-Packaged: 2020-02-25 14:15:28 UTC; alviglio
+Packaged: 2023-11-13 08:22:36 UTC; alviglio
 Author: Alberto Viglione [aut, cre],
   Jonathan R. M. Hosking [ctb],
   Francesco Laio [ctb],
@@ -44,4 +44,4 @@ Author: Alberto Viglione [aut, cre],
   Karine Halbert [ctb]
 Maintainer: Alberto Viglione <alberto.viglione@polito.it>
 Repository: CRAN
-Date/Publication: 2020-02-26 16:50:02 UTC
+Date/Publication: 2023-11-13 13:33:20 UTC

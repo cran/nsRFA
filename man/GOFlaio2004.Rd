@@ -7,6 +7,8 @@
 \alias{W2}
 %\alias{Fx}
 \alias{fw2}
+\alias{.typeIerrorA2_GOFlaio}
+
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Goodness of fit tests}
 \description{
@@ -27,12 +29,12 @@
 % \item{T}{parameters (position, scale, shape, ...)}
  \item{w}{Transformed test statistic (Laio, 2004)}
 }
-\details{An introduction on the Anderson-Darling test is available on \url{http://en.wikipedia.org/wiki/Anderson-Darling_test} and in the \code{GOFmontecarlo} help page.
+\details{An introduction on the Anderson-Darling test is available on \url{https://en.wikipedia.org/wiki/Anderson-Darling_test} and in the \code{GOFmontecarlo} help page.
  The original paper of Laio (2004) is available on his web site.
 }
 \value{
   \code{A2_GOFlaio} tests the goodness of fit of a distribution with the sample \code{x}; it return the value \eqn{A_2} of the Anderson-Darling statistics and its non-exceedence probability \eqn{P(A_2)}{P(A2)}. 
-  Note that \eqn{P} is the probability of obtaining the test statistic \eqn{A_2}{A2} lower than the one that was actually observed, assuming that the null hypothesis is true, i.e., \eqn{P} is one minus the p-value usually employed in statistical testing (see \url{http://en.wikipedia.org/wiki/P-value}).
+  Note that \eqn{P} is the probability of obtaining the test statistic \eqn{A_2}{A2} lower than the one that was actually observed, assuming that the null hypothesis is true, i.e., \eqn{P} is one minus the p-value usually employed in statistical testing (see \url{https://en.wikipedia.org/wiki/P-value}).
   If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the null hypothesis at significance level \eqn{\alpha=10\%} is rejected.
   %If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the test is not passed at level \eqn{\alpha=10\%}.
 

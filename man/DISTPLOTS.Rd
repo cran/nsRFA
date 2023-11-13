@@ -98,8 +98,8 @@
  \item{...}{graphical parameters as \code{xlab}, \code{ylab}, \code{main}, ...}
 }
 \details{
- A brief introduction on Probability Plots (or Quantile-Quantile plots) is available on \url{http://en.wikipedia.org/wiki/Q-Q_plot}.
- For plotting positions see \url{http://en.wikipedia.org/wiki/Plotting_position}.
+ A brief introduction on Probability Plots (or Quantile-Quantile plots) is available on \url{https://en.wikipedia.org/wiki/Q-Q_plot}.
+ For plotting positions see \url{https://en.wikipedia.org/wiki/Plotting_position}.
 
 For the quantiles of the comparison distribution typically the Weibull formula \eqn{k/(n + 1)} is used (default here). 
 Several different formulas have been used or proposed as symmetrical plotting positions. 

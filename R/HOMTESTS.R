@@ -192,7 +192,7 @@ ksampleA2 <- function (x,cod) {
 
   fac <- factor(cod)
   Y <- x
-  N <- length(Y)
+  N <- as.numeric(length(Y))
   k <- nlevels(fac)
   nn <- tapply(Y,fac,length)
   NN <- cumsum(nn)

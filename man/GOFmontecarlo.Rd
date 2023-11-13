@@ -10,6 +10,8 @@
 \alias{gofGEVtest}
 \alias{gofLOGNORMtest}
 \alias{gofP3test}
+\alias{.test.GOFmontecarlo}
+
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Goodness of fit tests}
 \description{
@@ -31,7 +33,7 @@
  \item{Nsim}{number of simulated samples from the hypothetical parent distribution}
 }
 \details{
-An introduction, analogous to the following one, on the Anderson-Darling test is available on \url{http://en.wikipedia.org/wiki/Anderson-Darling_test}.
+An introduction, analogous to the following one, on the Anderson-Darling test is available on \url{https://en.wikipedia.org/wiki/Anderson-Darling_test}.
 
 Given a sample \eqn{x_i \  (i=1,\ldots,m)}{xi (i=1,...,m)} of data extracted from a distribution \eqn{F_R(x)}{FR(x)}, the test is used to check the null hypothesis \eqn{H_0 : F_R(x) = F(x,\theta)}{H0 : FR(x) = F(x,\theta)}, where \eqn{F(x,\theta)} is the hypothetical distribution and \eqn{\theta} is an array of parameters estimated from the sample \eqn{x_i}{xi}.
 
@@ -69,7 +71,7 @@ In other cases, e.g. the Pearson Type III case, can be derived with a Monte-Carl
   \code{gofP3test} tests the goodness of fit of a Pearson type III (gamma) distribution with the sample \code{x}.
 
   They return the value \eqn{A_2}{A2} of the Anderson-Darling statistics and its non exceedence probability \eqn{P}.
-  Note that \eqn{P} is the probability of obtaining the test statistic \eqn{A_2}{A2} lower than the one that was actually observed, assuming that the null hypothesis is true, i.e., \eqn{P} is one minus the p-value usually employed in statistical testing (see \url{http://en.wikipedia.org/wiki/P-value}).
+  Note that \eqn{P} is the probability of obtaining the test statistic \eqn{A_2}{A2} lower than the one that was actually observed, assuming that the null hypothesis is true, i.e., \eqn{P} is one minus the p-value usually employed in statistical testing (see \url{https://en.wikipedia.org/wiki/P-value}).
   If \eqn{P(A_2)}{P(A2)} is, for example, greater than 0.90, the null hypothesis at significance level \eqn{\alpha=10\%} is rejected.
   %If \eqn{P} is, for example, 0.92, the sample shouldn't be considered extracted from the hypothetical parent distribution with significance level greater than 8%.
 }
