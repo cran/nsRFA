@@ -38,7 +38,7 @@ For both of them, the best estimator is the one that optimizes some criterion, s
 Due to its simplicity, the most frequently used method is the multiregressive approach (see e.g. Kottegoda & Rosso, 1998; Viglione et al., 2007a), that relates the index-flow to catchment characteristics, such as climatic indices, geologic and morphologic parameters, land cover type, etc., through linear or non-linear equations.
 
 R provides the functions \code{\link{lm}} and \code{\link{nls}} for linear and non-linear regressions (package \code{\link{stats}}).
-With the package \code{nsRFA}, a tool to select the best linear regressions given a set of candidate descriptors, \code{\link{bestlm}}, is provided.
+With the package \code{nsRFA}, a tool to select the best linear regressions given a set of candidate descriptors, \code{bestlm}, is provided.
 In \code{\link{REGRDIAGNOSTICS}} several functions are provided to analyze the output of \code{\link{lm}}, such as: 
 the coefficient of determination (classic and adjusted);
 the Student t significance test;
@@ -70,13 +70,13 @@ For instance, the coefficient of variation (CV) or the L-CV of the curve can be 
 The package \code{nsRFA} provide the functions in \code{\link{moments}} and \code{\link{Lmoments}} to calculate sample moments and L-moments.
 Subsequently, the selected parameter is related with basin descriptors through a linear or a more complex model.
 A regression analysis is performed with different combination of descriptors, and descriptors that are strongly related with the parameter are used to group sites in regions.
-The same tools used for the regionalization of the index value, i.e. \code{\link{bestlm}}, \code{\link{REGRDIAGNOSTICS}} and \code{\link{DIAGNOSTICS}}, can be used if the parametric method is chosen.
+The same tools used for the regionalization of the index value, i.e. \code{bestlm}, \code{\link{REGRDIAGNOSTICS}} and \code{\link{DIAGNOSTICS}}, can be used if the parametric method is chosen.
 
 \code{nsRFA} also provide a non-parametric approach that considers the dimensionless growth curve as a whole (see, Viglione et al., 2006; Viglione, 2007). 
 The multiregressive approach can still be used if we reason in terms of (dis)similarity between pairs of basins in the following way:
 (1) for each couple of stations, a dissimilarity index between non-dimensional curves is calculated using a quantitatively predefined metric, for example using the Anderson-Darling statistic (\code{\link{A2}}), and organising the distances in a matrix with \code{\link{AD.dist}};
 (2) for each basin descriptor, the absolute value (or another metric) of the difference between its measure in two basins is used as distance between them, using \code{\link{dist}} of the package \code{\link{stats}} to obtain distance matrices;
-(4) a multiregressive approach (\code{\link{bestlm}}, \code{\link{lm}}) is applied considering the matrices as variables and the basin descriptors associated to the best regression are chosen;
+(4) a multiregressive approach (\code{bestlm}, \code{\link{lm}}) is applied considering the matrices as variables and the basin descriptors associated to the best regression are chosen;
 (5) the significance of the linear relationship between distance matrices is assessed through the Mantel test with \code{\link{mantel.lm}}.
 
 In the suitable-descriptor's space, stations with similar descriptor values can be grouped into disjoint regions through a cluster analysis (using functions in \code{\link{traceWminim}}) or the ROI method can be used adapting a region to the ungauged basin (\code{\link{roi}}).
@@ -143,6 +143,7 @@ For a complete list of the functions, use \code{library(help="nsRFA").}
 
 \bold{Main changes in version 0.7}
 \tabular{ll}{
+0.7-17: \tab removal of old Fortran code and therefore of functions \code{bestlm} (and therefore the vignette \code{nsRFA_ex01}) and \code{HW.original};\cr
 0.7-12: \tab refinement of function \code{\link{BayesianMCMC}} allowing several threshold and new function \code{\link{BayesianMCMCreg}};\cr
 0.7-1: \tab refinement of function \code{\link{BayesianMCMC}};\cr
 0.7-0: \tab plotting position for historical information in \code{\link{DISTPLOTS}};\cr
@@ -156,7 +157,7 @@ For a complete list of the functions, use \code{library(help="nsRFA").}
 0.6-2: \tab new vignette \code{nsRFA_ex02};\cr
 0.6-2: \tab refinement of function \code{\link{BayesianMCMC}};\cr
 0.6-0: \tab new vignette \code{nsRFA_ex01};\cr
-0.6-0: \tab new function \code{\link{bestlm}};\cr
+0.6-0: \tab new function \code{bestlm};\cr
 0.6-0: \tab the plotting position/probability plots in \code{\link{DISTPLOTS}} have been reshaped;\cr
 0.6-0: \tab this list of changes has been added;\cr
 }

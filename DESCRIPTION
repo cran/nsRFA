@@ -1,11 +1,9 @@
 Package: nsRFA
-Version: 0.7-16
-Date: 2023-11-13
+Version: 0.7-17
+Date: 2024-05-14
 Title: Non-Supervised Regional Frequency Analysis
 Authors@R: c(person("Alberto", "Viglione", role=c("aut", "cre"), email="alberto.viglione@polito.it"),
-             person("Jonathan R. M.", "Hosking", role="ctb"),
              person("Francesco", "Laio", role="ctb"),
-             person("Alan", "Miller", role="ctb"),
              person("Eric", "Gaume", role="ctb"),
              person("Olivier", "Payrastre", role="ctb"),
              person("Jose Luis", "Salinas", role="ctb"),
@@ -23,20 +21,13 @@ Description: A collection of statistical tools for objective (non-supervised) ap
              Homogeneity tests from Hosking and Wallis (1993) <doi:10.1029/92WR01980> 
              and Viglione et al. (2007) <doi:10.1029/2006WR005095> are available.
 License: GPL (>= 2)
-Copyright: The fortran routines for the function HW.original are from
-        Jonathan R. M. Hosking and are available at the url
-        http://www.research.ibm.com/people/h/hosking/lmoments.html. The
-        functions `MLlaio2004.R', `GOFlaio2004.R' and `MSClaio2008.R'
-        are derived from original Francesco Laio Matlab code (non
-        published material). The fortran routines for the function
-        'bestlm' are from Alan Miller and were obtained from his R
-        package 'leaps'.
-NeedsCompilation: yes
-Packaged: 2023-11-13 08:22:36 UTC; alviglio
+Copyright: The functions `MLlaio2004.R', `GOFlaio2004.R' and
+        `MSClaio2008.R' are derived from original Francesco Laio Matlab
+        code (non published material).
+NeedsCompilation: no
+Packaged: 2024-05-14 09:56:44 UTC; alviglio
 Author: Alberto Viglione [aut, cre],
-  Jonathan R. M. Hosking [ctb],
   Francesco Laio [ctb],
-  Alan Miller [ctb],
   Eric Gaume [ctb],
   Olivier Payrastre [ctb],
   Jose Luis Salinas [ctb],
@@ -44,4 +35,4 @@ Author: Alberto Viglione [aut, cre],
   Karine Halbert [ctb]
 Maintainer: Alberto Viglione <alberto.viglione@polito.it>
 Repository: CRAN
-Date/Publication: 2023-11-13 13:33:20 UTC
+Date/Publication: 2024-05-14 14:40:02 UTC
